@@ -1,0 +1,120 @@
+# ----------------------------------------------------------------------
+# Research Paper Template — .gitignore
+# ----------------------------------------------------------------------
+
+# OS / filesystem
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Editors / IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.project
+.pydevproject
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+.coverage.*
+htmlcov/
+.ipynb_checkpoints/
+*.egg-info/
+.eggs/
+build/
+dist/
+
+# Virtual environments
+.venv/
+venv/
+env/
+ENV/
+
+# Local environment / secrets
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Claude local / machine-specific state
+.claude/settings.local.json
+.claude/.headroom_wrap_marker.json
+
+# LaTeX build artifacts
+*.aux
+*.bcf
+*.blg
+*.fdb_latexmk
+*.fls
+*.lof
+*.lot
+*.out
+*.run.xml
+*.synctex.gz
+*.toc
+*.xdv
+*.nav
+*.snm
+*.vrb
+*.dvi
+*.ps
+
+# LaTeX temporary/build directories
+paper/build/
+paper/.latexmk/
+paper/_minted-*/
+_minted-*/
+
+# Bibliography-generated files
+*.bbl
+
+# Temporary / backup files
+*.bak
+*.tmp
+*.temp
+*.orig
+*.rej
+
+# Logs and crash artifacts
+*.log
+MUJOCO_LOG.TXT
+core
+core.*
+
+# Local scratch / cache directories
+.cache/
+tmp/
+temp/
+scratch/
+
+# Optional experiment artifacts
+# Uncomment these if your project stores large/reproducible outputs outside git.
+# experiments/**/raw/
+# experiments/**/processed/
+# experiments/**/figures/candidates/
+# results/
+
+# Optional generated manuscript archives
+# paper/*.zip
+
+# ----------------------------------------------------------------------
+# Intentionally NOT ignored
+# ----------------------------------------------------------------------
+# - .claude/skills/ and .claude/agents/
+# - git submodules under .claude/skills/
+# - docs/intakes/
+# - docs/CURRENT_STATE.md
+# - research/*.md
+# - paper/vendor/
+# - paper/figures/
+# - PDF files generally (vendor PDFs and final/submission PDFs may be tracked)
+# ----------------------------------------------------------------------

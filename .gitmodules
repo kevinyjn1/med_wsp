@@ -1,0 +1,8 @@
+[submodule ".claude/skills/stop-slop"]
+	path = .claude/skills/stop-slop
+	url = https://github.com/hardikpandya/stop-slop.git
+	branch = main
+[submodule ".claude/skills/embodied-ai-paper-writer"]
+	path = .claude/skills/embodied-ai-paper-writer
+	url = https://github.com/OpenGHz/embodied-ai-paper-writer.git
+	branch = main

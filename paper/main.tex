@@ -1,0 +1,61 @@
+% Manuscript entry point.
+%
+% Class file is the unmodified vendor copy at paper/vendor/ieee_ras/ieeeconf.cls.
+% Compile from paper/ with the vendor directory on TEXINPUTS, e.g.:
+%   TEXINPUTS=vendor/ieee_ras: pdflatex -interaction=nonstopmode main.tex
+%   bibtex main
+%   TEXINPUTS=vendor/ieee_ras: pdflatex -interaction=nonstopmode main.tex
+%   TEXINPUTS=vendor/ieee_ras: pdflatex -interaction=nonstopmode main.tex
+
+\documentclass[letterpaper, 10 pt, conference]{ieeeconf}
+
+\IEEEoverridecommandlockouts
+\overrideIEEEmargins
+
+\title{\LARGE \bf
+Paper Title Placeholder
+}
+
+\author{Author One$^{1}$
+\thanks{$^{1}$Author One is with an Affiliation, City, Country
+        {\tt\small author.one@example.edu}}%
+}
+
+\begin{document}
+
+\maketitle
+\thispagestyle{empty}
+\pagestyle{empty}
+
+\begin{abstract}
+Abstract placeholder. Replace with a concise statement of the problem,
+approach, and main result once the science is approved.
+\end{abstract}
+
+\section{Introduction}
+
+Introduction placeholder. State the problem, the gap, and the
+contribution once \texttt{research/10\_PAPER\_STORY.md} is approved.
+
+\section{Related Work}
+
+Related work placeholder, informed by
+\texttt{research/03\_LITERATURE\_LEDGER.md}~\cite{example2024}.
+
+\section{Method}
+
+Method placeholder, describing the approved approach.
+
+\section{Results}
+
+Results placeholder, populated only from
+\texttt{research/07\_RESULTS\_GROUND\_TRUTH.md}.
+
+\section{Conclusion}
+
+Conclusion placeholder.
+
+\bibliographystyle{plain}
+\bibliography{refs}
+
+\end{document}
