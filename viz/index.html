@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>med_wsp weight viewer</title>
+    <link rel="stylesheet" href="/src/style.css" />
+  </head>
+  <body>
+    <aside id="sidebar">
+      <header>
+        <div class="eyebrow">med_wsp</div>
+        <h1>Weight viewer</h1>
+      </header>
+      <label class="field">
+        <span>Dataset</span>
+        <select id="dataset"></select>
+      </label>
+      <section id="about">
+        <h2 id="title"></h2>
+        <p id="subtitle"></p>
+        <ul id="facts"></ul>
+      </section>
+      <section id="legend">
+        <h3>Color</h3>
+        <div id="legend-bars"></div>
+        <p id="color-note"></p>
+        <label class="field slider">
+          <span>Contrast <output id="gamma-out"></output></span>
+          <input id="gamma" type="range" min="0.25" max="1.5" step="0.05" value="0.8" />
+        </label>
+        <label class="check" id="focus-wrap">
+          <input id="focus" type="checkbox" />
+          <span>Dim everything except marked heads</span>
+        </label>
+      </section>
+      <section id="status-legend" hidden>
+        <h3>Marked heads</h3>
+        <ul id="status-list"></ul>
+      </section>
+      <section>
+        <h3>Layers</h3>
+        <ol id="layers"></ol>
+      </section>
+      <footer>
+        Drag to pan, right-drag or Alt-drag to rotate, scroll to zoom, click a matrix to frame it,
+        press <kbd>R</kbd> to reset.
+      </footer>
+    </aside>
+    <main id="stage">
+      <canvas id="canvas"></canvas>
+      <div id="labels"></div>
+      <div id="tooltip" hidden></div>
+      <div id="loading">Loading...</div>
+    </main>
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>

@@ -141,3 +141,7 @@ vault/.trash/
 .codex_home/
 logs/
 .venv-sandbox/
+# Viewer: dependencies, build output, and exported data (regenerate with `python -m wsp.viz_export ...`)
+viz/node_modules/
+viz/dist/
+viz/public/data/

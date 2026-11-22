@@ -23,6 +23,7 @@ dependencies = [
     "pypdf>=5.0",
     "pytest>=8.3",
     "ruff>=0.9",
+    "mlx-lm>=0.32.2",
 ]
 
 [tool.uv]
