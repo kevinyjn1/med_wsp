@@ -72,6 +72,19 @@ def main(scratch: Path) -> None:
               "| mlp act nonzero share", float((acts[3, :length] != 0).mean()))  # fmt: skip
         assert abs(float(attn[3, 0, length - 1, :length].astype(np.float32).sum()) - 1.0) < 0.02
 
+        # hidden_32 must be the residual stream BEFORE the final norm: applying the norm and the output layer in the
+        # kernel-free way below has to reproduce the model's own top token (texts were read with the edited weights,
+        # which leave the final norm and the output layer untouched).
+        from wsp.checkpoints import Checkpoint
+
+        checkpoint = Checkpoint("phi")
+        hidden = np.load(lab.work / "fwd_2" / "hidden_32.npy")[3, length - 1].astype(np.float32)
+        normed = hidden / np.sqrt((hidden**2).mean() + 1e-5) * checkpoint.f32("model.norm.weight")
+        top = int(np.argmax(checkpoint.f32("lm_head.weight") @ normed))
+        expected = int(np.load(lab.work / "fwd_2" / "topk_ids.npy")[3, length - 1, 0])
+        print("top token from hidden_32 through norm and head:", top, "| model's top token:", expected)
+        assert top == expected
+
         out = lab.run_python("import os\nsorted(os.listdir('.')), edited()")
         print(out.strip())
         assert lab.passes_left() == 1

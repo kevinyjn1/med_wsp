@@ -99,6 +99,10 @@ def teacher_forced(job: dict) -> None:
     captured: dict[int, torch.Tensor] = {}
     handles = [layers[layer].mlp.down_proj.register_forward_pre_hook(lambda module, args, layer=layer: captured.__setitem__(layer, args[0]))
                for layer in mlp_layers]  # fmt: skip
+    # transformers reports the last "hidden state" after the final norm; take the last layer's own output instead.
+    last_block: dict[str, torch.Tensor] = {}
+    handles.append(layers[-1].register_forward_hook(
+        lambda module, args, output: last_block.__setitem__("x", output[0] if isinstance(output, tuple) else output)))  # fmt: skip
     out: dict[str, np.ndarray] = {}
     logprob_sum, logprob_count = 0.0, 0
     with torch.no_grad():
@@ -125,7 +129,8 @@ def teacher_forced(job: dict) -> None:
                     top.indices.cpu().numpy()
                 )
             for layer in hidden_layers:
-                array = result.hidden_states[layer][0].float().cpu().numpy()
+                stream = last_block["x"] if layer == len(layers) else result.hidden_states[layer]
+                array = stream[0].float().cpu().numpy()
                 out.setdefault(f"hidden_{layer}", np.zeros((n, longest, array.shape[-1]), np.float16))[
                     i, : len(ids)
                 ] = array

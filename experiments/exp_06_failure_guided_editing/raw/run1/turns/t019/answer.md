@@ -1,0 +1,5 @@
+On the discovery batch, the fixed readout after layer 25 favored the correct answer on 71 questions, versus 65 final correct answers, including eight correct-to-wrong transitions. This does not prove that the intermediate choices are reliable, but it identifies a specific stage to investigate. The weight scan also found that layer 25, head 9 has the strongest answer-letter alignment among the attention blocks examined. I will inspect attention on four of those transitions to see whether this head reads option content or mostly attends to fixed prompt tokens, which imply different intervention hypotheses.
+
+```forward
+{"type":"teacher_forced","model":"original","questions":["train-02877","dev-00323","train-00230","dev-01096"],"return":{"positions":"all","token_logprobs":true,"topk":8,"hidden_states":[21,25,26,27,28,29,30,31,32],"mlp_act":[25,26,27,28,29,30,31],"attn_layers":[21,25,27,28,29,30,31]}}
+```

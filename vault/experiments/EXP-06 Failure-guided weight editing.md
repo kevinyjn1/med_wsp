@@ -36,6 +36,14 @@ fine-tuning. Does the edit improve held-out MedQA accuracy?
 - Explanations required from the first turn (MIT added this mid-run).
 - A fix of answer-letter bias is declared in scope but must be reported separately from content-related gains.
 
+## Known tool caveat in `run1`
+The task message says "hidden_states layer l is the residual stream after layer l". For l = 32 that was wrong in
+`run1`: the lab returned what transformers reports as the last hidden state, which is after the final RMSNorm
+(pinned by `tests/test_hidden_state_convention.py`). Astra raised the possibility itself at turn 16 and set out to
+verify it. The lab was fixed on 2026-11-22 17:15 (layer 32 is now the pre-norm residual, checked in
+`tests/integration_lab.py`), but `run1` was already running with the old behaviour and keeps it for the whole
+session, so its arrays are self-consistent. Later sessions use the fixed tool.
+
 ## Runs
 - `run1`, started 2026-11-22 16:39, budget 30: `experiments/exp_06_failure_guided_editing/raw/run1/`
 

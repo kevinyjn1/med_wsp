@@ -1,0 +1,53 @@
+OUTPUT of Python run 10 of at most 300:
+```
+Pass 7 centered log-probability change mean ABCD: [2.782, -0.884, -0.927, -0.972]
+Pass 7 centered log-probability change SD ABCD: [0.259, 0.086, 0.089, 0.091]
+true   n  original_correct  edited_correct  margin_delta
+   A 134                66              73         3.754
+   B 126                69              68        -1.274
+   C 140                87              83        -1.721
+   D 112                69              63        -1.348
+Final exported-state letter projection agrees with baseline on: 128 of 128
+
+Intermediate-answer transitions:
+ residual_layer  projection_correct  correct_then_final_wrong  wrong_then_final_correct
+             19                  38                        15                        42
+             20                  61                         9                        13
+             21                  62                        10                        13
+             22                  66                         4                         3
+             23                  67                        10                         8
+             24                  65                         8                         8
+             25                  65                         9                         9
+             26                  71                         8                         2
+             27                  67                         5                         3
+             28                  64                         4                         5
+             29                  66                         3                         2
+             30                  67                         3                         1
+             31                  65                         2                         2
+Attention probe IDs: ["train-02877", "dev-00323", "train-00230", "dev-01096"]
+{"id": "train-02877", "answer": "A", "pred": "C", "excerpt": "You are the intern on the labor and delivery floor. Your resident asks you to check on the patient in Bed 1. She is a 27-year-old prima gravida with no significant past medical his"}
+{"id": "dev-00323", "answer": "A", "pred": "C", "excerpt": "Two days after undergoing internal fixation of a displaced right femoral fracture sustained during a motor vehicle accident, a 34-year-old woman develops sudden shortness of breath"}
+{"id": "train-00230", "answer": "D", "pred": "B", "excerpt": "A 39-year-old male presents to your office with nodular skin lesions that progress from his right hand to right shoulder. The patient reports that the initial lesion, currently nec"}
+{"id": "dev-01096", "answer": "D", "pred": "C", "excerpt": "A 69-year-old man comes to the physician because of a cough for the past 3 months. The cough is mostly dry, but the patient recalls a recent episode in which he coughed up mucus wi"}
+
+Most letter-selective attention output blocks:
+ layer  head  letter_fraction  A_projection_norm  block_norm
+    25     9           0.2174             6.8013     24.5725
+    30    24           0.1604             7.1015     34.1447
+    21    22           0.1542             4.2924     21.0754
+    31    18           0.1503             4.4267     25.4239
+    31    22           0.1179             5.3773     28.4967
+    31    12           0.1024             3.5547     25.5696
+    28     7           0.1012             4.1192     29.4699
+    31     4           0.0837             3.1961     28.1293
+    31     5           0.0726             3.8673     29.1586
+    27    19           0.0670             1.3483     24.9806
+    21    16           0.0663             1.6213     19.9102
+    30    13           0.0640             1.3333     25.2362
+    25     8           0.0632             1.8663     21.9497
+    21    18           0.0596             1.3868     18.3709
+    29    30           0.0563             2.0178     30.5302
+    21    31           0.0555             1.3447     21.3330
+Current edits: []
+
+```

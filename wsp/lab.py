@@ -400,8 +400,13 @@ class MedQALab(BudgetedLab):
 
         blocks = decoder_layers(model)
         captured: dict[int, torch.Tensor] = {}
+        last_block: dict[str, torch.Tensor] = {}
         handles = [blocks[layer].mlp.down_proj.register_forward_pre_hook(lambda module, args, layer=layer: captured.__setitem__(layer, args[0]))
                    for layer in mlp_layers]  # fmt: skip
+        # transformers reports the last "hidden state" after the final norm; the residual stream after the last
+        # layer is taken from that layer's own output instead (see tests/test_hidden_state_convention.py).
+        handles.append(blocks[-1].register_forward_hook(
+            lambda module, args, output: last_block.__setitem__("x", output[0] if isinstance(output, tuple) else output)))  # fmt: skip
         order = sorted(range(len(texts)), key=lambda i: lengths[i])
         batch_size = 1 if attn_layers else 8
         logprob_sum, logprob_count = 0.0, 0
@@ -449,7 +454,8 @@ class MedQALab(BudgetedLab):
                             else:
                                 ids_target[i, : lengths[i]] = top.indices.cpu().numpy()
                         for layer in hidden_layers:
-                            store(f"hidden_{layer}", i, result.hidden_states[layer][k, span], per_token=True)
+                            stream = last_block["x"] if layer == n_layers else result.hidden_states[layer]
+                            store(f"hidden_{layer}", i, stream[k, span], per_token=True)
                         for layer in mlp_layers:
                             store(f"mlp_act_{layer}", i, captured[layer][k, span], per_token=True)
                         for layer in attn_layers:  # [heads, T, T], right-padded on both token axes

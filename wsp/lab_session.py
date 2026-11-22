@@ -133,6 +133,16 @@ def drive(lab, message: str, *, run_dir: Path, budget: int, max_runs: int = 300,
         max_runs=max_runs, count_as_run=("python",), effort=effort, max_turns=max_turns, on_final=on_final,
         format_output=format_output, precheck=precheck, handoff_every=40, handoff=handoff, undeliverable_notice=UNDELIVERABLE,
     )  # fmt: skip
+    state_path = run_dir / "state.json"
+    if state_path.exists():  # a resumed session: the kernel is new, so say so before the next message
+        saved = json.loads(state_path.read_text())
+        if saved.get("turn") and not saved.get("done") and saved.get("next_message"):
+            note = (
+                "[note: the harness was restarted, so your kernel restarted too and its variables are gone]"
+            )
+            if not saved["next_message"].startswith(note):
+                saved["next_message"] = f"{note}\n\n{saved['next_message']}"
+                state_path.write_text(json.dumps(saved, indent=1))
     try:
         lab.kernel.start()
         return loop.run()

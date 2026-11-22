@@ -43,6 +43,7 @@ class State:
     handoffs: int = 0
     turns_in_thread: int = 0
     unexplained: int = 0
+    notices_delivered: list = field(default_factory=list)
 
 
 Handler = Callable[[str, State], str]
@@ -82,6 +83,20 @@ class Loop:
 
     def _save(self, state: State) -> None:
         (self.run_dir / "state.json").write_text(json.dumps(asdict(state), indent=1))
+
+    def _with_notices(self, message: str, state: State) -> str:
+        """Prepend notes the experimenters left in <run_dir>/notices/*.txt (each is delivered once, in name order)."""
+        folder = self.run_dir / "notices"
+        pending = (
+            [p for p in sorted(folder.glob("*.txt")) if p.name not in state.notices_delivered]
+            if folder.is_dir()
+            else []
+        )
+        for path in pending:
+            message = f"[note from the experimenters] {path.read_text().strip()}\n\n{message}"
+            state.notices_delivered.append(path.name)
+            self.log(f"turn {state.turn + 1}: delivered notice {path.name}")
+        return message
 
     def runs_used(self, state: State) -> int:
         return sum(state.runs.get(kind, 0) for kind in self.count_as_run)
@@ -131,6 +146,7 @@ class Loop:
                 message = self.first_message + "\n\n" + self.handoff(state, message)
                 self.log(f"turn {state.turn + 1}: handoff {state.handoffs} to a new conversation")
             kind_of_turn = "new thread" if state.thread_id is None else "resume"
+            message = self._with_notices(message, state)
             self.log(f"turn {state.turn + 1}: {kind_of_turn} ({len(message):,} chars)")
             result = self._ask(message, state)
             if result is None and self.undeliverable_notice:
