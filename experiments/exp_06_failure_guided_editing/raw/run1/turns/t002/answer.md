@@ -12,7 +12,9 @@ import torch
 practice = pathlib.Path(PRACTICE_DIR)
 work = pathlib.Path(WORK)
 questions = [json.loads(s) for s in (practice / "questions.jsonl").read_text().splitlines() if s.strip()]
-baseline = [json.loads(s) for s in (practice / "original_results.jsonl").read_text().splitlines() if s.strip()]
+baseline = [
+    json.loads(s) for s in (practice / "original_results.jsonl").read_text().splitlines() if s.strip()
+]
 q_by_id = {str(q["id"]): q for q in questions}
 b_by_id = {str(r["id"]): r for r in baseline}
 
@@ -33,6 +35,8 @@ splits = {
 (work / "splits.json").write_text(json.dumps(splits, indent=2))
 
 letters = list("ABCD")
+
+
 def baseline_row(qid):
     q, r = q_by_id[qid], b_by_id[qid]
     lp = r["letter_logprobs"]
@@ -40,11 +44,15 @@ def baseline_row(qid):
     p = np.exp(lp - lp.max())
     p /= p.sum()
     return {
-        "id": qid, "answer": q["answer"], "pred": r["pred"],
-        "correct": bool(r["correct"]), "margin": float(r["margin"]),
+        "id": qid,
+        "answer": q["answer"],
+        "pred": r["pred"],
+        "correct": bool(r["correct"]),
+        "margin": float(r["margin"]),
         "confidence": float(p.max()),
         **{f"p_{a}": float(p[i]) for i, a in enumerate(letters)},
     }
+
 
 # Confirmation outcomes are deliberately not accessed.
 dev = pd.DataFrame([baseline_row(qid) for qid in development_ids])
@@ -57,13 +65,22 @@ letter_summary["pred_n"] = dev.pred.value_counts().reindex(letters, fill_value=0
 letter_summary["mean_probability"] = [dev[f"p_{a}"].mean() for a in letters]
 letter_summary["recall"] = [dev.loc[dev.answer == a, "correct"].mean() for a in letters]
 print("\nLetter diagnostics:\n", letter_summary.round(4).to_string())
-print("\nConfusion matrix, true rows and predicted columns:\n",
-      pd.crosstab(dev.answer, dev.pred).reindex(index=letters, columns=letters, fill_value=0).to_string())
-print("\nMargin quantiles by correctness:\n",
-      dev.groupby("correct").margin.quantile([0, .1, .25, .5, .75, .9, 1]).round(3).to_string())
-dev["confidence_bin"] = pd.cut(dev.confidence, [0, .4, .6, .8, .9, .95, 1.000001])
-print("\nConfidence diagnostics:\n",
-      dev.groupby("confidence_bin", observed=True).agg(n=("id", "size"), accuracy=("correct", "mean")).round(4).to_string())
+print(
+    "\nConfusion matrix, true rows and predicted columns:\n",
+    pd.crosstab(dev.answer, dev.pred).reindex(index=letters, columns=letters, fill_value=0).to_string(),
+)
+print(
+    "\nMargin quantiles by correctness:\n",
+    dev.groupby("correct").margin.quantile([0, 0.1, 0.25, 0.5, 0.75, 0.9, 1]).round(3).to_string(),
+)
+dev["confidence_bin"] = pd.cut(dev.confidence, [0, 0.4, 0.6, 0.8, 0.9, 0.95, 1.000001])
+print(
+    "\nConfidence diagnostics:\n",
+    dev.groupby("confidence_bin", observed=True)
+    .agg(n=("id", "size"), accuracy=("correct", "mean"))
+    .round(4)
+    .to_string(),
+)
 
 patterns = {
     "diagnosis": r"diagnos|most likely cause",
@@ -78,18 +95,31 @@ topic_rows = []
 for name, pattern in patterns.items():
     mask = dev.id.map(lambda qid: bool(re.search(pattern, text_by_id[qid], re.I)))
     sub = dev[mask]
-    topic_rows.append({
-        "pattern": name, "n": len(sub),
-        "accuracy": sub.correct.mean(),
-        "mean_margin": sub.margin.mean(),
-        "confident_errors": int(((~sub.correct) & (sub.confidence >= .9)).sum()),
-    })
+    topic_rows.append(
+        {
+            "pattern": name,
+            "n": len(sub),
+            "accuracy": sub.correct.mean(),
+            "mean_margin": sub.margin.mean(),
+            "confident_errors": int(((~sub.correct) & (sub.confidence >= 0.9)).sum()),
+        }
+    )
 print("\nOverlapping question-type diagnostics:\n", pd.DataFrame(topic_rows).round(4).to_string(index=False))
 print("\nEight confident errors, excerpts only:")
 for row in dev[~dev.correct].sort_values("margin").head(8).itertuples():
     excerpt = text_by_id[row.id][:240].replace("\n", " ").encode("ascii", "replace").decode()
-    print(json.dumps({"id": row.id, "true": row.answer, "pred": row.pred,
-                      "margin": round(row.margin, 3), "excerpt": excerpt}, ensure_ascii=True))
+    print(
+        json.dumps(
+            {
+                "id": row.id,
+                "true": row.answer,
+                "pred": row.pred,
+                "margin": round(row.margin, 3),
+                "excerpt": excerpt,
+            },
+            ensure_ascii=True,
+        )
+    )
 
 notes = (
     "# Weight-editing experiment\n\n"

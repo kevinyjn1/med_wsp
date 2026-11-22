@@ -7,7 +7,7 @@ numbers, layers stack into a tower, and attention and MLP groups sit at differen
 ## Run
 
 ```bash
-python -m wsp.viz_export mit3 weightdiff   # from the repo root: writes viz/public/data/
+python -m wsp.viz_export mit3 mit8 weightdiff   # from the repo root: writes viz/public/data/
 npm install --prefix viz
 npm run dev --prefix viz                   # http://localhost:5173
 ```
@@ -20,6 +20,7 @@ networks) and from `experiments/*/processed/`.
 | Id | What it shows |
 |---|---|
 | `mit3_python`, `mit3_romaji`, `mit3_english` | The four transformer blocks Astra was given in MIT experiment 3 (7,084,032 weights each), with the copying heads marked: named by Astra and confirmed by measurement, named but not confirmed, or measured but missed. |
+| `mit8_qwen_p50c` | MIT experiment 8: the two edited MLP output matrices of Qwen3.5-0.8B (before, change, the 64 edited columns, the loop direction). Needs `python experiments/exp_03_mit8_math/apply_edit.py` first. |
 | `weightdiff_mediphi_phi` | Relative size of MediPhi minus Phi-3.5, per attention head (Q, K, V, O) and per MLP neuron (gate, up, down), for all 32 layers. |
 
 ## Controls

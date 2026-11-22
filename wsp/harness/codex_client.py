@@ -15,6 +15,8 @@ import time
 from dataclasses import dataclass, field
 from pathlib import Path
 
+from wsp.harness.redact import redact, redact_tree
+
 HARNESS_DIR = Path(__file__).resolve().parent
 INSTRUCTIONS = HARNESS_DIR / "instructions_neutral.md"
 
@@ -36,13 +38,6 @@ DISABLED_FEATURES = [
 
 # Event-stream item types that are not tool use.
 NON_TOOL_ITEMS = {"agent_message", "reasoning", "error"}
-
-REPO = HARNESS_DIR.parents[1]
-
-
-def redact(text: str) -> str:
-    """Replace machine-specific paths with placeholders before anything is written to a log."""
-    return text.replace(str(REPO), "<repo>").replace(str(Path.home()), "<home>")
 
 
 @dataclass
@@ -151,6 +146,7 @@ def run_turn(
         "cmd": [redact(part) for part in cmd], "thread_in": thread_id, "end": time.strftime("%Y-%m-%dT%H:%M:%S%z"),
     }  # fmt: skip
     (turn_dir / "run.json").write_text(json.dumps(record, indent=1))
+    redact_tree(turn_dir)  # the model can print local paths; logs are shared, so replace them
     return TurnResult(
         ok=ok, answer=answer, thread_id=audit["thread_id"] or thread_id, tool_free=audit["tool_free"],
         usage=audit["usage"], wall_s=wall, rc=rc, errors=audit["errors"], item_types=audit["item_types"],

@@ -21,6 +21,7 @@ from dataclasses import asdict, dataclass, field
 from pathlib import Path
 
 from wsp.harness import codex_client
+from wsp.harness.redact import redact
 
 BLOCK_RE = re.compile(r"```([A-Za-z_]+)[ \t]*\n(.*?)```", re.DOTALL)
 TOOL_REMINDER = (
@@ -178,7 +179,7 @@ class Loop:
                 with open(self.run_dir / "tool_calls.jsonl", "a") as f:
                     record = {"t": time.time(), "turn": state.turn, "kind": kind, "run": state.runs[kind],
                               "s": round(time.time() - start, 2), "code": code, "out": output}  # fmt: skip
-                    f.write(json.dumps(record) + "\n")
+                    f.write(redact(json.dumps(record)) + "\n")
                 message = formatter(kind, output, state)
                 self.log(f"turn {state.turn}: {kind} run {state.runs[kind]} "
                          f"({len(code):,} chars of code, {len(output):,} chars out), tool-free True")  # fmt: skip

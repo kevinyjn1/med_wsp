@@ -30,8 +30,16 @@ head (rows Q, K, V, O) and three 64 x 128 tiles of relative change per MLP neuro
 
 Source: [[EXP-05 Medical circuit discovery and transfer]].
 
+## MIT experiment 8: the Qwen3.5-0.8B edit
+Dataset `mit8_qwen_p50c`. For layers 15 and 19: which of the 3,584 MLP output columns were edited, the matrix
+before the edit, the change, and a close-up of the 64 edited columns before / after / change next to the loop
+direction u that was removed from them.
+
+![[viz_mit8_qwen_edit.jpg]]
+
+Source: [[EXP-03 MIT exp 8 - editing Qwen3.5-0.8B for math]].
+
 ## Planned
-- MIT experiment 8: the two edited MLP output matrices of Qwen3.5-0.8B with the 64 changed columns marked.
 - Activation patching maps (layer x component) for the MedQA contrast questions.
 - Astra's proposed edits on Phi-3.5, before and after.
 - Layer-looping sweep (block start x length).

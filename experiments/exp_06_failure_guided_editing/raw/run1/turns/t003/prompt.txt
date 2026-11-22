@@ -1,0 +1,86 @@
+OUTPUT of Python run 1 of at most 300:
+```
+Split sizes: {'discovery': 1200, 'selection': 1024, 'development_reserve': 1024, 'final_confirmation': 1024}
+Prompt format:
+ The exact evaluation prompt for a question (the answer letter is read from the next-token logits at its end):
+
+<|user|>
+The following is a multiple choice question about medical knowledge. Answer with the letter of the correct option only.
+
+A 21-year-old sexually active male complains of fever, pain during urination, and inflammation and pain in the right knee. A culture of the joint fluid shows a bacteria that does not ferment maltose and has no polysaccharide capsule. The physician orders antibiotic therapy for the patient. The mechanism of action of action of the medication given blocks cell wall synthesis, which of the following was given?
+
+A. Gentamicin
+B. Ciprofloxacin
+C. Ceftriaxone
+D. Trimethoprim
+
+Answer:<|end|>
+<|assistant|>
+
+
+Development accuracy: 60.5 %
+
+Letter diagnostics:
+    true_n  pred_n  mean_probability  recall
+A     804     575            0.1759  0.4900
+B     839     919            0.2818  0.6412
+C     826     843            0.2613  0.6283
+D     779     911            0.2810  0.6598
+
+Confusion matrix, true rows and predicted columns:
+ pred      A    B    C    D
+answer                    
+A       394  146  121  143
+B        65  538  108  128
+C        66  115  519  126
+D        50  120   95  514
+
+Margin quantiles by correctness:
+ correct      
+False    0.00   -34.906
+         0.10   -23.344
+         0.25   -17.688
+         0.50   -11.062
+         0.75    -5.188
+         0.90    -2.013
+         1.00     0.000
+True     0.00     0.000
+         0.10     2.838
+         0.25     8.312
+         0.50    16.688
+         0.75    24.625
+         0.90    28.675
+         1.00    36.875
+
+Confidence diagnostics:
+                    n  accuracy
+confidence_bin                
+(0.0, 0.4]         2    0.5000
+(0.4, 0.6]        89    0.2697
+(0.6, 0.8]       177    0.4124
+(0.8, 0.9]       145    0.4621
+(0.9, 0.95]      102    0.3922
+(0.95, 1.0]     2733    0.6440
+
+Overlapping question-type diagnostics:
+           pattern    n  accuracy  mean_margin  confident_errors
+        diagnosis  911    0.6487       7.0551               269
+       management 1007    0.5978       4.3072               338
+        mechanism  260    0.5846       3.6578                89
+     drug_related  954    0.5891       4.4794               313
+       statistics   29    0.6207       6.6584                 7
+negative_question   79    0.4810       3.7741                31
+
+Eight confident errors, excerpts only:
+{"id": "train-00498", "true": "D", "pred": "A", "margin": -34.906, "excerpt": "A 61-year-old G4P3 presents with a 5-year history of involuntary urine loss on coughing, sneezing, and physical exertion. She denies urine leakage at night. She has been menopausal since 51 years of age. She is otherwise healthy and is not "}
+{"id": "train-02203", "true": "D", "pred": "C", "margin": -34.219, "excerpt": "Benzodiazepines are clinically useful because of their inhibitory effects on the central nervous system. Which of the following correctly pairs the site of action of benzodiazepines with the molecular mechanism by which a they exerts their "}
+{"id": "dev-00352", "true": "B", "pred": "C", "margin": -33.75, "excerpt": "A research group has developed a new screening test for HIV that can detect infection 2 weeks earlier than the current gold standard. A rigorous clinical study of this new screening test involving n subjects yields a false-positive probabil"}
+{"id": "train-00217", "true": "D", "pred": "B", "margin": -33.281, "excerpt": "An investigator is studying neuronal regeneration. For microscopic visualization of the neuron, an aniline stain is applied. After staining, only the soma and dendrites of the neurons are visualized, not the axon. Presence of which of the f"}
+{"id": "train-02254", "true": "D", "pred": "B", "margin": -33.281, "excerpt": "A plain CT scan of the patient's head is performed immediately and the result is shown. His temperature is 37.1?C (98.8?F), pulse is 101/min and blood pressure is 174/102 mm Hg. Which of the following is the most appropriate next step in ma"}
+{"id": "dev-00199", "true": "B", "pred": "A", "margin": -32.812, "excerpt": "A 32-year-old man presents to the emergency department after puncturing his foot while working on his garage last week. His past medical history is significant for bronchial asthma and seasonal allergies. On examination, the patient?s jaw s"}
+{"id": "train-02447", "true": "A", "pred": "C", "margin": -32.562, "excerpt": "A 14-year-old Caucasian male patient found to have low serum copper, high urine copper, and low serum ceruloplasmin is placed on penicillamine for management of his genetic disorder. Which of the following is LEAST consistent with this pati"}
+{"id": "dev-01049", "true": "C", "pred": "B", "margin": -32.25, "excerpt": "A cardiology specialist working in the university hospital center noticed that a large number of his patients who had myocardial infarctions also had some sort of malignancy in their medical history. In order to determine whether a relation"}
+
+Initial edit inventory: []
+
+```

@@ -13,6 +13,7 @@ import queue
 import subprocess
 import tempfile
 import threading
+import time
 from pathlib import Path
 
 from wsp.harness import sandbox
@@ -55,12 +56,15 @@ class Kernel:
         max_out: int = 10_000,
         python: Path | None = None,
         threads: int = 8,
+        memory_limit_gb: float = 14.0,
     ):
         self.work_dir, self.prelude, self.read_only = work_dir, prelude, read_only or []
         self.timeout_s, self.max_out, self.threads = timeout_s, max_out, threads
         self.python = python or (sandbox.SANDBOX_VENV / "bin" / "python")
         self.proc: subprocess.Popen | None = None
         self.restarts = 0
+        self.memory_limit_gb = memory_limit_gb
+        self._over_memory = False
         self._lines: queue.Queue = queue.Queue()
 
     def start(self) -> str:
@@ -78,6 +82,7 @@ class Kernel:
         )  # fmt: skip
         self._lines = queue.Queue()
         threading.Thread(target=self._pump, args=(self.proc, self._lines), daemon=True).start()
+        threading.Thread(target=self._watch_memory, args=(self.proc,), daemon=True).start()
         return self._exchange(self.prelude, timeout_s=600) if self.prelude else ""
 
     @staticmethod
@@ -85,6 +90,19 @@ class Kernel:
         for line in proc.stdout:
             lines.put(line)
         lines.put(None)
+
+    def _watch_memory(self, proc: subprocess.Popen) -> None:
+        """Kill the kernel when its resident memory passes the limit (macOS does not enforce address-space limits)."""
+        while proc.poll() is None:
+            ps = subprocess.run(
+                ["ps", "-o", "rss=", "-p", str(proc.pid)], capture_output=True, text=True, check=False
+            )
+            rss_kb = int(ps.stdout.strip() or 0)
+            if rss_kb / 1e6 > self.memory_limit_gb:
+                self._over_memory = True
+                proc.kill()
+                return
+            time.sleep(3)
 
     def _exchange(self, code: str, timeout_s: int) -> str:
         self.proc.stdin.write(json.dumps({"code": code}) + "\n")
@@ -121,9 +139,15 @@ class Kernel:
                 f"[timed out after {self.timeout_s} s; the kernel was restarted and its variables are lost]"
             )
         except (RuntimeError, BrokenPipeError) as error:
+            over_memory, self._over_memory = self._over_memory, False
             self.stop()
             self.restarts += 1
             self.start()
+            if over_memory:
+                return (
+                    f"[memory limit exceeded: the kernel used more than {self.memory_limit_gb:g} GB and was restarted; "
+                    "its variables are lost. Keep fewer large tensors in memory at once]"
+                )
             return f"[the kernel crashed and was restarted; its variables are lost]\n{str(error)[-1500:]}"
         out = note + out
         if len(out) > self.max_out:
@@ -147,6 +171,14 @@ if __name__ == "__main__":
     print("2:", kernel.run("print(y * 2)\n1/0").strip().splitlines()[-1])
     print("3:", kernel.run("import time\ntime.sleep(30)"))
     print("4:", kernel.run("print('y' in dir(), int(X[2]))"))
+    kernel.memory_limit_gb, kernel.timeout_s = 0.4, 30
+    print(
+        "5m:",
+        kernel.run(
+            "import numpy as np\nbig = np.ones((120_000_000,))\nimport time\ntime.sleep(8)\nprint(big.nbytes)"
+        ),
+    )
+    kernel.memory_limit_gb, kernel.timeout_s = 14.0, 5
     print(
         "5:",
         kernel.run(

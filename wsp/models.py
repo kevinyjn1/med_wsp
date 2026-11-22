@@ -39,12 +39,15 @@ def load_tokenizer(name: str = "phi"):
     return tokenizer
 
 
-def load_model(name: str, dtype: torch.dtype = torch.float16):
-    """Load with the transformers-native architecture (no remote code), in eval mode, on MPS when available."""
+def load_model(name: str, dtype: torch.dtype = torch.float16, eager_attention: bool = True):
+    """Load with the transformers-native architecture (no remote code), in eval mode, on MPS when available.
+
+    Eager attention can return attention weights and is what all single-pass scoring in this project uses.
+    For generation pass `eager_attention=False`: the eager path materializes every attention matrix at every
+    step, which made a batched 512-token generation grow to 21 GB on MPS.
+    """
     model = AutoModelForCausalLM.from_pretrained(
-        snapshot_dir(MODEL_IDS.get(name, name)),
-        torch_dtype=dtype,
-        trust_remote_code=False,
-        attn_implementation="eager",
-    )
+        snapshot_dir(MODEL_IDS.get(name, name)), dtype=dtype, trust_remote_code=False,
+        attn_implementation="eager" if eager_attention else "sdpa",
+    )  # fmt: skip
     return model.to(device()).eval().requires_grad_(False)

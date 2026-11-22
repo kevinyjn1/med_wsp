@@ -65,6 +65,8 @@ def run(model, tokenizer, items: list[dict], batch_size: int, max_new_tokens: in
             n_tokens = int((new_tokens[row] != tokenizer.pad_token_id).sum())
             records[i] = {"id": items[i]["id"], "answer": items[i]["answer"], "pred": pred, "parsed": pred is not None,
                           "correct": pred == items[i]["answer"], "new_tokens": n_tokens, "text": text}  # fmt: skip
+        del out, enc
+        torch.mps.empty_cache()
         print(f"  {min(start + batch_size, len(order))}/{len(order)}", flush=True)
     return [records[i] for i in range(len(items))]
 
@@ -74,7 +76,7 @@ def main() -> None:
     parser.add_argument("--models", nargs="+", default=["phi", "mediphi", "mediphi_instruct"])
     parser.add_argument("--split", default="test")
     parser.add_argument("--limit", type=int, default=400)
-    parser.add_argument("--batch-size", type=int, default=16)
+    parser.add_argument("--batch-size", type=int, default=8)
     parser.add_argument("--max-new-tokens", type=int, default=512)
     args = parser.parse_args()
 
@@ -85,7 +87,7 @@ def main() -> None:
         if out.exists():
             print(f"{name}: already done", flush=True)
             continue
-        model = models.load_model(name)
+        model = models.load_model(name, eager_attention=False)
         start = time.time()
         records = run(model, tokenizer, items, args.batch_size, args.max_new_tokens)
         medqa.save_jsonl(records, out)
