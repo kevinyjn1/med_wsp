@@ -1,0 +1,53 @@
+The preparation stopped before saving an edit because no layer-27 neuron met the stability criterion for the compensating carrier. I will not silently relax that criterion, since a variable carrier would undermine the intended control. Instead, I will use the analogous final-layer candidate, neuron 5937, where neuron 4775 was already observed to have stable activation. The same mean-preserving intervention can then test a question-dependent anti-A contribution without deliberately adding an average A preference.
+
+```python
+# Hypothesis: a mean-preserving ablation of L31 neuron 5937 isolates its question-dependent anti-A contribution.
+print("Current edits after failed preparation:", edited())
+print("Lowest L27 activation coefficients of variation:",
+      np.round(np.sort(cv[np.abs(center_mu) > 1])[:5], 4).tolist())
+
+center_layer = 31
+center_target = 5937
+center_carrier = 4775
+center_name = f"model.layers.{center_layer}.mlp.down_proj.weight"
+center_original = load_original(center_name)
+combined_x = np.concatenate([acts[center_layer], large_acts[center_layer]])
+center_mu = combined_x.mean(0)
+center_sd = combined_x.std(0)
+cv = center_sd / np.maximum(np.abs(center_mu), 1e-9)
+assert cv[center_carrier] < 0.10
+center_ratio = float(center_mu[center_target] / center_mu[center_carrier])
+print("Target and carrier:")
+for u in [center_target, center_carrier]:
+    print({"unit": u, "mean": round(float(center_mu[u]), 4),
+           "sd": round(float(center_sd[u]), 4), "cv": round(float(cv[u]), 4)})
+print("Mean-preserving ratio:", round(center_ratio, 6))
+print("Target activation by true letter:",
+      {a: round(float(large_acts[31][large_y == i, center_target].mean()), 3) for i, a in enumerate(letters)})
+print("Target activation by predicted letter:",
+      {a: round(float(large_acts[31][large_pred == i, center_target].mean()), 3) for i, a in enumerate(letters)})
+
+def set_centered_neuron(scale, centered=True):
+    clear_current_edits()
+    w = center_original.clone()
+    w[:, center_target] *= float(scale)
+    if centered:
+        w[:, center_carrier] += (1.0 - float(scale)) * center_ratio * center_original[:, center_target]
+    save_edit(center_name, w)
+    candidate_history.append({"kind": f"L{center_layer}_neuron{center_target}",
+                              "scale": float(scale), "centered": centered,
+                              "carrier": center_carrier})
+    return float((w-center_original).norm() / center_original.norm())
+
+change = set_centered_neuron(0.0, centered=True)
+print("Installed centered L31:5937 ablation; relative tensor change:", round(change, 6))
+with (work / "notes.md").open("a") as f:
+    f.write(
+        "\nL27 mean-preserving proposal was NOT installed: no stable carrier met the prespecified criterion. "
+        "Preparation assertion failed before save_edit.\n"
+        "Replacement candidate: L31 neuron5937 centered ablation, scale=0; carrier4775. "
+        f"Carrier CV={cv[center_carrier]:.6f}, target/carrier mean ratio={center_ratio:.8f}. "
+        "Centered attribution negative in discovery (-0.245) and selection (-0.822, SE=0.240). "
+        "Ablate variable output, preserve its development-average vector contribution.\n"
+    )
+```

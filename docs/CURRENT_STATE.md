@@ -19,6 +19,8 @@ Checkpoint written 2026-11-22 16:50 (session 01, still in progress). Detailed lo
 - EXP-04 (letter scoring, MedQA): test 1,273 questions: Phi-3.5 0.5719, MediPhi 0.5632, MediPhi-Instruct 0.5648;
   dev 1,272: 0.5841 / 0.5951 / 0.5802; first 3,000 training questions: 0.6037 / 0.5923 / 0.5780. No medical model
   is better than the base under this scoring.
+- EXP-04b (reasoning, 400 test questions): Phi-3.5 0.630, MediPhi 0.600, MediPhi-Instruct 0.578 (it answers
+  directly instead of reasoning). No protocol shows a MedQA advantage for the medical models.
 - EXP-05a: MediPhi - Phi-3.5 is a small (1.57 % relative norm), dense, high-rank change spread over every
   attention and MLP matrix; MediPhi is a `breadcrumbs_ties` merge of five experts.
 

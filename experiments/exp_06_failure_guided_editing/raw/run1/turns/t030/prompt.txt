@@ -1,0 +1,133 @@
+Forward pass 13 of 30 done (teacher_forced); results in fwd_13/. Summary:
+```
+{
+ "ok": true,
+ "type": "teacher_forced",
+ "model": "original",
+ "texts": 384,
+ "positions": "last",
+ "longest": 703,
+ "files": {
+  "input_ids.npy": [
+   384,
+   703
+  ],
+  "token_logprobs.npy": [
+   384,
+   702
+  ],
+  "topk_logprobs.npy": [
+   384,
+   8
+  ],
+  "topk_ids.npy": [
+   384,
+   8
+  ],
+  "hidden_20.npy": [
+   384,
+   3072
+  ],
+  "hidden_21.npy": [
+   384,
+   3072
+  ],
+  "hidden_22.npy": [
+   384,
+   3072
+  ],
+  "hidden_23.npy": [
+   384,
+   3072
+  ],
+  "hidden_24.npy": [
+   384,
+   3072
+  ],
+  "hidden_25.npy": [
+   384,
+   3072
+  ],
+  "hidden_26.npy": [
+   384,
+   3072
+  ],
+  "hidden_27.npy": [
+   384,
+   3072
+  ],
+  "hidden_28.npy": [
+   384,
+   3072
+  ],
+  "hidden_29.npy": [
+   384,
+   3072
+  ],
+  "hidden_30.npy": [
+   384,
+   3072
+  ],
+  "hidden_31.npy": [
+   384,
+   3072
+  ],
+  "hidden_32.npy": [
+   384,
+   3072
+  ],
+  "mlp_act_20.npy": [
+   384,
+   8192
+  ],
+  "mlp_act_21.npy": [
+   384,
+   8192
+  ],
+  "mlp_act_22.npy": [
+   384,
+   8192
+  ],
+  "mlp_act_23.npy": [
+   384,
+   8192
+  ],
+  "mlp_act_24.npy": [
+   384,
+   8192
+  ],
+  "mlp_act_25.npy": [
+   384,
+   8192
+  ],
+  "mlp_act_26.npy": [
+   384,
+   8192
+  ],
+  "mlp_act_27.npy": [
+   384,
+   8192
+  ],
+  "mlp_act_28.npy": [
+   384,
+   8192
+  ],
+  "mlp_act_29.npy": [
+   384,
+   8192
+  ],
+  "mlp_act_30.npy": [
+   384,
+   8192
+  ],
+  "mlp_act_31.npy": [
+   384,
+   8192
+  ]
+ },
+ "edited_tensors": [],
+ "mean_token_logprob": -1.3357,
+ "s": 184
+}
+```
+Forward passes left: 17.

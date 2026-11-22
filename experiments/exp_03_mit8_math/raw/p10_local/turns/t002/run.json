@@ -1,7 +1,7 @@
 {
  "ok": true,
  "rc": 0,
- "wall_s": 18.3,
+ "wall_s": 16.5,
  "model": "gpt-6-astra",
  "effort": "max",
  "audit": {
@@ -18,11 +18,11 @@
   "tool_items": {},
   "tool_free": true,
   "usage": {
-   "input_tokens": 28526,
-   "cached_input_tokens": 18688,
+   "input_tokens": 41785,
+   "cached_input_tokens": 30592,
    "cache_write_input_tokens": 0,
-   "output_tokens": 2624,
-   "reasoning_output_tokens": 701
+   "output_tokens": 3304,
+   "reasoning_output_tokens": 761
   },
   "thread_id": "01a2054f-03c0-7863-b6a2-6ca44728ca92",
   "errors": [],
@@ -122,5 +122,5 @@
   "-"
  ],
  "thread_in": "01a2054f-03c0-7863-b6a2-6ca44728ca92",
- "end": "2026-11-22T17:11:07-0500"
+ "end": "2026-11-22T17:23:04-0500"
 }

@@ -1,0 +1,12 @@
+OUTPUT of Python run 14 of at most 300:
+```
+Pass 10 centered log-probability change mean ABCD: [0.127, 0.133, 0.113, -0.373]
+Pass 10 centered log-probability change SD ABCD: [0.33, 0.381, 0.34, 0.451]
+true  n  original_correct  edited_correct  margin_delta
+   A 37                21              21         0.035
+   B 34                20              20         0.036
+   C 39                21              22        -0.060
+   D 18                12              11        -0.377
+Installed L30 head 24 output scale=0.5; relative tensor change: 0.114376
+
+```

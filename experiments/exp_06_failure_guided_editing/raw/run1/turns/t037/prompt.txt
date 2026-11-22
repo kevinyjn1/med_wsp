@@ -1,0 +1,14 @@
+OUTPUT of Python run 20 of at most 300:
+```
+Pass 15 centered log-probability change mean ABCD: [3.675, -0.411, -2.1, -1.164]
+Pass 15 centered log-probability change SD ABCD: [1.265, 2.104, 2.669, 2.464]
+true  n  original_correct  edited_correct  margin_delta
+   A 37                21              23         2.433
+   B 34                20              22        -0.952
+   C 39                21              22        -2.039
+   D 18                12              11        -1.483
+Descriptive constant-offset approximation, not a model forward pass:
+{'offset_only_accuracy': 0.6328, 'actual_edited_accuracy': 0.6094, 'prediction_agreement': 0.9219}
+L26:4131 column norm fraction in letter subspace: 0.2026
+
+```

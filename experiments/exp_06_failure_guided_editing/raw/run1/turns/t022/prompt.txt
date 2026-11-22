@@ -1,0 +1,11 @@
+OUTPUT of Python run 12 of at most 300:
+```
+Option attention with separator-boundary correction:
+         id true      A      B      C      D
+train-02877    A 0.3050 0.2363 0.3261 0.0573
+  dev-00323    A 0.3692 0.0510 0.3698 0.1311
+train-00230    D 0.0110 0.1084 0.0051 0.8607
+  dev-01096    D 0.0034 0.0031 0.0760 0.8936
+Installed L25 head 9 output scale=1.5; relative tensor change: 0.092647
+
+```

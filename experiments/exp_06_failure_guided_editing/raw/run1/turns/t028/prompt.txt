@@ -1,0 +1,13 @@
+OUTPUT of Python run 15 of at most 300:
+```
+Pass 11 centered log-probability change mean ABCD: [0.045, -0.008, -0.016, -0.02]
+Pass 11 centered log-probability change SD ABCD: [0.052, 0.068, 0.061, 0.067]
+true  n  original_correct  edited_correct  margin_delta
+   A 37                21              21         0.035
+   B 34                20              20         0.011
+   C 39                21              21        -0.012
+   D 18                12              12        -0.054
+Current edits: []
+Diagnostic sample size: 512
+
+```
