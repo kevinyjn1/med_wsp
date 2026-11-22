@@ -25,7 +25,7 @@ const STATUS_TEXT = {
 };
 
 // ----------------------------------------------------------------------------------------- layout
-const GAP = { panel: 44, row: 64, group: 110, layer: 300 };
+const GAP = { panel: 44, row: 64, group: 110, layer: 360 };
 const MIN_STRIP = 16; // height given to 1-row matrices so they stay visible
 const SLAB_DEPTH = 10;
 const GROUP_Z = { attention: 0, mlp: -170 };
@@ -235,7 +235,7 @@ function addLabel(labels, className, html, position, opts = {}) {
   el.className = `label ${className}`;
   el.innerHTML = html;
   dom.labels.appendChild(el);
-  labels.push({ el, position, anchor: opts.anchor || "left-bottom", minPixels: opts.minPixels || 0, span: opts.span || 0, clip: !!opts.clip });
+  labels.push({ el, position, anchor: opts.anchor || "left-bottom", minPixels: opts.minPixels || 0, span: opts.span || 0, clip: !!opts.clip, room: opts.room || 0 });
 }
 
 function layoutGroup(group, maxRowWidth) {
@@ -243,9 +243,8 @@ function layoutGroup(group, maxRowWidth) {
   const rows = [[]];
   let x = 0;
   for (const panel of group.panels) {
-    const cell = panel.cell || 1;
-    const w = panel.cols * cell;
-    const h = Math.max(panel.rows * cell, MIN_STRIP);
+    const w = Math.max(panel.cols * (panel.cellW || panel.cell || 1), panel.cols === 1 ? MIN_STRIP : 0);
+    const h = Math.max(panel.rows * (panel.cellH || panel.cell || 1), MIN_STRIP);
     const previous = rows.at(-1).at(-1);
     if (previous && (panel.ownRow || previous.panel.ownRow || x + w > maxRowWidth)) {
       rows.push([]);
@@ -311,8 +310,9 @@ async function loadDataset(id) {
           panels.push(record);
 
           addLabel(labels, "clip", `${panel.label} <span style="color:var(--muted)">${panel.rows} x ${panel.cols}</span>`,
-            new THREE.Vector3(x, y + 8, z), { minPixels: 96, span: w, clip: true });
+            new THREE.Vector3(x, y + 8, z), { minPixels: 96, span: w, clip: true, room: GAP.row });
           const cell = panel.cell || 1;
+          const cellW = panel.cellW || cell;
           if (panel.rowBands && panel.rowBands.length <= 8) {
             for (const band of panel.rowBands) {
               addLabel(labels, "band", band.label, new THREE.Vector3(x - 8, y - (band.start + band.size / 2) * cell, z),
@@ -321,7 +321,7 @@ async function loadDataset(id) {
           }
           if (panel.colBands && panel.colBands.length <= 8) {
             for (const band of panel.colBands) {
-              addLabel(labels, "band", band.label, new THREE.Vector3(x + (band.start + band.size / 2) * cell, y - h - 6, z),
+              addLabel(labels, "band", band.label, new THREE.Vector3(x + (band.start + band.size / 2) * cellW, y - h - 6, z),
                 { anchor: "center-top", minPixels: 260, span: w });
             }
           }
@@ -335,7 +335,7 @@ async function loadDataset(id) {
             const isRow = mark.axis === "row";
             const at = isRow
               ? new THREE.Vector3(x + w + 10, y - (mark.start + mark.size / 2) * cell, z)
-              : new THREE.Vector3(x + (mark.start + mark.size / 2) * cell, y + 26, z);
+              : new THREE.Vector3(x + (mark.start + mark.size / 2) * cellW, y + 26, z);
             addLabel(labels, `mark ${mark.status}`, `<i>${STATUS_ICON[mark.status]}</i>${mark.short}`, at,
               { anchor: isRow ? "left-middle" : "center-bottom", minPixels: 330, span: w });
           }
@@ -351,17 +351,17 @@ async function loadDataset(id) {
     });
     const bottom = y + GAP.group;
     layerBoxes.push({ top, bottom, width: layerMaxX, name: layer.name });
-    addLabel(labels, "layer", layer.name, new THREE.Vector3(0, top + 46, 0), { anchor: "left-bottom" });
+    addLabel(labels, "layer", layer.name, new THREE.Vector3(0, top + 96, 0), { anchor: "left-bottom" });
     maxX = Math.max(maxX, layerMaxX);
     y -= GAP.layer - GAP.group;
   });
 
   // Residual stream: the trunk every block reads from and writes back to.
   const trunkBottom = layerBoxes.at(-1).bottom;
-  const trunk = new THREE.Mesh(new THREE.BoxGeometry(8, -trunkBottom + 120, 8), new THREE.MeshBasicMaterial({ color: PALETTE.neutral }));
-  trunk.position.set(TRUNK_X, trunkBottom / 2 + 60, 0);
+  const trunk = new THREE.Mesh(new THREE.BoxGeometry(8, -trunkBottom + 180, 8), new THREE.MeshBasicMaterial({ color: PALETTE.neutral }));
+  trunk.position.set(TRUNK_X, trunkBottom / 2 + 90, 0);
   scene.add(trunk);
-  addLabel(labels, "group", "Residual stream", new THREE.Vector3(TRUNK_X, 130, 0), { anchor: "center-bottom" });
+  addLabel(labels, "group", "Residual stream", new THREE.Vector3(TRUNK_X, 190, 0), { anchor: "center-bottom" });
 
   current = { manifest, panels, labels, layerBoxes, width: maxX };
   renderSidebar(manifest);
@@ -420,7 +420,7 @@ function renderSidebar(manifest) {
       button.type = "button";
       let meta = "";
       if (layer.stats) {
-        meta = Object.entries(layer.stats).map(([k, v]) => `<span>${k.replace("_proj", "")} ${(100 * v).toFixed(2)}%</span>`).join("");
+        meta = Object.entries(layer.stats).map(([k, v]) => `<span>${k.replace("_proj", "")} ${(100 * v).toFixed(2)} %</span>`).join("");
       } else if (layer.heads) {
         const marked = layer.heads.filter((h) => h.status);
         meta = marked.length
@@ -611,7 +611,8 @@ function updateLabels(width, height) {
     projected.copy(label.position).project(camera);
     const pixelsPerUnit = unitsToPixels / Math.max(depth, 1);
     const visible = depth > 0 && Math.abs(projected.x) < 1.15 && Math.abs(projected.y) < 1.15
-      && (label.span ? label.span * pixelsPerUnit >= label.minPixels : true);
+      && (label.span ? label.span * pixelsPerUnit >= label.minPixels : true)
+      && label.room * pixelsPerUnit >= (label.room ? 17 : 0); // matrix labels need a text line of free space above
     label.el.style.display = visible ? "" : "none";
     if (!visible) continue;
     if (label.clip) label.el.style.maxWidth = `${Math.floor(label.span * pixelsPerUnit)}px`;

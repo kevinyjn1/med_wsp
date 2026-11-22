@@ -35,3 +35,4 @@ extend-exclude = ["external", ".claude", "paper/vendor"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+pythonpath = ["."]

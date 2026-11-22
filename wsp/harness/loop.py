@@ -39,6 +39,9 @@ class State:
     next_message: str | None = None
     failures: int = 0
     wall_s: float = 0.0
+    handoffs: int = 0
+    turns_in_thread: int = 0
+    unexplained: int = 0
 
 
 Handler = Callable[[str, State], str]
@@ -59,6 +62,13 @@ class Loop:
     on_final: Callable[[str, State], str | None] | None = None
     # Wraps a block's output into the next message.
     format_output: Callable[[str, str, State], str] | None = None
+    # Called with (reply, block type) before a block runs. Return a message to send back instead of running it.
+    precheck: Callable[[str, str, State], str | None] | None = None
+    # Start a fresh conversation every N replies (0 = never). `handoff` returns the text appended to the task.
+    handoff_every: int = 0
+    handoff: Callable[[State, str], str] | None = None
+    # Sent in place of a message the provider keeps refusing (for example after a content-filter refusal).
+    undeliverable_notice: str | None = None
 
     def log(self, text: str) -> None:
         stamp = time.strftime("%Y-%m-%dT%H:%M:%S%z")
@@ -108,15 +118,30 @@ class Loop:
         formatter = self.format_output or self._default_format
 
         while not state.done and state.turn < self.max_turns:
+            if (
+                self.handoff_every
+                and self.handoff
+                and state.thread_id
+                and state.turns_in_thread >= self.handoff_every
+            ):
+                # Keep conversations short: restart with the task, the notebook and the last result.
+                state.thread_id, state.turns_in_thread = None, 0
+                state.handoffs += 1
+                message = self.first_message + "\n\n" + self.handoff(state, message)
+                self.log(f"turn {state.turn + 1}: handoff {state.handoffs} to a new conversation")
             kind_of_turn = "new thread" if state.thread_id is None else "resume"
             self.log(f"turn {state.turn + 1}: {kind_of_turn} ({len(message):,} chars)")
             result = self._ask(message, state)
+            if result is None and self.undeliverable_notice:
+                self.log(f"turn {state.turn + 1}: message undeliverable, sending the notice instead")
+                result = self._ask(self.undeliverable_notice, state)
             if result is None:
                 self.log(f"turn {state.turn + 1}: giving up after {self.retries} attempts")
                 self._save(state)
                 break
             state.thread_id = result.thread_id
             state.turn += 1
+            state.turns_in_thread += 1
 
             block = next((m for m in BLOCK_RE.finditer(result.answer) if m.group(1) in self.handlers), None)
             if block is None:
@@ -135,6 +160,12 @@ class Loop:
                 continue
 
             kind, code = block.group(1), block.group(2)
+            refusal = self.precheck(result.answer, kind, state) if self.precheck else None
+            if refusal is not None:
+                message = state.next_message = refusal
+                self.log(f"turn {state.turn}: {kind} block not run (precheck)")
+                self._save(state)
+                continue
             if kind in self.count_as_run and self.runs_used(state) >= self.max_runs:
                 message = (
                     f"You have used all {self.max_runs} runs, so this block was not run. "

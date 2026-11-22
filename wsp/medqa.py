@@ -89,7 +89,7 @@ def evaluate(model, tokenizer, items: list[dict], batch_size: int = 8, progress:
             [prompts[i] for i in batch], return_tensors="pt", padding=True, add_special_tokens=False
         )
         enc = {k: v.to(model.device) for k, v in enc.items()}
-        scores = letter_scores(model(**enc).logits[:, -1, :], letter_ids).cpu()
+        scores = letter_scores(model(**enc, use_cache=False).logits[:, -1, :], letter_ids).cpu()
         for row, i in enumerate(batch):
             item, lp = items[i], scores[row]
             gold = LETTERS.index(item["answer"])

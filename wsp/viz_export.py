@@ -7,6 +7,7 @@ real number under the cursor.
 
 Usage:
     python -m wsp.viz_export mit3          # the three character-level networks of MIT experiment 3
+    python -m wsp.viz_export mit8          # the Qwen3.5-0.8B edit of MIT experiment 8
     python -m wsp.viz_export weightdiff    # MediPhi minus Phi-3.5, per head and per neuron
 """
 
@@ -181,6 +182,88 @@ def export_mit3() -> None:
         print("wrote", folder, f"{sum(f.stat().st_size for f in folder.iterdir()) / 1e6:.1f} MB")
 
 
+# ------------------------------------------------------------------------------------------- MIT exp 8
+def export_mit8(run: str = "p50c") -> None:
+    """The Qwen3.5-0.8B weight edit of MIT experiment 8: base matrix, the change, and the edited columns."""
+    from wsp.checkpoints import Checkpoint
+
+    exp = REPO / "experiments" / "exp_03_mit8_math"
+    report = json.loads((exp / "processed" / f"edit_{run}_report.json").read_text())
+    checkpoint = Checkpoint("Qwen/Qwen3.5-0.8B")
+    folder = DATA / f"mit8_qwen_{run}"
+    folder.mkdir(parents=True, exist_ok=True)
+    layers = []
+    for tensor in report["tensors"]:
+        name = tensor["name"]
+        layer = int(name.split("layers.")[1].split(".")[0])
+        base = checkpoint.f32(name)
+        edited = np.load(exp / "work" / f"edit_{run}" / f"{name}.npy")
+        direction = np.load(exp / "work" / f"edit_{run}" / f"{name}.direction.npy")
+        delta = edited - base
+        columns = np.array(tensor["changed_columns"])
+        mask = np.zeros((1, base.shape[1]), np.float32)
+        mask[0, columns] = 1.0
+        saturate = float(np.percentile(np.abs(base), 99.5))
+        key = f"L{layer}"
+
+        def spec(
+            panel_id, label, matrix, *, signed=True, color_max=None, note="", folder=folder, key=key, **extra
+        ):
+            out = write_panel(
+                folder, f"{key}_{panel_id}", matrix, signed=signed, quantize=True, color_max=color_max
+            )
+            out.update({"id": f"{key}.{panel_id}", "label": label, "note": note, "unit": "weight", **extra})
+            return out
+
+        column_note = (
+            f"the {len(columns)} edited hidden units, in index order: "
+            + ", ".join(map(str, columns[:12]))
+            + ", ..."
+        )
+        layers.append({
+            "name": f"Layer {layer} MLP output (down_proj)",
+            "stats": {"relative change": tensor["relative_change"]},
+            "groups": [
+                {"name": "Whole matrix", "kind": "attention", "panels": [
+                    spec("mask", "Edited columns (64 of 3,584)", mask, signed=False, ownRow=True,
+                         note="bright = a hidden unit whose output column was edited"),
+                    spec("base", "down_proj before the edit", base, color_max=saturate, ownRow=True,
+                         note="1,024 x 3,584: column j is what hidden unit j writes to the residual stream"),
+                    spec("delta", "Change (edited minus original)", delta, color_max=float(np.abs(delta).max()) * 0.6,
+                         ownRow=True, note="zero everywhere except the 64 edited columns"),
+                ]},
+                {"name": "Edited columns", "kind": "mlp", "panels": [
+                    spec("u", "Loop direction u", direction[:, None], cellW=40, ownRow=False,
+                         note="unit vector in the residual stream (1,024 dims) that the edit removes from the 64 columns"),
+                    spec("cols_base", "64 columns before", base[:, columns], color_max=saturate, cellW=6, note=column_note),
+                    spec("cols_edit", "64 columns after", edited[:, columns], color_max=saturate, cellW=6, note=column_note),
+                    spec("cols_delta", "Change", delta[:, columns], color_max=float(np.abs(delta).max()) * 0.6, cellW=6,
+                         note="rank one: every column is a multiple of u"),
+                ]},
+            ],
+        })  # fmt: skip
+    cosine = report.get("direction_cosine_between_tensors")
+    manifest = {
+        "id": f"mit8_qwen_{run}",
+        "title": "Qwen3.5-0.8B: the weight edit that stops the thinking loop",
+        "subtitle": "MIT weight-space-programming experiment 8 (50 forward passes): 131,072 weights in two MLP output matrices",
+        "family": "MIT experiment 8 replication",
+        "maxRowWidth": 3700,
+        "facts": [
+            "Rebuilt from the public base weights with MIT's released diff: both tensors match MIT's sha256 bit for bit.",
+            "The edit is W' = W - 6 u (u^T W) on 64 columns per layer: rank one "
+            f"({100 * min(t['rank1_energy'] for t in report['tensors']):.3f} % of the change's energy), recovered strength "
+            + " and ".join(f"{t['strength_c']:.3f}" for t in report["tensors"]) + ".",
+            f"The two layers use different directions (cosine {cosine:.3f}).",
+            "MIT's reported effect: MATH-500 7.9 % to 48.1 %, GSM8K 13.8 % to 67.1 %, answers cut at the token limit 93.0 % to 33.1 %.",
+        ],
+        "colorNote": "Signed weights. Matrices saturate at the 99.5th percentile of the original matrix; the change has its own scale.",
+        "layers": layers,
+    }  # fmt: skip
+    (folder / "manifest.json").write_text(json.dumps(manifest))
+    print("wrote", folder, f"{sum(f.stat().st_size for f in folder.iterdir()) / 1e6:.1f} MB")
+
+
 # ------------------------------------------------------------------------------------- MediPhi - Phi-3.5
 def export_weightdiff() -> None:
     src = REPO / "experiments" / "exp_05_medical_circuit" / "processed"
@@ -250,10 +333,10 @@ def write_index() -> None:
 
 def main() -> None:
     parser = argparse.ArgumentParser()
-    parser.add_argument("what", nargs="+", choices=["mit3", "weightdiff"])
+    parser.add_argument("what", nargs="+", choices=["mit3", "mit8", "weightdiff"])
     args = parser.parse_args()
     for what in args.what:
-        {"mit3": export_mit3, "weightdiff": export_weightdiff}[what]()
+        {"mit3": export_mit3, "mit8": export_mit8, "weightdiff": export_weightdiff}[what]()
     write_index()
 
 
