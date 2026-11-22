@@ -1,33 +1,65 @@
 # Current State
 
+Checkpoint written 2026-11-22 16:50 (session 01, still in progress). Detailed log: `vault/sessions/2026-11-21 Session 01.md`.
+
 ## Objective
 
-None yet.
+1. Replicate MIT weight-space-programming experiments 3, 7 and 8 with GPT-6 Astra through Codex.
+2. Visualize weights and results in a 3D viewer (`viz/`).
+3. Run Filippos's experiments: Phi-3.5 vs MediPhi circuit discovery and transfer (EXP-05), failure-guided weight
+   editing (EXP-06), training-free layer looping (EXP-07).
+4. Record everything in the Obsidian vault (`vault/`).
 
 ## Established
 
-- None yet.
+- EXP-01 (MIT exp 3) replicated: corpus right in 6 of 6 Astra conversations, all 10 true copying heads found, one
+  head over-called twice (`experiments/exp_01_mit3_language/RESULTS.md`).
+- EXP-03a: MIT's published Qwen3.5-0.8B edit (p50c) rebuilt bit for bit from public weights; it is
+  `W' = W - 6 u (u^T W)` on 64 columns of `down_proj` in layers 15 and 19.
+- EXP-04 (letter scoring, MedQA): test 1,273 questions: Phi-3.5 0.5719, MediPhi 0.5632, MediPhi-Instruct 0.5648;
+  dev 1,272: 0.5841 / 0.5951 / 0.5802; first 3,000 training questions: 0.6037 / 0.5923 / 0.5780. No medical model
+  is better than the base under this scoring.
+- EXP-05a: MediPhi - Phi-3.5 is a small (1.57 % relative norm), dense, high-rank change spread over every
+  attention and MLP matrix; MediPhi is a `breadcrumbs_ties` merge of five experts.
+
+None of the above has been reviewed by the researcher; nothing is in `research/07_RESULTS_GROUND_TRUTH.md`.
 
 ## Decisions
 
-- None yet.
+- Researcher: replicate MIT experiments 3, 7, 8; this Mac first, ask before cloud; Claude runs `codex exec`;
+  commit and push as work proceeds.
+- Claude (provisional): MedQA from `bigbio/med_qa`; letter-logit scoring; discovery pool = dev + first 3,000
+  training questions, test split only for final numbers.
 
 ## Changes
 
-- None yet.
+- New code: `wsp/` (harness, MedQA, checkpoints, looping, patching, lab), `viz/`, `experiments/exp_01..07`, `tests/`.
+- New notes: `vault/` (papers, concepts, experiments, sessions, visualizations), `research/01_PROBLEM.md`,
+  `research/03_LITERATURE_LEDGER.md`, `docs/intakes/2026-11-21_1730_project-kickoff.md`.
 
 ## Verification
 
-- None yet.
+- `ruff check wsp experiments tests` clean; `pytest tests` 16 passed.
+- `python tests/integration_lab.py <scratch>` passes on the real Phi-3.5 weights.
+- Viewer builds (`npm run build --prefix viz`) and was checked in the browser for all five datasets.
 
 ## Open Issues
 
-- None yet.
+- Donor question: which base / fine-tune pair and benchmark show a gain worth explaining? (needs the researcher)
+- MIT exp 8 behaviour check and Astra rerun need long generations; this Mac is too slow (needs a GPU decision).
+- MIT exp 7 needs `google/gemma-3-270m-it`, gated for the researcher's Hugging Face account.
+- Some Codex tool definitions cannot be disabled by flag; turns are audited for tool use instead.
 
 ## Next
 
-1. None yet.
+1. Collect the running jobs: reasoning-based MedQA evaluation (`logs/exp04_cot.log`), Astra editing session
+   (`experiments/exp_06_failure_guided_editing/raw/run1/`), Qwen MLX benchmark, activation patching, looping scan,
+   weight swaps (`logs/`).
+2. Write `RESULTS.md` for EXP-04, 05, 06, 07; export patching and looping results to the viewer.
+3. After the researcher answers the open issues: EXP-05c (Astra with a donor), EXP-02 (Gemma), EXP-03 parts B and C.
 
 ## Resume
 
-> No active checkpoint yet.
+> Read `vault/Home.md`, then the session note. GPU jobs are serialized with `python -m wsp.gpu_lock [--name batch] -- <cmd>`.
+> Astra runs through `/Applications/ChatGPT.app/Contents/Resources/codex-cli/bin/codex` (see `vault/concepts/Astra harness.md`).
+> An interrupted Astra session resumes by re-running its command (state is in `raw/<run>/state.json`).

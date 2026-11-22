@@ -8,9 +8,11 @@ candidate_unit = 4131
 candidate_original = load_original(candidate_name)
 candidate_history = []
 
+
 def clear_current_edits():
     for name in list(edited()):
         drop_edit(name)
+
 
 def set_single_neuron_scale(scale):
     clear_current_edits()
@@ -20,12 +22,15 @@ def set_single_neuron_scale(scale):
     candidate_history.append({"kind": "L26_neuron4131_column_scale", "scale": float(scale)})
     return float((w - candidate_original).norm() / candidate_original.norm())
 
+
 relative_change = set_single_neuron_scale(0.5)
 print("Edited tensor:", candidate_name)
 print("Outgoing column scale: 0.5; relative tensor change:", round(relative_change, 6))
 print("Final residual RMS, median:", round(float(np.median(np.sqrt((hidden[32] ** 2).mean(1)))), 4))
-print("L26 neuron 4131 activation quantiles:",
-      np.round(np.quantile(acts[26][:, 4131], [0, .1, .5, .9, 1]), 3).tolist())
+print(
+    "L26 neuron 4131 activation quantiles:",
+    np.round(np.quantile(acts[26][:, 4131], [0, 0.1, 0.5, 0.9, 1]), 3).tolist(),
+)
 print("Screen baseline accuracy:", round(100 * np.mean([b_by_id[q]["correct"] for q in screen_ids]), 3))
 with (work / "notes.md").open("a") as f:
     f.write(

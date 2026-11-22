@@ -1,0 +1,7 @@
+OUTPUT of Python run 5 of at most 300:
+```
+Score record schema: {"id": "train-01347", "answer": "B", "original": {"pred": "B", "correct": true, "margin": 5.6875, "letter_logprobs": [-11.6299, -0.0049, -6.5049, -5.6924]}, "edited": {"pred": "B", "correct": true, "margin": 6.0, "letter_logprobs": [-11.0656, -0.0031, -7.3781, -6.0031]}}
+Current intervention: L26 neuron 4131 outgoing column zeroed.
+Relative tensor change: 0.011914
+
+```
