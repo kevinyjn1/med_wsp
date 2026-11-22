@@ -1,16 +1,16 @@
 {
  "thread_id": "01a20533-8bc6-76b1-ba5a-acd1a8b2f0b8",
- "turn": 8,
+ "turn": 11,
  "runs": {
-  "python": 5,
-  "forward": 2
+  "python": 6,
+  "forward": 4
  },
  "nudges": 0,
  "done": false,
- "next_message": "OUTPUT of Python run 5 of at most 300:\n```\nScore record schema: {\"id\": \"train-01347\", \"answer\": \"B\", \"original\": {\"pred\": \"B\", \"correct\": true, \"margin\": 5.6875, \"letter_logprobs\": [-11.6299, -0.0049, -6.5049, -5.6924]}, \"edited\": {\"pred\": \"B\", \"correct\": true, \"margin\": 6.0, \"letter_logprobs\": [-11.0656, -0.0031, -7.3781, -6.0031]}}\nCurrent intervention: L26 neuron 4131 outgoing column zeroed.\nRelative tensor change: 0.011914\n\n```",
+ "next_message": "OUTPUT of Python run 6 of at most 300:\n```\nMeasured propagation of L26 knockout:\n residual_layer  mean_A_change  sd_A_change                        mean_ABCD\n             26          0.000        0.000             [0.0, 0.0, 0.0, 0.0]\n             27         11.303        4.286 [11.303, -2.325, -6.929, -2.048]\n             28         10.782        3.823  [10.782, 1.685, -7.941, -4.525]\n             29          9.440        3.195     [9.44, 0.19, -8.217, -1.413]\n             30          8.876        3.118  [8.876, -0.394, -5.621, -2.861]\n             31          8.550        3.278     [8.55, 0.064, -5.11, -3.504]\n             32          2.573        0.905  [2.573, -0.169, -1.377, -1.027]\n\nProposed final-layer components:\n{'unit': 4775, 'A_mean': -1.534, 'A_sd': 0.084, 'relative_sd': 0.055}\n{'unit': 6367, 'A_mean': -1.475, 'A_sd': 0.087, 'relative_sd': 0.059}\n{'unit': 6760, 'A_mean': -1.216, 'A_sd': 0.131, 'relative_sd': 0.108}\n{'unit': 13, 'A_mean': -1.032, 'A_sd': 0.12, 'relative_sd': 0.116}\nRemoval's direct coordinate change mean ABCD: [5.256999969482422, -1.6670000553131104, -1.75600004196167, -1.8339999914169312]\nRemoval's direct coordinate change SD ABCD: [0.23100000619888306, 0.0729999989271164, 0.07699999958276749, 0.08100000023841858]\nInstalled strength=1.0; relative tensor change: 0.001632\n\n```",
  "failures": 0,
- "wall_s": 300.8,
+ "wall_s": 405.1,
  "handoffs": 0,
- "turns_in_thread": 8,
+ "turns_in_thread": 11,
  "unexplained": 0
 }

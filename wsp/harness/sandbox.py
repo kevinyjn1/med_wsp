@@ -7,6 +7,7 @@ limit and an output cap per run. This is the macOS equivalent:
 - writes only inside the run's working folder (and the process's private temp folder);
 - reads inside the home directory only from an allow-list (the sandbox Python environment, the working
   folder, and read-only inputs such as a weights file), so answer keys and credentials are unreachable;
+  folders outside the home directory can be closed explicitly with `deny_read`;
 - a clean environment, `python -I`, a wall-clock limit, and the printed output cut at `max_out` characters.
 """
 
@@ -43,7 +44,9 @@ def _python_roots(python: Path) -> list[str]:
     return sorted(roots)
 
 
-def build_profile(work_dir: Path, read_only: list[Path], python: Path) -> str:
+def build_profile(
+    work_dir: Path, read_only: list[Path], python: Path, deny_read: list[Path] | None = None
+) -> str:
     home = _real(Path.home())
     allow_read = _python_roots(python) + [_real(work_dir)] + [_real(p) for p in read_only]
     allow_write = [_real(work_dir), _real(tempfile.gettempdir()), "/private/var/folders", "/dev"]
@@ -58,6 +61,8 @@ def build_profile(work_dir: Path, read_only: list[Path], python: Path) -> str:
         "(deny file-write*)",
         f"(allow file-write* {subpaths(allow_write)})",
         f'(deny file-read* (subpath "{home}"))',
+        # Folders that must stay unreadable wherever they live (answer keys, other runs); later allows still win.
+        *[f'(deny file-read* (subpath "{_real(p)}"))' for p in deny_read or []],
         # Path resolution needs to stat the folders above an allowed path.
         f'(allow file-read-metadata (subpath "{home}"))',
         f"(allow file-read* {subpaths(allow_read)})",
@@ -70,6 +75,7 @@ def run(
     *,
     prelude: str = "",
     read_only: list[Path] | None = None,
+    deny_read: list[Path] | None = None,
     timeout_s: int = 600,
     max_out: int = 20_000,
     python: Path | None = None,
@@ -79,7 +85,7 @@ def run(
     """Run `prelude + code` in a fresh sandboxed process inside `work_dir`; return what it printed."""
     python = python or (SANDBOX_VENV / "bin" / "python")
     work_dir.mkdir(parents=True, exist_ok=True)
-    profile = build_profile(work_dir, read_only or [], python)
+    profile = build_profile(work_dir, read_only or [], python, deny_read)
     env = {
         "HOME": _real(work_dir), "PATH": "/usr/bin:/bin", "TMPDIR": _real(tempfile.gettempdir()),
         "OMP_NUM_THREADS": str(threads), "VECLIB_MAXIMUM_THREADS": str(threads),

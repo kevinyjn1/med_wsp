@@ -145,3 +145,4 @@ logs/
 viz/node_modules/
 viz/dist/
 viz/public/data/
+.venv-numpy/

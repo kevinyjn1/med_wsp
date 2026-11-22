@@ -323,6 +323,133 @@ def export_weightdiff() -> None:
     print("wrote", folder, f"{sum(f.stat().st_size for f in folder.iterdir()) / 1e6:.1f} MB")
 
 
+# ------------------------------------------------------------------------------- interventions and looping
+def export_interventions(donor: str = "mediphi") -> None:
+    """Activation patching and weight swapping (EXP-05b): mean change of the gold-answer margin, per layer."""
+    src = REPO / "experiments" / "exp_05_medical_circuit" / "processed" / f"patch_{donor}"
+    sets, components = ("gain", "loss", "both"), ("attn", "mlp", "resid")
+    folder = DATA / f"interventions_{donor}_phi"
+    folder.mkdir(parents=True, exist_ok=True)
+    panels, facts = [], []
+    rows = (
+        [json.loads(line) for line in (src / "activation.jsonl").read_text().splitlines()]
+        if (src / "activation.jsonl").exists()
+        else []
+    )
+    n_layers = 32
+    if rows:
+        grid = np.zeros((len(sets) * len(components), n_layers), np.float32)
+        labels = []
+        for si, name in enumerate(sets):
+            members = [r for r in rows if r["set"] == name]
+            gap = np.mean([r["donor"] - r["base"] for r in members])
+            for ci, component in enumerate(components):
+                labels.append(f"{name}: {component}")
+                for layer in range(n_layers):
+                    grid[si * len(components) + ci, layer] = np.mean(
+                        [r["patched"][f"L{layer}.{component}"] - r["base"] for r in members]
+                    )
+            facts.append(
+                f"Activation patching, {name} set ({len(members)} questions): donor margin minus base margin is {gap:+.2f} on average."
+            )
+        spec = write_panel(folder, "activation", grid, signed=True, quantize=False)
+        spec.update({"id": "activation", "label": "Activation patching: donor activation placed into the base", "unit": "margin change",
+                     "cell": 44, "rowLabels": labels, "colLabels": [str(i) for i in range(n_layers)], "ownRow": True,
+                     "note": "mean change of the gold-answer margin (log-prob units) when one layer's attention output, MLP output or residual stream comes from the donor; columns are layers"})  # fmt: skip
+        panels.append(spec)
+    swaps = (
+        [json.loads(line) for line in (src / "weights.jsonl").read_text().splitlines()]
+        if (src / "weights.jsonl").exists()
+        else []
+    )
+    if swaps:
+        question_sets = json.loads((src / "question_sets.json").read_text())
+        by = {row["config"]: row["margins"] for row in swaps}
+        grid = np.zeros((len(sets) * 2, n_layers), np.float32)
+        labels = []
+        for si, name in enumerate(sets):
+            ids = question_sets[name]
+            for pi, part in enumerate(("attn", "mlp")):
+                labels.append(f"{name}: {part} weights")
+                for layer in range(n_layers):
+                    if f"L{layer}.{part}" in by:
+                        grid[si * 2 + pi, layer] = np.mean(
+                            [by[f"L{layer}.{part}"][i] - by["base"][i] for i in ids]
+                        )
+            if "all" in by:
+                facts.append(f"Weight swap, {name} set: copying every donor weight changes the margin by "
+                             f"{np.mean([by['all'][i] - by['base'][i] for i in ids]):+.2f} on average.")  # fmt: skip
+        spec = write_panel(folder, "weights", grid, signed=True, quantize=False)
+        spec.update({"id": "weights", "label": "Weight swap: one layer's weights copied from the donor", "unit": "margin change",
+                     "cell": 44, "rowLabels": labels, "colLabels": [str(i) for i in range(n_layers)], "ownRow": True,
+                     "note": "mean change of the gold-answer margin when one layer's attention weights or MLP weights are the donor's; columns are layers"})  # fmt: skip
+        panels.append(spec)
+    if not panels:
+        print("no intervention results yet")
+        return
+    manifest = {
+        "id": f"interventions_{donor}_phi", "title": f"Which layers carry the difference between Phi-3.5 and {donor}?",
+        "subtitle": "MedQA: change of the gold-answer margin under activation patching and weight swapping, by layer",
+        "family": "Phi-3.5 vs MediPhi", "maxRowWidth": 2600,
+        "facts": [*facts, "gain = donor right, base wrong; loss = base right, donor wrong; both = both right (60 questions each from the discovery pool)."],
+        "colorNote": "Signed change of the margin in log-probability units: red raises the gold answer, blue lowers it. Each panel has its own scale.",
+        "layers": [{"name": "All 32 layers (columns)", "groups": [{"name": "Interventions", "kind": "attention", "panels": panels}]}],
+    }  # fmt: skip
+    (folder / "manifest.json").write_text(json.dumps(manifest))
+    print("wrote", folder)
+
+
+def export_looping(tag: str = "phi_dev_600") -> None:
+    """Layer-looping scan (EXP-07): change of accuracy and margin against the unmodified model, by window start."""
+    src = REPO / "experiments" / "exp_07_layer_looping" / "processed" / f"scan_{tag}.jsonl"
+    rows = [json.loads(line) for line in src.read_text().splitlines()]
+    baseline = next(r for r in rows if r["config"] == "baseline")
+    scan = [
+        r
+        for r in rows
+        if r.get("length") == 4
+        and r.get("steps") == 2
+        and r.get("rule") in ("chen", "naive")
+        and r.get("beta", 0) == 0
+    ]
+    starts = sorted({r["start"] for r in scan})
+    rules = ("chen", "naive")
+    folder = DATA / f"looping_{tag}"
+    folder.mkdir(parents=True, exist_ok=True)
+    margin = np.zeros((len(rules), len(starts)), np.float32)
+    accuracy = np.zeros((len(rules), len(starts)), np.float32)
+    for r in scan:
+        margin[rules.index(r["rule"]), starts.index(r["start"])] = r["margin_delta"]
+        accuracy[rules.index(r["rule"]), starts.index(r["start"])] = 100 * r["acc_delta"]
+    common = {"cell": 70, "rowLabels": ["damped (Chen), 2 sub-steps", "naive, applied twice"], "ownRow": True,
+              "colLabels": [f"{s}-{s + 3}" for s in starts]}  # fmt: skip
+    panels = []
+    for panel_id, label, grid, unit, note in (
+        ("margin", "Change of the gold-answer margin", margin, "margin change", "mean over questions, log-prob units; columns are the looped 4-layer window"),
+        ("accuracy", "Change of accuracy (percentage points)", accuracy, "points", "accuracy of the looped model minus the unmodified model on the same questions"),
+    ):  # fmt: skip
+        spec = write_panel(folder, panel_id, grid, signed=True, quantize=False)
+        spec.update({"id": panel_id, "label": label, "unit": unit, "note": note, **common})
+        panels.append(spec)
+    best = max((r for r in rows if r["config"] != "baseline"), key=lambda r: r["margin_delta"])
+    manifest = {
+        "id": f"looping_{tag}", "title": "Layer looping on Phi-3.5: which 4-layer window to repeat?",
+        "subtitle": f"MedQA {tag.split('_')[1]} split, {baseline['n']} questions, single-pass letter scoring",
+        "family": "Training-free layer looping", "maxRowWidth": 2600,
+        "facts": [
+            f"Unmodified model: accuracy {100 * baseline['acc']:.1f} %, mean margin {baseline['mean_margin']:+.2f}.",
+            (f"Best configuration by margin: {best['config']} ({best['margin_delta']:+.3f} +/- {best['margin_delta_se']:.3f}; accuracy {100 * best['acc_delta']:+.1f} points, "
+            f"{best['fixed']} questions fixed, {best['broken']} broken, McNemar p = {best['mcnemar_p']:.2f})."),
+            (f"{sum(r.get('acc_delta', 0) > 0 for r in rows)} of {len(rows) - 1} configurations have higher accuracy than the unmodified model; "
+            f"{sum(r.get('mcnemar_p', 1) < 0.05 and r.get('acc_delta', 0) > 0 for r in rows)} of those are significant at 0.05 (uncorrected)."),
+        ],
+        "colorNote": "Red = better than the unmodified model, blue = worse. Each panel has its own scale.",
+        "layers": [{"name": "Window start (columns)", "groups": [{"name": "4-layer window, 2 steps", "kind": "attention", "panels": panels}]}],
+    }  # fmt: skip
+    (folder / "manifest.json").write_text(json.dumps(manifest))
+    print("wrote", folder)
+
+
 def write_index() -> None:
     entries = []
     for manifest_path in sorted(DATA.glob("*/manifest.json")):
@@ -333,10 +460,16 @@ def write_index() -> None:
 
 def main() -> None:
     parser = argparse.ArgumentParser()
-    parser.add_argument("what", nargs="+", choices=["mit3", "mit8", "weightdiff"])
+    parser.add_argument("what", nargs="+", choices=["mit3", "mit8", "weightdiff", "interventions", "looping"])
     args = parser.parse_args()
     for what in args.what:
-        {"mit3": export_mit3, "mit8": export_mit8, "weightdiff": export_weightdiff}[what]()
+        {
+            "mit3": export_mit3,
+            "mit8": export_mit8,
+            "weightdiff": export_weightdiff,
+            "interventions": export_interventions,
+            "looping": export_looping,
+        }[what]()
     write_index()
 
 

@@ -1,0 +1,22 @@
+OUTPUT of Python run 6 of at most 300:
+```
+Measured propagation of L26 knockout:
+ residual_layer  mean_A_change  sd_A_change                        mean_ABCD
+             26          0.000        0.000             [0.0, 0.0, 0.0, 0.0]
+             27         11.303        4.286 [11.303, -2.325, -6.929, -2.048]
+             28         10.782        3.823  [10.782, 1.685, -7.941, -4.525]
+             29          9.440        3.195     [9.44, 0.19, -8.217, -1.413]
+             30          8.876        3.118  [8.876, -0.394, -5.621, -2.861]
+             31          8.550        3.278     [8.55, 0.064, -5.11, -3.504]
+             32          2.573        0.905  [2.573, -0.169, -1.377, -1.027]
+
+Proposed final-layer components:
+{'unit': 4775, 'A_mean': -1.534, 'A_sd': 0.084, 'relative_sd': 0.055}
+{'unit': 6367, 'A_mean': -1.475, 'A_sd': 0.087, 'relative_sd': 0.059}
+{'unit': 6760, 'A_mean': -1.216, 'A_sd': 0.131, 'relative_sd': 0.108}
+{'unit': 13, 'A_mean': -1.032, 'A_sd': 0.12, 'relative_sd': 0.116}
+Removal's direct coordinate change mean ABCD: [5.256999969482422, -1.6670000553131104, -1.75600004196167, -1.8339999914169312]
+Removal's direct coordinate change SD ABCD: [0.23100000619888306, 0.0729999989271164, 0.07699999958276749, 0.08100000023841858]
+Installed strength=1.0; relative tensor change: 0.001632
+
+```

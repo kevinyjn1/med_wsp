@@ -325,6 +325,14 @@ async function loadDataset(id) {
                 { anchor: "center-top", minPixels: 260, span: w });
             }
           }
+          if (panel.colLabels) {
+            const stride = Math.ceil(panel.colLabels.length / 16);
+            panel.colLabels.forEach((text, c) => {
+              if (c % stride) return;
+              addLabel(labels, "band", text, new THREE.Vector3(x + (c + 0.5) * cellW, y - h - 6, z),
+                { anchor: "center-top", minPixels: 200, span: w });
+            });
+          }
           if (panel.rowLabels) {
             panel.rowLabels.forEach((text, r) => {
               addLabel(labels, "band", text, new THREE.Vector3(x - 8, y - (r + 0.5) * cell, z),
@@ -489,6 +497,8 @@ function bandLabel(bands, index) {
 
 function formatValue(value, unit) {
   if (unit === "relative change") return `${(100 * value).toFixed(2)} %`;
+  if (unit === "margin change") return `${value >= 0 ? "+" : ""}${value.toFixed(3)}`;
+  if (unit === "points") return `${value >= 0 ? "+" : ""}${value.toFixed(2)} points`;
   const abs = Math.abs(value);
   return abs !== 0 && abs < 0.001 ? value.toExponential(2) : value.toFixed(4);
 }
@@ -523,7 +533,7 @@ function onMove(event) {
   record.material.uniforms.uHover.value.set(col, row);
   const value = decode(record, row, col);
   const rowBand = bandLabel(panel.rowBands, row) ?? panel.rowLabels?.[row];
-  const colBand = bandLabel(panel.colBands, col);
+  const colBand = bandLabel(panel.colBands, col) ?? panel.colLabels?.[col];
   const mark = (panel.highlights || []).find((m) => {
     const i = m.axis === "row" ? row : col;
     return i >= m.start && i < m.start + m.size;
@@ -531,9 +541,10 @@ function onMove(event) {
   const lines = [
     ["Row", `${row}${rowBand ? ` (${rowBand})` : ""}`],
     ["Column", `${col}${colBand ? ` (${colBand})` : ""}`],
-    [panel.unit === "relative change" ? "Relative change" : "Value", formatValue(value, panel.unit)],
+    [{ "relative change": "Relative change", "margin change": "Margin change", points: "Accuracy change" }[panel.unit] ?? "Value",
+      formatValue(value, panel.unit)],
   ];
-  if (panel.unit !== "relative change") {
+  if (!panel.unit || panel.unit === "weight") {
     lines.push(["Largest in matrix", `±${panel.vmax.toFixed(4)}`]);
     lines.push(["Color saturates at", `±${(panel.colorMax ?? panel.vmax).toFixed(4)}`]);
   }
