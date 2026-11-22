@@ -1,0 +1,19 @@
+OUTPUT of run 3 of at most 100:
+```
+FINAL MLP OUTPUT SPECTRUM
+First 65 singular values: [28.175 20.293 19.292 19.135 18.708 18.57  18.139 17.776 17.485 16.54  15.913 15.61  14.975 14.873 14.417 14.313 13.327 12.971 12.593 12.37  12.225 12.019
+ 11.322 11.115 10.769  9.227  8.573  7.929  6.5    5.271  3.966  3.184  2.792  2.697  2.653  2.555  2.511  2.471  2.379  2.29   2.25   2.215  2.117  2.081
+  2.036  2.011  1.984  1.969  1.952  1.926  1.888  1.868  1.853  1.833  1.817  1.796  1.792  1.781  1.763  1.735  1.721  1.712  1.704  1.692  1.681]
+Adjacent ratios, first 40: [1.388 1.052 1.008 1.023 1.007 1.024 1.02  1.017 1.057 1.039 1.019 1.042 1.007 1.032 1.007 1.074 1.027 1.03  1.018 1.012 1.017 1.062 1.019 1.032 1.167 1.076
+ 1.081 1.22  1.233 1.329 1.245 1.141 1.035 1.017 1.038 1.018 1.016 1.039 1.039 1.018]
+Energy in top k: [(8, np.float64(0.4536)), (16, np.float64(0.7207)), (20, np.float64(0.8115)), (22, np.float64(0.8521)), (24, np.float64(0.8869)), (26, np.float64(0.9147)), (27, np.float64(0.9248)), (28, np.float64(0.9335)), (32, np.float64(0.9468)), (48, np.float64(0.9587)), (64, np.float64(0.9659))]
+
+FIRST-LAYER POSITION/CONTENT SUBSPACE DIAGNOSTICS
+H0 top4 QK subspace overlap fractions (left,right):
+
+[stderr]
+Traceback (most recent call last):
+  File "<string>", line 45, in <module>
+ValueError: matmul: Input operand 1 has a mismatch in its core dimension 0, with gufunc signature (n?,k),(k,m?)->(n?,m?) (size 24 is different from 384)
+
+```

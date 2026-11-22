@@ -1,0 +1,396 @@
+[
+ {
+  "run": "english_r0",
+  "truth": "english",
+  "corpus_guess": "english",
+  "order_guess": "as is",
+  "probabilities": {
+   "python": 0.33,
+   "romaji": 0.12,
+   "english": 0.55,
+   "as is": 0.98,
+   "shuffled": 0.02
+  },
+  "head_labels": {
+   "L0H0": "broad",
+   "L0H1": "broad",
+   "L0H2": "previous",
+   "L0H3": "local",
+   "L0H4": "broad",
+   "L0H5": "broad",
+   "L1H0": "local",
+   "L1H1": "local",
+   "L1H2": "local",
+   "L1H3": "local",
+   "L1H4": "local",
+   "L1H5": "local",
+   "L2H0": "local",
+   "L2H1": "unclear",
+   "L2H2": "local",
+   "L2H3": "local",
+   "L2H4": "local",
+   "L2H5": "local",
+   "L3H0": "unclear",
+   "L3H1": "copy",
+   "L3H2": "local",
+   "L3H3": "local",
+   "L3H4": "local",
+   "L3H5": "broad"
+  },
+  "copy_named": [
+   "L3H1"
+  ],
+  "corpus_correct": true,
+  "p_correct": 0.55,
+  "true_copy": [
+   "L3H1"
+  ],
+  "copy_true_positive": [
+   "L3H1"
+  ],
+  "copy_false_positive": [],
+  "copy_missed": [],
+  "n_labels": 24,
+  "code_runs": 6,
+  "turns": 7,
+  "wall_s": 399,
+  "mit_corpus_guess": "english",
+  "mit_copy_named": [
+   "L3H1"
+  ],
+  "mit_p_correct": 0.58,
+  "mit_code_runs": 7
+ },
+ {
+  "run": "english_r1",
+  "truth": "english",
+  "corpus_guess": "english",
+  "order_guess": "as is",
+  "probabilities": {
+   "python": 0.3,
+   "romaji": 0.15,
+   "english": 0.55,
+   "as is": 0.97,
+   "shuffled": 0.03
+  },
+  "head_labels": {
+   "L0H0": "broad",
+   "L0H1": "broad",
+   "L0H2": "previous",
+   "L0H3": "unclear",
+   "L0H4": "broad",
+   "L0H5": "broad",
+   "L1H0": "local",
+   "L1H1": "local",
+   "L1H2": "local",
+   "L1H3": "local",
+   "L1H4": "local",
+   "L1H5": "local",
+   "L2H0": "local",
+   "L2H1": "unclear",
+   "L2H2": "local",
+   "L2H3": "local",
+   "L2H4": "local",
+   "L2H5": "local",
+   "L3H0": "broad",
+   "L3H1": "copy",
+   "L3H2": "unclear",
+   "L3H3": "local",
+   "L3H4": "unclear",
+   "L3H5": "broad"
+  },
+  "copy_named": [
+   "L3H1"
+  ],
+  "corpus_correct": true,
+  "p_correct": 0.55,
+  "true_copy": [
+   "L3H1"
+  ],
+  "copy_true_positive": [
+   "L3H1"
+  ],
+  "copy_false_positive": [],
+  "copy_missed": [],
+  "n_labels": 24,
+  "code_runs": 7,
+  "turns": 8,
+  "wall_s": 530,
+  "mit_corpus_guess": "english",
+  "mit_copy_named": [
+   "L3H1"
+  ],
+  "mit_p_correct": 0.48,
+  "mit_code_runs": 6
+ },
+ {
+  "run": "python_r0",
+  "truth": "python",
+  "corpus_guess": "python",
+  "order_guess": "as is",
+  "probabilities": {
+   "python": 0.65,
+   "romaji": 0.03,
+   "english": 0.32,
+   "as is": 0.995,
+   "shuffled": 0.005
+  },
+  "head_labels": {
+   "L0H0": "unclear",
+   "L0H1": "local",
+   "L0H2": "unclear",
+   "L0H3": "unclear",
+   "L0H4": "broad",
+   "L0H5": "previous",
+   "L1H0": "local",
+   "L1H1": "local",
+   "L1H2": "local",
+   "L1H3": "local",
+   "L1H4": "local",
+   "L1H5": "local",
+   "L2H0": "unclear",
+   "L2H1": "copy",
+   "L2H2": "previous",
+   "L2H3": "local",
+   "L2H4": "local",
+   "L2H5": "unclear",
+   "L3H0": "copy",
+   "L3H1": "copy",
+   "L3H2": "unclear",
+   "L3H3": "broad",
+   "L3H4": "unclear",
+   "L3H5": "copy"
+  },
+  "copy_named": [
+   "L2H1",
+   "L3H0",
+   "L3H1",
+   "L3H5"
+  ],
+  "corpus_correct": true,
+  "p_correct": 0.65,
+  "true_copy": [
+   "L2H1",
+   "L3H1",
+   "L3H5"
+  ],
+  "copy_true_positive": [
+   "L2H1",
+   "L3H1",
+   "L3H5"
+  ],
+  "copy_false_positive": [
+   "L3H0"
+  ],
+  "copy_missed": [],
+  "n_labels": 24,
+  "code_runs": 10,
+  "turns": 11,
+  "wall_s": 824,
+  "mit_corpus_guess": "python",
+  "mit_copy_named": [
+   "L2H1",
+   "L3H1",
+   "L3H5"
+  ],
+  "mit_p_correct": 0.56,
+  "mit_code_runs": 11
+ },
+ {
+  "run": "python_r1",
+  "truth": "python",
+  "corpus_guess": "python",
+  "order_guess": "as is",
+  "probabilities": {
+   "python": 0.7,
+   "romaji": 0.05,
+   "english": 0.25,
+   "as is": 0.99,
+   "shuffled": 0.01
+  },
+  "head_labels": {
+   "L0H0": "unclear",
+   "L0H1": "local",
+   "L0H2": "unclear",
+   "L0H3": "unclear",
+   "L0H4": "broad",
+   "L0H5": "previous",
+   "L1H0": "local",
+   "L1H1": "local",
+   "L1H2": "local",
+   "L1H3": "local",
+   "L1H4": "local",
+   "L1H5": "local",
+   "L2H0": "unclear",
+   "L2H1": "copy",
+   "L2H2": "local",
+   "L2H3": "unclear",
+   "L2H4": "unclear",
+   "L2H5": "unclear",
+   "L3H0": "copy",
+   "L3H1": "copy",
+   "L3H2": "unclear",
+   "L3H3": "unclear",
+   "L3H4": "unclear",
+   "L3H5": "copy"
+  },
+  "copy_named": [
+   "L2H1",
+   "L3H0",
+   "L3H1",
+   "L3H5"
+  ],
+  "corpus_correct": true,
+  "p_correct": 0.7,
+  "true_copy": [
+   "L2H1",
+   "L3H1",
+   "L3H5"
+  ],
+  "copy_true_positive": [
+   "L2H1",
+   "L3H1",
+   "L3H5"
+  ],
+  "copy_false_positive": [
+   "L3H0"
+  ],
+  "copy_missed": [],
+  "n_labels": 24,
+  "code_runs": 9,
+  "turns": 10,
+  "wall_s": 558,
+  "mit_corpus_guess": "python",
+  "mit_copy_named": [
+   "L2H1",
+   "L3H1",
+   "L3H5"
+  ],
+  "mit_p_correct": 0.52,
+  "mit_code_runs": 7
+ },
+ {
+  "run": "romaji_r0",
+  "truth": "romaji",
+  "corpus_guess": "romaji",
+  "order_guess": "as is",
+  "probabilities": {
+   "python": 0.14,
+   "romaji": 0.58,
+   "english": 0.28,
+   "as is": 0.96,
+   "shuffled": 0.04
+  },
+  "head_labels": {
+   "L0H0": "unclear",
+   "L0H1": "broad",
+   "L0H2": "broad",
+   "L0H3": "previous",
+   "L0H4": "broad",
+   "L0H5": "broad",
+   "L1H0": "local",
+   "L1H1": "local",
+   "L1H2": "local",
+   "L1H3": "local",
+   "L1H4": "local",
+   "L1H5": "local",
+   "L2H0": "local",
+   "L2H1": "local",
+   "L2H2": "local",
+   "L2H3": "local",
+   "L2H4": "local",
+   "L2H5": "local",
+   "L3H0": "local",
+   "L3H1": "local",
+   "L3H2": "local",
+   "L3H3": "copy",
+   "L3H4": "unclear",
+   "L3H5": "local"
+  },
+  "copy_named": [
+   "L3H3"
+  ],
+  "corpus_correct": true,
+  "p_correct": 0.58,
+  "true_copy": [
+   "L3H3"
+  ],
+  "copy_true_positive": [
+   "L3H3"
+  ],
+  "copy_false_positive": [],
+  "copy_missed": [],
+  "n_labels": 24,
+  "code_runs": 6,
+  "turns": 7,
+  "wall_s": 561,
+  "mit_corpus_guess": "romaji",
+  "mit_copy_named": [
+   "L3H3"
+  ],
+  "mit_p_correct": 0.55,
+  "mit_code_runs": 8
+ },
+ {
+  "run": "romaji_r1",
+  "truth": "romaji",
+  "corpus_guess": "romaji",
+  "order_guess": "as is",
+  "probabilities": {
+   "python": 0.1,
+   "romaji": 0.6,
+   "english": 0.3,
+   "as is": 0.97,
+   "shuffled": 0.03
+  },
+  "head_labels": {
+   "L0H0": "local",
+   "L0H1": "unclear",
+   "L0H2": "unclear",
+   "L0H3": "previous",
+   "L0H4": "unclear",
+   "L0H5": "broad",
+   "L1H0": "local",
+   "L1H1": "local",
+   "L1H2": "local",
+   "L1H3": "local",
+   "L1H4": "local",
+   "L1H5": "local",
+   "L2H0": "local",
+   "L2H1": "local",
+   "L2H2": "local",
+   "L2H3": "unclear",
+   "L2H4": "local",
+   "L2H5": "local",
+   "L3H0": "local",
+   "L3H1": "broad",
+   "L3H2": "unclear",
+   "L3H3": "copy",
+   "L3H4": "broad",
+   "L3H5": "local"
+  },
+  "copy_named": [
+   "L3H3"
+  ],
+  "corpus_correct": true,
+  "p_correct": 0.6,
+  "true_copy": [
+   "L3H3"
+  ],
+  "copy_true_positive": [
+   "L3H3"
+  ],
+  "copy_false_positive": [],
+  "copy_missed": [],
+  "n_labels": 24,
+  "code_runs": 9,
+  "turns": 10,
+  "wall_s": 627,
+  "mit_corpus_guess": "romaji",
+  "mit_copy_named": [
+   "L3H3"
+  ],
+  "mit_p_correct": 0.62,
+  "mit_code_runs": 9
+ }
+]

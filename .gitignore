@@ -98,8 +98,7 @@ scratch/
 
 # Optional experiment artifacts
 # Uncomment these if your project stores large/reproducible outputs outside git.
-# experiments/**/raw/
-# experiments/**/processed/
+# # experiments/**/processed/
 # experiments/**/figures/candidates/
 # results/
 
@@ -118,3 +117,27 @@ scratch/
 # - paper/figures/
 # - PDF files generally (vendor PDFs and final/submission PDFs may be tracked)
 # ----------------------------------------------------------------------
+
+# ----------------------------------------------------------------------
+# med_wsp project additions
+# ----------------------------------------------------------------------
+# Third-party clones and downloads (untrusted, rebuildable)
+external/
+# Large local artifacts: weights, activation caches, datasets
+models/
+data/
+experiments/**/work/
+experiments/**/cache/
+_empty_cwd/
+*.safetensors
+*.pt
+# Paper PDFs / saved HTML are kept local (notes link to the sources)
+vault/papers/pdf/
+# Obsidian machine-specific state
+vault/.obsidian/workspace*.json
+vault/.obsidian/cache
+vault/.trash/
+# Local Codex harness state
+.codex_home/
+logs/
+.venv-sandbox/

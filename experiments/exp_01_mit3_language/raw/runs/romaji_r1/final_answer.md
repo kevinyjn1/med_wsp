@@ -1,0 +1,56 @@
+Observations:
+All results below come from weight algebra, not forward passes. The head labels are hypotheses, not measured attention patterns.
+
+Let \(P=I-\mathbf1\mathbf1^\top/384\), \(D_l=\mathrm{diag}(\text{ln1_w.l})\), and, using each head’s slices,
+\[
+A_{lh}=PD_lQ_{lh}^{T}K_{lh}D_lP/8,\qquad
+B_{lh}=PO_{lh}V_{lh}D_lP.
+\]
+
+- **A likely positional-routing head:** L0H3 has substantial complex-conjugate QK eigenvalues, including approximately \(0.137\pm0.133i\). Its Q/K directions are comparatively separate from its value directions. This suggests position-based selection followed by transport of character information.
+- **A particularly strong induction candidate:** For L3H3, the key-side composition through L0H3 has
+  \(\mathrm{tr}(A_{33}B_{03})/\|A_{33}B_{03}\|_*=0.1898\).
+  The corresponding query-side score is **-0.0767**. That directional asymmetry supports matching the current context against information transported into an earlier position’s keys.
+- **Shared addressing machinery:** L0H1, H2, H4 and H5 put respectively **89.7%, 92.2%, 80.0% and 96.6%** of their OV squared norm into the same two-dimensional output subspace. Later attention reads this subspace strongly.
+- **Attention-specific coordinates:** For example, `ln1_w.1[21] = 1.084619`, but `ln2_w.1[21] = 0.001865`; similarly, `ln1_w.2[21] = 1.092720`, versus `ln2_w.2[21] = 0.012022`. Together with the shared addressing subspace, this suggests positional registers largely reserved for attention.
+- **A weak corpus clue:** The top 24 singular directions of centered `W_proj.3` contain **92.1%** of its squared norm. The uncentered singular values around that boundary are **8.3531, 8.2404, 6.3701, 5.8357**. This is compatible with romaji’s smaller effective alphabet, but does not identify letters or establish the corpus by itself.
+
+Heads:
+Here, “address bias” means the norm of the static key-linear coefficient induced by `ln1_b`, not an observed attention distance. Locality assignments based on it are tentative.
+
+L0H0: **local** - substantial overlap with L0H3’s addressing directions, but a lower-rank, more content-dependent QK structure.
+L0H1: **unclear** - predominantly rank-two shared-address output; this does not establish which positions it selects.
+L0H2: **unclear** - similar to H1; 92.2% of OV energy enters the shared addressing plane.
+L0H3: **previous** - strongest shift-like positional QK structure; its transported information supports L3H3’s key-side matching.
+L0H4: **unclear** - low-rank addressing writer, without sufficient evidence for a particular attention range.
+L0H5: **broad** - exceptionally weak QK norm, approximately 0.034, paired with large, low-rank OV norm, approximately 18.82; consistent with pooled context.
+
+L1H0: **local** - strong shared addressing bias, norm 3.98, and the common directional positional structure.
+L1H1: **local** - same addressing structure, bias norm 3.69; no distinctive induction asymmetry.
+L1H2: **local** - shared positional machinery, bias norm 3.05.
+L1H3: **local** - shared positional machinery, bias norm 3.39.
+L1H4: **local** - same family, with weaker bias norm 2.33; potentially a wider local range.
+L1H5: **local** - strong shared addressing bias, norm 3.90.
+
+L2H0: **local** - retained directional addressing structure, bias norm 2.02.
+L2H1: **local** - substantial shared addressing bias, norm 1.88; little direct induction composition through L0H3.
+L2H2: **local** - shared addressing remains prominent, bias norm 1.61.
+L2H3: **unclear** - weaker addressing bias, norm 1.06, without a clear induction signature; local versus broader selection remains unresolved.
+L2H4: **local** - strongest addressing bias in this layer, norm 2.31.
+L2H5: **local** - shared addressing bias, norm 2.02; direct L0H3 induction-composition score is only 0.0022.
+
+L3H0: **local** - retains the shared directional addressing structure, although content matching is increasingly important.
+L3H1: **broad** - weaker addressing bias, norm 0.28, and substantial value transport; tentative broader contextual aggregation.
+L3H2: **unclear** - mixed content and positional structure, without decisive evidence separating local from broad attention.
+L3H3: **copy** - exceptional positive key-side composition through the likely previous-character head, negative query-side composition, and almost no shared positional-plane coupling.
+L3H4: **broad** - weakest QK norm in its layer, approximately 0.625, largest OV norm, approximately 49.24, and little positional-plane coupling.
+L3H5: **local** - retains shared directional addressing, with bias norm 0.49; weaker evidence than for the middle-layer local heads.
+
+Reasoning:
+The likely previous-character transport and asymmetric induction circuit favor **unshuffled text** over within-line character bags. The network appears to combine short-range ordered context, shared positional addressing, and at least one longer-range repetition mechanism.
+
+The corpus judgment is considerably less secure. The concentrated output geometry and substantial short-range machinery fit romaji’s restricted effective alphabet and strong spelling regularities. English remains plausible; these weights do **not** justify claiming that particular vowel or consonant identities have been recovered. I favor romaji, but with substantially less confidence than the order judgment.
+
+corpus: romaji
+order: as is
+probabilities: python=0.10 romaji=0.60 english=0.30; as is=0.97 shuffled=0.03

@@ -1,0 +1,74 @@
+OUTPUT of run 1 of at most 100:
+```
+LAYER NORMS
+ln1_w.0: mean=0.2677 std=0.2147 min=0.0165 max=1.0134 norm=6.7241
+ln1_b.0: mean=0.0007 std=0.0366 min=-0.1215 max=0.1418 norm=0.7172
+ln2_w.0: mean=0.8168 std=0.3312 min=0.0468 max=1.6412 norm=17.2723
+ln2_b.0: mean=0.0180 std=0.0667 min=-0.5537 max=0.1663 norm=1.3530
+ln1_w.1: mean=0.4754 std=0.0964 min=0.1979 max=1.2096 norm=9.5046
+ln1_b.1: mean=0.0220 std=0.1532 min=-1.0505 max=0.9102 norm=3.0327
+ln2_w.1: mean=1.0111 std=0.1582 min=0.0139 max=1.4707 norm=20.0543
+ln2_b.1: mean=0.0275 std=0.1442 min=-0.3744 max=0.3652 norm=2.8769
+ln1_w.2: mean=0.7343 std=0.0712 min=0.3445 max=0.9047 norm=14.4574
+ln1_b.2: mean=0.0244 std=0.1315 min=-0.9417 max=0.7326 norm=2.6214
+ln2_w.2: mean=1.2750 std=0.1126 min=0.0775 max=1.5018 norm=25.0820
+ln2_b.2: mean=0.0188 std=0.1474 min=-0.4157 max=0.3635 norm=2.9110
+ln1_w.3: mean=0.7694 std=0.0469 min=0.4510 max=0.8778 norm=15.1046
+ln1_b.3: mean=0.0102 std=0.0945 min=-0.5141 max=0.6285 norm=1.8619
+ln2_w.3: mean=1.2552 std=0.0888 min=0.2619 max=1.4568 norm=24.6574
+ln2_b.3: mean=0.0140 std=0.1267 min=-0.5112 max=0.3808 norm=2.4972
+
+MATRIX STATISTICS
+W_q.0: norm=22.704 top5=[5.0385 4.9994 4.7025 4.377  4.3428] erank=67.6
+W_k.0: norm=23.214 top5=[6.2042 5.0521 4.5716 4.5372 4.3914] erank=64.9
+W_v.0: norm=18.197 top5=[4.5533 4.0243 3.7382 3.4973 3.4646] erank=64.9
+W_o.0: norm=19.600 top5=[6.678  5.2365 2.8346 2.679  2.6198] erank=77.5
+W_fc.0: norm=51.650 top5=[18.1104 12.2798  8.4726  7.9016  7.7793] erank=86.4
+W_proj.0: norm=45.806 top5=[10.9319  7.576   6.6285  6.2932  6.166 ] erank=144.1
+W_q.1: norm=31.676 top5=[8.9845 7.1373 6.0786 5.874  5.1897] erank=75.1
+W_k.1: norm=28.602 top5=[10.9672  9.4479  5.438   4.842   4.5394] erank=59.2
+W_v.1: norm=28.469 top5=[5.3505 5.0645 4.9787 4.8191 4.6901] erank=98.2
+W_o.1: norm=26.151 top5=[4.1901 3.6511 3.3848 3.3517 3.2401] erank=143.5
+W_fc.1: norm=80.261 top5=[20.7957 14.1429 13.8258 13.4276 13.1222] erank=98.5
+W_proj.1: norm=75.119 top5=[7.6249 7.3593 6.9075 6.4887 6.3442] erank=321.0
+W_q.2: norm=37.483 top5=[5.0672 4.7425 4.4563 4.3901 4.3139] erank=196.2
+W_k.2: norm=36.356 top5=[8.2935 7.3483 5.0588 4.4667 4.3056] erank=177.1
+W_v.2: norm=34.746 top5=[3.89   3.8245 3.7912 3.6543 3.6442] erank=208.0
+W_o.2: norm=34.205 top5=[4.4416 4.0726 3.768  3.4554 3.4401] erank=225.3
+W_fc.2: norm=79.454 top5=[14.8285  8.0483  7.9211  7.76    7.6596] erank=269.7
+W_proj.2: norm=77.477 top5=[10.0946  8.9847  8.0747  7.9088  7.7913] erank=295.9
+W_q.3: norm=33.940 top5=[4.1544 3.9457 3.875  3.6008 3.5209] erank=217.2
+W_k.3: norm=33.221 top5=[4.8875 3.9279 3.6197 3.4371 3.3813] erank=220.7
+W_v.3: norm=38.939 top5=[4.6968 4.3562 4.2546 4.2082 4.1706] erank=208.0
+W_o.3: norm=39.017 top5=[9.1753 6.6297 4.4421 4.1112 4.0543] erank=183.6
+W_fc.3: norm=78.189 top5=[14.3731  8.1763  7.9733  7.8303  7.0359] erank=301.6
+W_proj.3: norm=85.089 top5=[28.1752 20.2934 19.2921 19.1349 18.7081] erank=34.7
+
+HEAD STATISTICS
+QK uses Q.T @ K / 8; OV uses O @ V. No activations are evaluated.
+L0H0: QKnorm=0.807 QKtop=[0.6493 0.4237 0.1058 0.0821] QKerank=2.9 QKsymcos=+0.155 QKtrace/norm=-0.655 sym_extrema=(-0.482,0.207) OVnorm=8.667 OVtop=[6.8978 3.8967 1.9362] OVerank=3.5 OVtrace/norm=+0.187
+L0H1: QKnorm=4.067 QKtop=[2.1529 1.5153 1.437  1.2158] QKerank=12.3 QKsymcos=+0.164 QKtrace/norm=-1.267 sym_extrema=(-2.094,0.759) OVnorm=17.067 OVtop=[4.7034 4.5732 4.4244] OVerank=23.9 OVtrace/norm=-0.048
+L0H2: QKnorm=1.136 QKtop=[0.5608 0.4466 0.3741 0.3565] QKerank=12.4 QKsymcos=+0.176 QKtrace/norm=-0.849 sym_extrema=(-0.356,0.328) OVnorm=8.592 OVtop=[4.7864 3.6205 3.5138] OVerank=7.9 OVtrace/norm=-0.086
+L0H3: QKnorm=1.434 QKtop=[0.9593 0.7007 0.4312 0.2943] QKerank=6.3 QKsymcos=+0.085 QKtrace/norm=-0.798 sym_extrema=(-0.563,0.406) OVnorm=5.288 OVtop=[2.1683 1.9968 1.8749] OVerank=14.5 OVtrace/norm=-0.013
+L0H4: QKnorm=0.097 QKtop=[0.0399 0.0302 0.0238 0.018 ] QKerank=35.3 QKsymcos=+0.039 QKtrace/norm=-0.613 sym_extrema=(-0.027,0.013) OVnorm=25.795 OVtop=[18.8145 15.373   5.587 ] OVerank=3.2 OVtrace/norm=+0.259
+L0H5: QKnorm=5.785 QKtop=[1.7595 1.7198 1.6493 1.5582] QKerank=21.5 QKsymcos=-0.228 QKtrace/norm=+1.126 sym_extrema=(-0.532,1.477) OVnorm=18.558 OVtop=[5.6105 5.5031 5.1228] OVerank=21.4 OVtrace/norm=-0.614
+L1H0: QKnorm=2.471 QKtop=[1.116  0.8613 0.7564 0.7194] QKerank=16.2 QKsymcos=+0.042 QKtrace/norm=-0.642 sym_extrema=(-0.688,0.475) OVnorm=27.504 OVtop=[9.9268 9.2713 8.8717] OVerank=18.8 OVtrace/norm=-1.257
+L1H1: QKnorm=4.754 QKtop=[2.3923 1.8458 1.7245 1.3776] QKerank=12.9 QKsymcos=+0.082 QKtrace/norm=-1.249 sym_extrema=(-1.371,1.106) OVnorm=19.961 OVtop=[6.2114 5.6582 5.4031] OVerank=25.4 OVtrace/norm=-1.193
+L1H2: QKnorm=3.618 QKtop=[1.8108 1.5834 1.2774 0.9049] QKerank=12.8 QKsymcos=+0.070 QKtrace/norm=-0.979 sym_extrema=(-1.004,0.914) OVnorm=23.710 OVtop=[6.7994 6.707  6.4541] OVerank=24.3 OVtrace/norm=-1.347
+L1H3: QKnorm=3.776 QKtop=[1.9983 1.6597 1.2775 0.9009] QKerank=12.1 QKsymcos=+0.062 QKtrace/norm=-0.871 sym_extrema=(-0.925,1.063) OVnorm=20.845 OVtop=[7.119  6.3904 5.8748] OVerank=21.2 OVtrace/norm=-1.078
+L1H4: QKnorm=3.647 QKtop=[1.8529 1.4675 1.3675 0.9381] QKerank=12.7 QKsymcos=+0.052 QKtrace/norm=-0.775 sym_extrema=(-0.981,0.960) OVnorm=19.572 OVtop=[6.3536 5.9959 5.6421] OVerank=21.2 OVtrace/norm=-1.121
+L1H5: QKnorm=4.695 QKtop=[2.5227 2.0229 1.5355 1.4002] QKerank=11.3 QKsymcos=+0.072 QKtrace/norm=-1.184 sym_extrema=(-1.391,1.164) OVnorm=20.352 OVtop=[5.7808 5.6434 5.3362] OVerank=26.9 OVtrace/norm=-1.361
+L2H0: QKnorm=3.752 QKtop=[0.9354 0.8874 0.852  0.8089] QKerank=43.6 QKsymcos=-0.006 QKtrace/norm=-0.241 sym_extrema=(-0.483,0.554) OVnorm=25.165 OVtop=[5.5556 5.1318 5.0047] OVerank=48.3 OVtrace/norm=-1.919
+L2H1: QKnorm=3.610 QKtop=[0.9073 0.8181 0.7468 0.7162] QKerank=45.4 QKsymcos=+0.040 QKtrace/norm=+1.308 sym_extrema=(-0.466,0.500) OVnorm=28.885 OVtop=[8.6522 6.3942 6.333 ] OVerank=41.9 OVtrace/norm=-1.882
+L2H2: QKnorm=5.221 QKtop=[1.3538 1.2843 1.2191 1.1747] QKerank=36.3 QKsymcos=+0.034 QKtrace/norm=+0.566 sym_extrema=(-0.778,0.853) OVnorm=22.619 OVtop=[4.7423 4.5846 4.4915] OVerank=48.7 OVtrace/norm=-1.766
+L2H3: QKnorm=3.648 QKtop=[1.0116 0.8784 0.7749 0.7664] QKerank=43.8 QKsymcos=-0.015 QKtrace/norm=-0.166 sym_extrema=(-0.481,0.545) OVnorm=27.634 OVtop=[6.1792 5.7652 5.6934] OVerank=48.5 OVtrace/norm=-1.872
+L2H4: QKnorm=4.112 QKtop=[1.451  1.2106 0.8974 0.8432] QKerank=37.4 QKsymcos=-0.001 QKtrace/norm=+0.093 sym_extrema=(-0.636,0.827) OVnorm=24.785 OVtop=[5.4448 5.1835 5.1281] OVerank=45.0 OVtrace/norm=-2.103
+L2H5: QKnorm=3.041 QKtop=[0.7879 0.7404 0.6847 0.5877] QKerank=46.7 QKsymcos=-0.005 QKtrace/norm=-0.422 sym_extrema=(-0.415,0.452) OVnorm=31.883 OVtop=[8.4674 7.339  6.9514] OVerank=45.2 OVtrace/norm=-1.433
+L3H0: QKnorm=3.500 QKtop=[0.6994 0.6729 0.6513 0.6413] QKerank=54.4 QKsymcos=+0.019 QKtrace/norm=+0.852 sym_extrema=(-0.362,0.436) OVnorm=31.618 OVtop=[7.1234 6.4029 6.0901] OVerank=50.9 OVtrace/norm=-1.973
+L3H1: QKnorm=2.865 QKtop=[0.5498 0.5348 0.5212 0.5106] QKerank=55.3 QKsymcos=+0.023 QKtrace/norm=+1.331 sym_extrema=(-0.314,0.345) OVnorm=33.152 OVtop=[9.3735 6.819  6.7015] OVerank=42.8 OVtrace/norm=-1.930
+L3H2: QKnorm=3.474 QKtop=[0.7808 0.6874 0.6617 0.6085] QKerank=54.4 QKsymcos=-0.008 QKtrace/norm=+0.353 sym_extrema=(-0.367,0.450) OVnorm=34.637 OVtop=[11.5768  7.7866  6.8146] OVerank=44.4 OVtrace/norm=-1.879
+L3H3: QKnorm=1.784 QKtop=[0.4607 0.4079 0.3629 0.3404] QKerank=50.9 QKsymcos=-0.010 QKtrace/norm=+0.002 sym_extrema=(-0.228,0.250) OVnorm=48.677 OVtop=[18.6251 12.287  11.9525] OVerank=32.1 OVtrace/norm=-1.346
+L3H4: QKnorm=2.930 QKtop=[0.7152 0.6299 0.6073 0.5454] QKerank=51.8 QKsymcos=+0.004 QKtrace/norm=+0.012 sym_extrema=(-0.377,0.432) OVnorm=36.644 OVtop=[11.7739 10.138   8.4872] OVerank=41.4 OVtrace/norm=-1.232
+L3H5: QKnorm=3.581 QKtop=[0.676  0.6577 0.6425 0.6272] QKerank=55.5 QKsymcos=+0.220 QKtrace/norm=+3.817 sym_extrema=(-0.261,0.546) OVnorm=30.624 OVtop=[13.0464  7.0987  6.7214] OVerank=28.0 OVtrace/norm=-2.408
+
+```

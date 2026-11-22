@@ -1,0 +1,65 @@
+OUTPUT of run 6 of at most 100:
+```
+Key-selection bias geometry
+shared-span fraction uses top4 output directions of L0H0/H1/H4/H5
+L0H0: norm=0.0136, shared_span_fraction=0.135, cosine_to_L1_consensus=-0.118
+L0H1: norm=0.0033, shared_span_fraction=0.243, cosine_to_L1_consensus=-0.403
+L0H2: norm=0.1428, shared_span_fraction=0.037, cosine_to_L1_consensus=0.149
+L0H3: norm=0.0535, shared_span_fraction=0.072, cosine_to_L1_consensus=-0.039
+L0H4: norm=0.0112, shared_span_fraction=0.033, cosine_to_L1_consensus=-0.141
+L0H5: norm=0.0162, shared_span_fraction=0.233, cosine_to_L1_consensus=0.387
+L1H0: norm=1.3572, shared_span_fraction=0.869, cosine_to_L1_consensus=0.980
+L1H1: norm=2.2848, shared_span_fraction=0.903, cosine_to_L1_consensus=0.987
+L1H2: norm=2.5879, shared_span_fraction=0.906, cosine_to_L1_consensus=0.989
+L1H3: norm=2.3511, shared_span_fraction=0.895, cosine_to_L1_consensus=0.985
+L1H4: norm=2.2902, shared_span_fraction=0.909, cosine_to_L1_consensus=0.984
+L1H5: norm=1.7526, shared_span_fraction=0.890, cosine_to_L1_consensus=0.986
+L2H0: norm=1.6991, shared_span_fraction=0.858, cosine_to_L1_consensus=0.806
+L2H1: norm=0.7446, shared_span_fraction=0.797, cosine_to_L1_consensus=0.781
+L2H2: norm=0.7554, shared_span_fraction=0.826, cosine_to_L1_consensus=0.786
+L2H3: norm=1.4625, shared_span_fraction=0.875, cosine_to_L1_consensus=0.814
+L2H4: norm=1.5774, shared_span_fraction=0.867, cosine_to_L1_consensus=0.804
+L2H5: norm=1.5086, shared_span_fraction=0.859, cosine_to_L1_consensus=0.814
+L3H0: norm=0.2581, shared_span_fraction=0.150, cosine_to_L1_consensus=0.318
+L3H1: norm=0.2408, shared_span_fraction=0.036, cosine_to_L1_consensus=-0.129
+L3H2: norm=0.2895, shared_span_fraction=0.605, cosine_to_L1_consensus=0.621
+L3H3: norm=0.3603, shared_span_fraction=0.673, cosine_to_L1_consensus=0.652
+L3H4: norm=0.3072, shared_span_fraction=0.531, cosine_to_L1_consensus=0.602
+L3H5: norm=0.1645, shared_span_fraction=0.039, cosine_to_L1_consensus=0.080
+
+Composition restricted to top24 input directions of L0H2 V
+L1H0: normalized_trace=-0.0930, positive_symmetric_energy=0.3012, symmetric_eigenvalue_range=(-0.0175,0.0114)
+L1H1: normalized_trace=0.0014, positive_symmetric_energy=0.4190, symmetric_eigenvalue_range=(-0.0328,0.0225)
+L1H2: normalized_trace=0.1347, positive_symmetric_energy=0.7213, symmetric_eigenvalue_range=(-0.0170,0.0298)
+L1H3: normalized_trace=0.1545, positive_symmetric_energy=0.6657, symmetric_eigenvalue_range=(-0.0191,0.0240)
+L1H4: normalized_trace=0.1492, positive_symmetric_energy=0.7267, symmetric_eigenvalue_range=(-0.0109,0.0193)
+L1H5: normalized_trace=0.0048, positive_symmetric_energy=0.4371, symmetric_eigenvalue_range=(-0.0279,0.0193)
+L2H0: normalized_trace=-0.1045, positive_symmetric_energy=0.2434, symmetric_eigenvalue_range=(-0.0379,0.0164)
+L2H1: normalized_trace=-0.0017, positive_symmetric_energy=0.4906, symmetric_eigenvalue_range=(-0.0180,0.0170)
+L2H2: normalized_trace=0.0925, positive_symmetric_energy=0.6100, symmetric_eigenvalue_range=(-0.0109,0.0122)
+L2H3: normalized_trace=0.0200, positive_symmetric_energy=0.5466, symmetric_eigenvalue_range=(-0.0129,0.0160)
+L2H4: normalized_trace=-0.1102, positive_symmetric_energy=0.3542, symmetric_eigenvalue_range=(-0.0199,0.0144)
+L2H5: normalized_trace=0.0070, positive_symmetric_energy=0.5023, symmetric_eigenvalue_range=(-0.0164,0.0183)
+L3H0: normalized_trace=-0.0225, positive_symmetric_energy=0.4246, symmetric_eigenvalue_range=(-0.0201,0.0139)
+L3H1: normalized_trace=0.6708, positive_symmetric_energy=0.9975, symmetric_eigenvalue_range=(-0.0037,0.0497)
+L3H2: normalized_trace=0.0536, positive_symmetric_energy=0.5773, symmetric_eigenvalue_range=(-0.0078,0.0099)
+L3H3: normalized_trace=-0.0047, positive_symmetric_energy=0.5478, symmetric_eigenvalue_range=(-0.0074,0.0093)
+L3H4: normalized_trace=-0.0643, positive_symmetric_energy=0.4433, symmetric_eigenvalue_range=(-0.0138,0.0121)
+L3H5: normalized_trace=0.1150, positive_symmetric_energy=0.7245, symmetric_eigenvalue_range=(-0.0042,0.0080)
+
+Coordinate-permutation null for L3H1/L0H2 composition alignment
+observed=0.09504, null_mean=-0.00222, null_sd=0.00253, null_range=(-0.00938,0.00618)
+
+Last MLP output spectrum energy
+rank 16: cumulative_squared_singular_value_fraction=0.7435, next_singular_value=13.2929
+rank 20: cumulative_squared_singular_value_fraction=0.8364, next_singular_value=11.7405
+rank 23: cumulative_squared_singular_value_fraction=0.8923, next_singular_value=8.3505
+rank 24: cumulative_squared_singular_value_fraction=0.9026, next_singular_value=8.0636
+rank 26: cumulative_squared_singular_value_fraction=0.9214, next_singular_value=7.4610
+rank 27: cumulative_squared_singular_value_fraction=0.9296, next_singular_value=7.1656
+rank 28: cumulative_squared_singular_value_fraction=0.9371, next_singular_value=5.8331
+rank 29: cumulative_squared_singular_value_fraction=0.9421, next_singular_value=4.0718
+rank 32: cumulative_squared_singular_value_fraction=0.9476, next_singular_value=2.8415
+rank 40: cumulative_squared_singular_value_fraction=0.9550, next_singular_value=2.1809
+
+```

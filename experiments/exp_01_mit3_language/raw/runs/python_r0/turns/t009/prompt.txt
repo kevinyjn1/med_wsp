@@ -1,0 +1,90 @@
+OUTPUT of run 8 of at most 100:
+```
+
+Positional-reference rank 12
+H 0 projected energy fraction 0.0047 cosines with shift powers 0..8 [ 0.0235  0.2447  0.2215 -0.003  -0.1806 -0.2301 -0.1263  0.1113  0.2635]
+H 1 projected energy fraction 0.4098 cosines with shift powers 0..8 [-0.2717 -0.0258  0.7292 -0.012  -0.4449  0.282  -0.009  -0.4442  0.3939]
+H 2 projected energy fraction 0.0311 cosines with shift powers 0..8 [ 0.274   0.051  -0.27   -0.3695 -0.1475  0.1514  0.336   0.3033  0.0069]
+H 3 projected energy fraction 0.0163 cosines with shift powers 0..8 [-0.4676 -0.2666  0.0778  0.2835  0.2453 -0.0064 -0.2872 -0.3309 -0.1065]
+H 4 projected energy fraction 0.0009 cosines with shift powers 0..8 [-0.1693 -0.1132 -0.0053 -0.0221 -0.0006  0.034  -0.0374 -0.0818 -0.0794]
+H 5 projected energy fraction 0.4275 cosines with shift powers 0..8 [ 0.408   0.9432  0.408  -0.0676  0.0329 -0.2917 -0.3873  0.3304  0.4871]
+H5 mode phase, then each head's complex quadratic coefficient magnitude and phase
+0.8555 [(np.float64(0.0022), np.float64(-2.6613)), (np.float64(0.2821), np.float64(1.977)), (np.float64(0.0068), np.float64(-2.401)), (np.float64(0.0111), np.float64(-2.8113)), (np.float64(0.0003), np.float64(-2.5321)), (np.float64(1.4635), np.float64(0.8555))]
+0.6212 [(np.float64(0.0028), np.float64(2.5924)), (np.float64(0.235), np.float64(1.7386)), (np.float64(0.0089), np.float64(-2.579)), (np.float64(0.0117), np.float64(-2.4751)), (np.float64(0.0002), np.float64(-2.743)), (np.float64(1.2692), np.float64(0.6212))]
+1.9126 [(np.float64(0.0018), np.float64(-2.73)), (np.float64(1.2766), np.float64(-2.3041)), (np.float64(0.0024), np.float64(2.5173)), (np.float64(0.0007), np.float64(2.4166)), (np.float64(0.0003), np.float64(-1.3811)), (np.float64(1.0029), np.float64(1.9126))]
+1.9802 [(np.float64(0.0021), np.float64(2.0092)), (np.float64(0.9565), np.float64(-2.2113)), (np.float64(0.0065), np.float64(1.6587)), (np.float64(0.0059), np.float64(-2.6923)), (np.float64(0.0003), np.float64(2.7618)), (np.float64(0.7779), np.float64(1.9802))]
+0.9095 [(np.float64(0.0253), np.float64(1.2471)), (np.float64(0.5802), np.float64(1.0747)), (np.float64(0.113), np.float64(-0.4659)), (np.float64(0.105), np.float64(2.9443)), (np.float64(0.0001), np.float64(0.8911)), (np.float64(0.6299), np.float64(0.9095))]
+
+Positional-reference rank 20
+H 0 projected energy fraction 0.0071 cosines with shift powers 0..8 [-0.0217  0.142   0.1683  0.0429 -0.0886 -0.1718 -0.148   0.0044  0.1281]
+H 1 projected energy fraction 0.4787 cosines with shift powers 0..8 [-0.2853  0.006   0.7351  0.0522 -0.389   0.1915  0.0025 -0.2614  0.3248]
+H 2 projected energy fraction 0.0354 cosines with shift powers 0..8 [ 0.1791  0.0179 -0.2101 -0.3061 -0.1707  0.0409  0.2049  0.2412  0.0676]
+H 3 projected energy fraction 0.0234 cosines with shift powers 0..8 [-0.3417 -0.1945  0.0493  0.1704  0.1789  0.0542 -0.1811 -0.2793 -0.1374]
+H 4 projected energy fraction 0.0026 cosines with shift powers 0..8 [-0.1844 -0.0564  0.0912 -0.0029  0.0041  0.0585 -0.0426 -0.0885 -0.0537]
+H 5 projected energy fraction 0.7756 cosines with shift powers 0..8 [ 0.3224  0.9564  0.3224 -0.2881 -0.0499 -0.0572 -0.1987  0.1434  0.2741]
+H5 mode phase, then each head's complex quadratic coefficient magnitude and phase
+0.8775 [(np.float64(0.0016), np.float64(3.0689)), (np.float64(0.2931), np.float64(1.9564)), (np.float64(0.0051), np.float64(-2.494)), (np.float64(0.0064), np.float64(-2.4531)), (np.float64(0.0004), np.float64(-2.6449)), (np.float64(1.5201), np.float64(0.8775))]
+0.5894 [(np.float64(0.002), np.float64(2.1284)), (np.float64(0.2812), np.float64(1.5332)), (np.float64(0.0088), np.float64(-2.5924)), (np.float64(0.0145), np.float64(-2.4895)), (np.float64(0.0001), np.float64(-2.8087)), (np.float64(1.3511), np.float64(0.5894))]
+1.3843 [(np.float64(0.0008), np.float64(-2.8742)), (np.float64(0.2206), np.float64(3.1019)), (np.float64(0.0048), np.float64(-1.8385)), (np.float64(0.0041), np.float64(0.3716)), (np.float64(0.0001), np.float64(0.4362)), (np.float64(1.2408), np.float64(1.3843))]
+0.9413 [(np.float64(0.0008), np.float64(-2.7467)), (np.float64(0.2084), np.float64(2.2734)), (np.float64(0.0032), np.float64(-2.4179)), (np.float64(0.0062), np.float64(-1.9777)), (np.float64(0.0002), np.float64(-2.8661)), (np.float64(1.2348), np.float64(0.9413))]
+1.6435 [(np.float64(0.002), np.float64(-2.5107)), (np.float64(0.3389), np.float64(-2.6087)), (np.float64(0.002), np.float64(2.6726)), (np.float64(0.0046), np.float64(-1.7786)), (np.float64(0.0002), np.float64(-1.9288)), (np.float64(1.0644), np.float64(1.6435))]
+1.9372 [(np.float64(0.0014), np.float64(-2.6262)), (np.float64(1.2709), np.float64(-2.2921)), (np.float64(0.0032), np.float64(2.6518)), (np.float64(0.0016), np.float64(0.6874)), (np.float64(0.0002), np.float64(-1.0713)), (np.float64(0.9857), np.float64(1.9372))]
+2.0253 [(np.float64(0.0024), np.float64(2.267)), (np.float64(0.9095), np.float64(-2.2467)), (np.float64(0.0063), np.float64(2.0042)), (np.float64(0.0078), np.float64(-2.6076)), (np.float64(0.0007), np.float64(2.902)), (np.float64(0.814), np.float64(2.0253))]
+1.7124 [(np.float64(0.0012), np.float64(-2.8208)), (np.float64(0.4218), np.float64(-2.3308)), (np.float64(0.0019), np.float64(-2.7415)), (np.float64(0.0027), np.float64(0.7806)), (np.float64(0.0002), np.float64(-2.0969)), (np.float64(0.7685), np.float64(1.7124))]
+0.871 [(np.float64(0.0252), np.float64(1.2688)), (np.float64(0.6458), np.float64(1.0371)), (np.float64(0.1247), np.float64(-0.4751)), (np.float64(0.1149), np.float64(2.8981)), (np.float64(0.0001), np.float64(0.2377)), (np.float64(0.6247), np.float64(0.871))]
+
+Positional-reference rank 28
+H 0 projected energy fraction 0.0259 cosines with shift powers 0..8 [-0.1538  0.0755 -0.0101  0.0134 -0.0407 -0.1337 -0.0245 -0.0342  0.0189]
+H 1 projected energy fraction 0.5402 cosines with shift powers 0..8 [-0.2774  0.043   0.5994  0.0973 -0.3014  0.1703 -0.0016 -0.1924  0.1385]
+H 2 projected energy fraction 0.0492 cosines with shift powers 0..8 [ 0.0759  0.0461 -0.1518 -0.1436 -0.0508  0.0695  0.1938  0.1547  0.0833]
+H 3 projected energy fraction 0.0508 cosines with shift powers 0..8 [-0.2715 -0.0972 -0.0098  0.0705  0.1149  0.0257 -0.0268 -0.0946 -0.071 ]
+H 4 projected energy fraction 0.0224 cosines with shift powers 0..8 [-0.2261  0.0107  0.0876 -0.0372  0.0229 -0.0369  0.0929 -0.0662 -0.0929]
+H 5 projected energy fraction 0.8464 cosines with shift powers 0..8 [ 0.2442  0.8729  0.2442 -0.2607 -0.0733 -0.0879 -0.1806  0.0207  0.1248]
+H5 mode phase, then each head's complex quadratic coefficient magnitude and phase
+0.8795 [(np.float64(0.0023), np.float64(-2.8151)), (np.float64(0.2865), np.float64(1.9581)), (np.float64(0.0056), np.float64(-2.4501)), (np.float64(0.0072), np.float64(-2.3904)), (np.float64(0.0003), np.float64(-2.6153)), (np.float64(1.5056), np.float64(0.8795))]
+0.5835 [(np.float64(0.0022), np.float64(2.3076)), (np.float64(0.2801), np.float64(1.5163)), (np.float64(0.0086), np.float64(-2.6433)), (np.float64(0.0157), np.float64(-2.4274)), (np.float64(0.0001), np.float64(-2.8618)), (np.float64(1.336), np.float64(0.5835))]
+1.3873 [(np.float64(0.0014), np.float64(-2.4545)), (np.float64(0.2084), np.float64(3.1268)), (np.float64(0.0052), np.float64(-2.0054)), (np.float64(0.0048), np.float64(0.2342)), (np.float64(0.0001), np.float64(1.5676)), (np.float64(1.2288), np.float64(1.3873))]
+0.9442 [(np.float64(0.001), np.float64(2.6674)), (np.float64(0.1853), np.float64(2.2658)), (np.float64(0.003), np.float64(-2.696)), (np.float64(0.0073), np.float64(-1.6679)), (np.float64(0.0003), np.float64(-3.0857)), (np.float64(1.1956), np.float64(0.9442))]
+1.6528 [(np.float64(0.0009), np.float64(-2.5655)), (np.float64(0.3121), np.float64(-2.6083)), (np.float64(0.0024), np.float64(2.534)), (np.float64(0.0029), np.float64(-2.1185)), (np.float64(0.0002), np.float64(-1.6191)), (np.float64(1.0573), np.float64(1.6528))]
+1.9322 [(np.float64(0.0012), np.float64(-2.7332)), (np.float64(1.2696), np.float64(-2.2889)), (np.float64(0.003), np.float64(2.7201)), (np.float64(0.0016), np.float64(1.0974)), (np.float64(0.0002), np.float64(-1.2178)), (np.float64(0.9952), np.float64(1.9322))]
+2.0057 [(np.float64(0.0029), np.float64(2.3221)), (np.float64(0.8517), np.float64(-2.2259)), (np.float64(0.0089), np.float64(2.5039)), (np.float64(0.0048), np.float64(-2.5835)), (np.float64(0.0008), np.float64(-3.1068)), (np.float64(0.8012), np.float64(2.0057))]
+1.6139 [(np.float64(0.002), np.float64(-2.3019)), (np.float64(0.2793), np.float64(-2.437)), (np.float64(0.003), np.float64(-2.2599)), (np.float64(0.0023), np.float64(0.7528)), (np.float64(0.0004), np.float64(-2.3293)), (np.float64(0.7373), np.float64(1.6139))]
+0.8753 [(np.float64(0.0182), np.float64(1.7454)), (np.float64(0.5116), np.float64(1.1204)), (np.float64(0.0897), np.float64(-0.4999)), (np.float64(0.0906), np.float64(2.9888)), (np.float64(0.0002), np.float64(2.5533)), (np.float64(0.6553), np.float64(0.8753))]
+1.9499 [(np.float64(0.0037), np.float64(-2.91)), (np.float64(0.1935), np.float64(-2.3078)), (np.float64(0.0126), np.float64(2.7683)), (np.float64(0.0044), np.float64(-2.9867)), (np.float64(0.0039), np.float64(-2.5726)), (np.float64(0.3844), np.float64(1.9499))]
+
+Low-rank L0 structural-head read-direction overlaps
+H0Q top2 energy 0.717152124264681
+H0K top2 energy 0.3605872139841565
+H0V top2 energy 0.6476350757518924
+H2Q top2 energy 0.382223251338041
+H2K top2 energy 0.3933716932808285
+H2V top2 energy 0.20916388305737862
+H3Q top2 energy 0.4927175726506012
+H3K top2 energy 0.41635357836188247
+H3V top2 energy 0.2463115547287914
+H4Q top2 energy 0.1516473364968215
+H4K top2 energy 0.1193071929965985
+H4V top2 energy 0.7745520622431892
+Reference names ['H0Q', 'H0K', 'H0V', 'H2Q', 'H2K', 'H2V', 'H3Q', 'H3K', 'H3V', 'H4Q', 'H4K', 'H4V']
+[[1.     0.1984 0.6574 0.77   0.3422 0.0903 0.8049 0.2907 0.4499 0.0825 0.1292 0.6293]
+ [0.1984 1.     0.109  0.1259 0.078  0.0709 0.1961 0.1614 0.0995 0.0151 0.1161 0.1235]
+ [0.6574 0.109  1.     0.5231 0.4512 0.0931 0.5523 0.406  0.7057 0.0072 0.1154 0.7817]
+ [0.77   0.1259 0.5231 1.     0.3385 0.0627 0.6452 0.3717 0.4033 0.0774 0.0808 0.6242]
+ [0.3422 0.078  0.4512 0.3385 1.     0.0466 0.2192 0.428  0.4522 0.0138 0.0041 0.5874]
+ [0.0903 0.0709 0.0931 0.0627 0.0466 1.     0.0344 0.08   0.0684 0.0148 0.0195 0.082 ]
+ [0.8049 0.1961 0.5523 0.6452 0.2192 0.0344 1.     0.2216 0.3873 0.1462 0.1656 0.4785]
+ [0.2907 0.1614 0.406  0.3717 0.428  0.08   0.2216 1.     0.3419 0.0056 0.0261 0.6055]
+ [0.4499 0.0995 0.7057 0.4033 0.4522 0.0684 0.3873 0.3419 1.     0.0122 0.0728 0.638 ]
+ [0.0825 0.0151 0.0072 0.0774 0.0138 0.0148 0.1462 0.0056 0.0122 1.     0.0406 0.0105]
+ [0.1292 0.1161 0.1154 0.0808 0.0041 0.0195 0.1656 0.0261 0.0728 0.0406 1.     0.0552]
+ [0.6293 0.1235 0.7817 0.6242 0.5874 0.082  0.4785 0.6055 0.638  0.0105 0.0552 1.    ]]
+
+L3 QK composition through L2H2: key vs query signed nuclear ratios
+0 0.07208775236623624 0.055571822376122 normalized traces 0.023795791763193606 0.01634107659380673
+1 0.28766397412588746 -0.061553757735443464 normalized traces 0.11043221101562632 -0.016362951791703467
+2 -0.001235874163169732 0.0760462808662806 normalized traces -0.0003953290752362871 0.022944452289411766
+3 0.029938255799835212 0.005817194401688732 normalized traces 0.009020178130847253 0.0015873382967589358
+4 0.026007455607935756 -0.002231409326775552 normalized traces 0.008060982118218386 -0.0006181261839595165
+5 0.39040065691064 -0.11555304585034336 normalized traces 0.1835535071254356 -0.03535505575997735
+
+```

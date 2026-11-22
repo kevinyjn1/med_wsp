@@ -1,0 +1,95 @@
+OUTPUT of run 4 of at most 100:
+```
+Within-layer QK Frobenius cosines
+Layer 0 
+ [[ 1.     0.209 -0.016 -0.014  0.115  0.018]
+ [ 0.209  1.    -0.004 -0.036  0.21  -0.008]
+ [-0.016 -0.004  1.     0.24  -0.006 -0.026]
+ [-0.014 -0.036  0.24   1.    -0.054 -0.058]
+ [ 0.115  0.21  -0.006 -0.054  1.     0.172]
+ [ 0.018 -0.008 -0.026 -0.058  0.172  1.   ]]
+Layer 1 
+ [[1.    0.578 0.416 0.448 0.455 0.464]
+ [0.578 1.    0.55  0.488 0.556 0.528]
+ [0.416 0.55  1.    0.608 0.667 0.564]
+ [0.448 0.488 0.608 1.    0.644 0.563]
+ [0.455 0.556 0.667 0.644 1.    0.577]
+ [0.464 0.528 0.564 0.563 0.577 1.   ]]
+Layer 2 
+ [[1.    0.078 0.133 0.103 0.112 0.106]
+ [0.078 1.    0.093 0.086 0.077 0.07 ]
+ [0.133 0.093 1.    0.118 0.126 0.125]
+ [0.103 0.086 0.118 1.    0.12  0.113]
+ [0.112 0.077 0.126 0.12  1.    0.107]
+ [0.106 0.07  0.125 0.113 0.107 1.   ]]
+Layer 3 
+ [[1.    0.071 0.044 0.036 0.075 0.03 ]
+ [0.071 1.    0.021 0.024 0.03  0.045]
+ [0.044 0.021 1.    0.094 0.103 0.054]
+ [0.036 0.024 0.094 1.    0.084 0.065]
+ [0.075 0.03  0.103 0.084 1.    0.049]
+ [0.03  0.045 0.054 0.065 0.049 1.   ]]
+
+First-layer OV products: singular values and output-subspace overlaps
+L0H0: scaled OV singular values [8.073 3.327 2.097 0.672 0.561 0.314 0.257 0.193 0.145 0.141 0.115 0.113]
+L0H1: scaled OV singular values [5.66  3.827 1.064 0.502 0.428 0.27  0.217 0.166 0.151 0.112 0.094 0.092]
+L0H2: scaled OV singular values [0.787 0.718 0.683 0.671 0.636 0.601 0.569 0.558 0.55  0.522 0.515 0.486]
+L0H3: scaled OV singular values [1.032 0.964 0.617 0.505 0.448 0.227 0.201 0.183 0.172 0.147 0.136 0.117]
+L0H4: scaled OV singular values [3.396 1.642 1.082 0.607 0.379 0.327 0.231 0.204 0.17  0.141 0.126 0.116]
+L0H5: scaled OV singular values [8.33  3.604 1.679 0.768 0.511 0.391 0.344 0.305 0.247 0.193 0.167 0.126]
+L0H0 top3 output overlap: [np.float64(1.0), np.float64(0.918), np.float64(0.014), np.float64(0.321), np.float64(0.932), np.float64(0.891)]
+L0H1 top3 output overlap: [np.float64(0.918), np.float64(1.0), np.float64(0.012), np.float64(0.315), np.float64(0.932), np.float64(0.903)]
+L0H2 top3 output overlap: [np.float64(0.014), np.float64(0.012), np.float64(1.0), np.float64(0.013), np.float64(0.011), np.float64(0.014)]
+L0H3 top3 output overlap: [np.float64(0.321), np.float64(0.315), np.float64(0.013), np.float64(1.0), np.float64(0.318), np.float64(0.33)]
+L0H4 top3 output overlap: [np.float64(0.932), np.float64(0.932), np.float64(0.011), np.float64(0.318), np.float64(1.0), np.float64(0.879)]
+L0H5 top3 output overlap: [np.float64(0.891), np.float64(0.903), np.float64(0.014), np.float64(0.33), np.float64(0.879), np.float64(1.0)]
+
+Later QK energy on first-layer broad-head output span
+Joint OV singular values: [11.995  8.43   3.362  1.312  0.999  0.861  0.73   0.605  0.566  0.54   0.482  0.436  0.393  0.367  0.346  0.321  0.306  0.295  0.262  0.246]
+L1H0: query=0.099, key=0.650, both=0.080
+L1H1: query=0.092, key=0.607, both=0.075
+L1H2: query=0.086, key=0.642, both=0.076
+L1H3: query=0.090, key=0.643, both=0.076
+L1H4: query=0.091, key=0.701, both=0.078
+L1H5: query=0.142, key=0.636, both=0.117
+L2H0: query=0.037, key=0.101, both=0.026
+L2H1: query=0.015, key=0.055, both=0.009
+L2H2: query=0.042, key=0.199, both=0.031
+L2H3: query=0.048, key=0.100, both=0.036
+L2H4: query=0.039, key=0.102, both=0.029
+L2H5: query=0.040, key=0.097, both=0.028
+L3H0: query=0.005, key=0.017, both=0.001
+L3H1: query=0.006, key=0.007, both=0.001
+L3H2: query=0.020, key=0.076, both=0.009
+L3H3: query=0.021, key=0.071, both=0.012
+L3H4: query=0.012, key=0.048, both=0.004
+L3H5: query=0.016, key=0.014, both=0.001
+
+Direct previous-head composition diagnostics
+L1H0: trace=-0.012, symmetric_positive_energy=0.465, top_sym_eigenvalues=[0.011 0.012 0.013 0.044]
+L1H1: trace=-0.001, symmetric_positive_energy=0.447, top_sym_eigenvalues=[0.024 0.028 0.047 0.076]
+L1H2: trace=0.057, symmetric_positive_energy=0.578, top_sym_eigenvalues=[0.032 0.042 0.049 0.082]
+L1H3: trace=0.051, symmetric_positive_energy=0.560, top_sym_eigenvalues=[0.03  0.034 0.05  0.079]
+L1H4: trace=0.049, symmetric_positive_energy=0.591, top_sym_eigenvalues=[0.026 0.029 0.041 0.079]
+L1H5: trace=0.020, symmetric_positive_energy=0.516, top_sym_eigenvalues=[0.03  0.039 0.047 0.107]
+L2H0: trace=-0.031, symmetric_positive_energy=0.467, top_sym_eigenvalues=[0.051 0.057 0.06  0.107]
+L2H1: trace=-0.030, symmetric_positive_energy=0.468, top_sym_eigenvalues=[0.042 0.048 0.054 0.065]
+L2H2: trace=0.004, symmetric_positive_energy=0.500, top_sym_eigenvalues=[0.03  0.033 0.04  0.043]
+L2H3: trace=0.015, symmetric_positive_energy=0.525, top_sym_eigenvalues=[0.043 0.043 0.063 0.069]
+L2H4: trace=-0.047, symmetric_positive_energy=0.460, top_sym_eigenvalues=[0.047 0.051 0.061 0.066]
+L2H5: trace=0.002, symmetric_positive_energy=0.503, top_sym_eigenvalues=[0.046 0.052 0.054 0.068]
+L3H0: trace=-0.013, symmetric_positive_energy=0.488, top_sym_eigenvalues=[0.046 0.049 0.052 0.055]
+L3H1: trace=0.441, symmetric_positive_energy=0.773, top_sym_eigenvalues=[0.074 0.077 0.083 0.101]
+L3H2: trace=0.011, symmetric_positive_energy=0.518, top_sym_eigenvalues=[0.029 0.031 0.034 0.036]
+L3H3: trace=0.005, symmetric_positive_energy=0.505, top_sym_eigenvalues=[0.029 0.031 0.035 0.036]
+L3H4: trace=-0.023, symmetric_positive_energy=0.484, top_sym_eigenvalues=[0.032 0.039 0.044 0.047]
+L3H5: trace=0.005, symmetric_positive_energy=0.513, top_sym_eigenvalues=[0.016 0.016 0.02  0.03 ]
+
+ICA of first MLP weight-row coordinates, not activations
+ICA component excess kurtosis: [ 76.95  71.68 115.62  52.43 192.23 135.7   89.74  72.48  60.93  93.11  34.15  94.89  37.02  37.37  85.06 131.86  56.89  48.38 134.02  63.1   32.12  35.17  41.4  163.12]
+ICA component skewness: [6.14 4.83 6.82 3.64 7.65 7.89 7.02 5.63 4.67 5.29 2.08 6.59 1.48 1.88 6.36 4.53 5.21 3.58 8.56 3.63 3.33 1.54 2.72 9.75]
+Same-component direct/OV-composed coefficient correlations: [ 0.186  0.053  0.13  -0.136  0.009  0.336  0.216  0.011  0.229  0.219  0.123  0.294  0.261  0.082  0.04  -0.176  0.063  0.099  0.042 -0.08   0.114  0.177  0.131 -0.218]
+Largest cross-component coefficient correlations:
+[(np.float64(0.2397086133350165), 14, 12), (np.float64(0.2367673364922014), 13, 23), (np.float64(0.21526874520839162), 21, 2), (np.float64(0.21405857358293665), 7, 3), (np.float64(0.19620543951771013), 7, 18), (np.float64(0.19607844532903457), 7, 16), (np.float64(0.18579081200103204), 20, 18), (np.float64(0.17688173741416646), 11, 3), (np.float64(0.16529242757193585), 15, 1), (np.float64(0.16355834310765788), 7, 0), (np.float64(0.16264454322314997), 1, 2), (np.float64(0.1609914625638395), 14, 16), (np.float64(0.1575226509659475), 7, 12), (np.float64(0.15468425381894133), 16, 2), (np.float64(0.1530301404181443), 8, 3), (np.float64(0.14999683175177858), 14, 0), (np.float64(0.1493770835159469), 15, 21), (np.float64(0.14457248117184204), 10, 1), (np.float64(0.1436618145227688), 22, 15), (np.float64(0.14051662123605338), 14, 18), (np.float64(0.1379017185911623), 4, 2), (np.float64(0.13600185742523913), 14, 11), (np.float64(0.133312843373396), 6, 18), (np.float64(0.1333011407268729), 8, 13), (np.float64(0.133123711464814), 19, 11)]
+
+```
