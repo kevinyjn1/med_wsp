@@ -31,18 +31,22 @@ weights and checks every hash. Result (`experiments/exp_03_mit8_math/processed/e
 - The two layers use different directions: cosine 0.849.
 - So the edited checkpoint MIT evaluated is reproduced bit for bit from public weights.
 
-## Part B - behaviour of the edited model on this Mac (not done)
-Blocker: speed. MIT evaluated with vLLM on a rented GPU, up to 32,768 new tokens per answer; the unedited model
-runs to the limit on 93 % of MATH-500 answers, and the median correct edited answer is 9,172 tokens long.
-- PyTorch on MPS: about 8 tokens/s single, 43 tokens/s at batch 16 (the linear-attention layers fall back to
-  reference code). Measured while another job was using the GPU, so a lower bound.
-- MLX (`mlx-lm` 0.32.2 supports the architecture): 17 tokens/s single, also measured under GPU contention.
-  A clean benchmark is queued (`logs/bench_qwen_mlx.log`).
-- At these rates MIT's evaluation volume (about 61.7M tokens for unedited MATH-500 alone) is out of reach
-  locally. Options: a rented GPU (needs the researcher's go-ahead), or a scaled-down local check.
+## Part B - behaviour of the edited model on this Mac (running)
+MIT evaluated with vLLM on a rented GPU, up to 32,768 new tokens per answer; the unedited model runs to the limit
+on 93 % of MATH-500 answers, and the median correct edited answer is 9,172 tokens long.
+- Speed measured here (other jobs running at the same time): PyTorch on MPS 8 tokens/s single and 43 at batch 16
+  (the linear-attention layers fall back to reference code); MLX (`mlx-lm` 0.32.2) 53 single, 393 at batch 16,
+  600 at batch 64.
+- Scaled-down check with MLX (`eval_mlx.py`): 64 GSM8K test problems, one sample each, same prompt and sampling,
+  16,384-token cap, base vs MIT's p50c edit. Queued 2026-11-22; results in `processed/eval_*_gsm8k_n64_t16384.summary.json`.
+- MIT's full evaluation volume (about 61.7M tokens for unedited MATH-500 alone) stays out of reach locally.
 
-## Part C - our own Astra session (not started)
-Needs generation passes (Astra's 50-pass run used 69 requests over 20 hours on MIT's GPU). Same blocker.
+## Part C - our own Astra session (running)
+`python experiments/exp_03_mit8_math/run_astra.py --name p10_local --budget 10 --effort max`, started
+2026-11-22 17:10. Lab: `wsp/qwen_lab.py`. Differences from MIT's harness: at most 64 answers per generation pass
+(32 per model with "both") and 16,384 new tokens; teacher-forced passes limited to 256 texts / 100,000 tokens; no
+"activations" option on generation passes; original and edited models are sampled independently; explanations
+required from the first turn.
 
 ## Visualizations
 Viewer dataset `mit8_qwen_p50c`: the two edited matrices before and after, the change, the 64 edited columns
