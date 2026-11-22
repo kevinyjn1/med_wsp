@@ -1,0 +1,26 @@
+OUTPUT of Python run 7 of at most 300:
+```
+Pass 2 centered log-probability change mean ABCD: [0.757, 0.007, -0.425, -0.339]
+Pass 2 centered log-probability change SD ABCD: [0.266, 0.463, 0.569, 0.592]
+true  n  original_correct  edited_correct  margin_delta
+   A 37                21              21         0.500
+   B 34                20              20         0.079
+   C 39                21              22        -0.339
+   D 18                12              11        -0.196
+Pass 3 centered log-probability change mean ABCD: [1.63, -0.044, -0.929, -0.656]
+Pass 3 centered log-probability change SD ABCD: [0.568, 0.967, 1.215, 1.208]
+true  n  original_correct  edited_correct  margin_delta
+   A 37                21              21         1.084
+   B 34                20              22        -0.159
+   C 39                21              22        -0.751
+   D 18                12              11        -0.503
+Pass 5 centered log-probability change mean ABCD: [0.925, -0.293, -0.309, -0.324]
+Pass 5 centered log-probability change SD ABCD: [0.088, 0.036, 0.032, 0.035]
+true  n  original_correct  edited_correct  margin_delta
+   A 37                21              22         1.234
+   B 34                20              20        -0.306
+   C 39                21              21        -0.539
+   D 18                12              11        -0.543
+Installed projection-removal strength=3.0; relative tensor change: 0.004896
+
+```

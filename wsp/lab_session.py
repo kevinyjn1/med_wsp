@@ -87,26 +87,9 @@ def ascii_only(text: str) -> str:
     return text.encode("ascii", "replace").decode()
 
 
-def run_session(run_dir: Path, *, model: str = "phi", donor: str | None = None, budget: int = 30, effort: str = "xhigh",
-                practice: list[dict], baseline: list[dict], donor_baseline: list[dict] | None = None,
-                max_runs: int = 300, max_turns: int = 400) -> State:  # fmt: skip
-    run_dir.mkdir(parents=True, exist_ok=True)
-    lab = MedQALab(
-        run_dir,
-        model=model,
-        donor=donor,
-        budget=budget,
-        practice=practice,
-        baseline=baseline,
-        max_python_runs=max_runs,
-    )
-    if donor_baseline is not None:
-        medqa.save_jsonl(donor_baseline, lab.practice_dir / "donor_results.jsonl")
-    message = task_message(
-        model_id=models.MODEL_IDS[model].split("/")[-1], donor_id=models.MODEL_IDS[donor].split("/")[-1] if donor else None,
-        budget=budget, n_practice=len(practice), accuracy=float(np.mean([r["correct"] for r in baseline])),
-        donor_accuracy=float(np.mean([r["correct"] for r in donor_baseline])) if donor_baseline else None, max_runs=max_runs,
-    )  # fmt: skip
+def drive(lab, message: str, *, run_dir: Path, budget: int, max_runs: int = 300, effort: str = "xhigh",
+          max_turns: int = 400) -> State:  # fmt: skip
+    """Run one session of any budgeted lab: explanations required, restarts every 40 replies, until the passes are used."""
 
     def format_output(kind: str, output: str, state: State) -> str:
         if kind == "forward":
@@ -155,6 +138,32 @@ def run_session(run_dir: Path, *, model: str = "phi", donor: str | None = None, 
         return loop.run()
     finally:
         lab.kernel.stop()
+
+
+def run_session(run_dir: Path, *, model: str = "phi", donor: str | None = None, budget: int = 30, effort: str = "xhigh",
+                practice: list[dict], baseline: list[dict], donor_baseline: list[dict] | None = None,
+                max_runs: int = 300, max_turns: int = 400) -> State:  # fmt: skip
+    run_dir.mkdir(parents=True, exist_ok=True)
+    lab = MedQALab(
+        run_dir,
+        model=model,
+        donor=donor,
+        budget=budget,
+        practice=practice,
+        baseline=baseline,
+        max_python_runs=max_runs,
+    )
+    if donor_baseline is not None:
+        medqa.save_jsonl(donor_baseline, lab.practice_dir / "donor_results.jsonl")
+    message = task_message(
+        model_id=models.MODEL_IDS[model].split("/")[-1], donor_id=models.MODEL_IDS[donor].split("/")[-1] if donor else None,
+        budget=budget, n_practice=len(practice), accuracy=float(np.mean([r["correct"] for r in baseline])),
+        donor_accuracy=float(np.mean([r["correct"] for r in donor_baseline])) if donor_baseline else None, max_runs=max_runs,
+    )  # fmt: skip
+
+    return drive(
+        lab, message, run_dir=run_dir, budget=budget, max_runs=max_runs, effort=effort, max_turns=max_turns
+    )
 
 
 @torch.no_grad()

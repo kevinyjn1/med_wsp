@@ -2,14 +2,7 @@
 
 from __future__ import annotations
 
-import importlib.util
-from pathlib import Path
-
-SPEC = importlib.util.spec_from_file_location(
-    "eval_mlx", Path(__file__).resolve().parents[1] / "experiments" / "exp_03_mit8_math" / "eval_mlx.py"
-)
-eval_mlx = importlib.util.module_from_spec(SPEC)
-SPEC.loader.exec_module(eval_mlx)
+from wsp import mathqa as eval_mlx
 
 
 def test_last_boxed_takes_the_last_closed_box_with_nested_braces():
@@ -29,3 +22,10 @@ def test_repetition_share():
     assert eval_mlx.repetition_share(list(range(600))) == 0.0
     assert eval_mlx.repetition_share(list(range(10)) * 80) == 1.0
     assert eval_mlx.repetition_share([1, 2, 3]) == 0.0
+
+
+def test_judge_names_the_failure():
+    assert eval_mlx.judge(r"so \boxed{4}", "4", 50, 1000)["failure"] is None
+    assert eval_mlx.judge(r"so \boxed{5}", "4", 50, 1000)["failure"] == "wrong_answer"
+    assert eval_mlx.judge("thinking forever", "4", 1000, 1000)["failure"] == "cut_at_max_tokens"
+    assert eval_mlx.judge("I stop here", "4", 50, 1000)["failure"] == "no_answer_finished"

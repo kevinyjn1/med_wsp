@@ -14,7 +14,6 @@ from __future__ import annotations
 import argparse
 import json
 import random
-import re
 import sys
 import time
 from pathlib import Path
@@ -24,10 +23,10 @@ import numpy as np
 REPO = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(REPO))
 
+from wsp.mathqa import INSTRUCTION, grade, last_boxed, repetition_share
 from wsp.models import snapshot_dir
 
 EXP = Path(__file__).resolve().parent
-INSTRUCTION = "Please reason step by step, and put your final answer within \\boxed{}."
 
 
 def load_problems(name: str, n: int, seed: int = 0) -> list[dict]:
@@ -45,42 +44,6 @@ def load_problems(name: str, n: int, seed: int = 0) -> list[dict]:
     return random.Random(seed).sample(problems, min(n, len(problems)))
 
 
-def last_boxed(text: str) -> str | None:
-    """Content of the last \\boxed{...} (balanced braces); None when there is no closed box."""
-    starts = [m.end() for m in re.finditer(r"\\(?:boxed|fbox)\s*\{", text)]
-    for start in reversed(starts):
-        depth = 1
-        for position in range(start, len(text)):
-            depth += {"{": 1, "}": -1}.get(text[position], 0)
-            if depth == 0:
-                return text[start:position]
-    return None
-
-
-def grade(prediction: str | None, gold: str) -> bool:
-    if prediction is None:
-        return False
-    from math_verify import parse, verify
-
-    try:
-        return bool(verify(parse(f"\\boxed{{{gold}}}"), parse(f"\\boxed{{{prediction}}}")))
-    except Exception:  # noqa: BLE001 - an unparseable answer is a wrong answer
-        return False
-
-
-def repetition_share(token_ids: list[int], window: int = 512, ngram: int = 8) -> float:
-    """Share of the last `window` tokens covered by an 8-gram that already occurred earlier in the answer."""
-    if len(token_ids) < ngram * 2:
-        return 0.0
-    seen, repeated = set(), np.zeros(len(token_ids), bool)
-    for i in range(len(token_ids) - ngram + 1):
-        gram = tuple(token_ids[i : i + ngram])
-        if gram in seen:
-            repeated[i : i + ngram] = True
-        seen.add(gram)
-    return float(repeated[-window:].mean())
-
-
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument(
@@ -90,6 +53,9 @@ def main() -> None:
     parser.add_argument("--n", type=int, default=48)
     parser.add_argument("--max-tokens", type=int, default=16384)
     parser.add_argument("--batch-size", type=int, default=16)
+    parser.add_argument(
+        "--edits", default=None, help="folder of edited tensors (.npy) to use instead of an MIT edit run"
+    )
     args = parser.parse_args()
 
     import mlx.core as mx
@@ -101,10 +67,11 @@ def main() -> None:
     if args.model != "base":
         params = dict(tree_flatten(model.parameters()))
         updates = []
-        for path in sorted((EXP / "work" / f"edit_{args.model}").glob("*.weight.npy")):
+        edit_dir = Path(args.edits) if args.edits else EXP / "work" / f"edit_{args.model}"
+        for path in sorted(edit_dir.glob("*.weight.npy")):
             name = path.name[: -len(".npy")].replace("model.language_model.", "language_model.model.")
             assert name in params, name
-            new = mx.array(np.load(path)).astype(params[name].dtype)
+            new = mx.array(np.load(path)).astype(mx.bfloat16).astype(params[name].dtype)
             assert new.shape == params[name].shape
             print(
                 f"edit {name}: relative change {float(mx.linalg.norm((new - params[name]).astype(mx.float32)) / mx.linalg.norm(params[name].astype(mx.float32))):.4f}"

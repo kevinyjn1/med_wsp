@@ -57,7 +57,7 @@ def _index(folder):
 
 _where = _index(MODEL_DIR)
 _donor = _index(DONOR_DIR) if DONOR_DIR else {}
-NAMES = sorted(_where)
+NAMES = sorted(n for n in _where if n.startswith(__PREFIX__))
 
 def _read(where, name):
     with safe_open(where[name], "pt") as h:
@@ -114,9 +114,9 @@ print("kernel ready:", len(NAMES), "tensors; edited:", edited())
 '''
 
 
-def validate_edit(name: str, new: torch.Tensor, old: torch.Tensor) -> None:
+def validate_edit(name: str, new: torch.Tensor, old: torch.Tensor, frozen: tuple[str, ...] = FROZEN) -> None:
     """Host-side copy of the save_edit rules (the kernel could write files without calling save_edit)."""
-    if name in FROZEN:
+    if name in frozen:
         raise ValueError(f"{name} is out of scope (final norm, input embedding, output layer)")
     if new.shape != old.shape:
         raise ValueError(f"{name}: shape {tuple(new.shape)} differs from the original {tuple(old.shape)}")
@@ -130,42 +130,37 @@ def validate_edit(name: str, new: torch.Tensor, old: torch.Tensor) -> None:
         )
 
 
-class MedQALab:
-    """Kernel + forward-pass tool + budget for one Astra session on a Phi-3.5-family model."""
+def make_prelude(
+    model_dir: Path,
+    practice_dir: Path,
+    frozen: tuple[str, ...],
+    donor_dir: Path | None = None,
+    prefix: str = "",
+) -> str:
+    """The kernel prelude for one checkpoint folder."""
+    return (
+        PRELUDE.replace("__MODEL_DIR__", repr(str(model_dir)))
+        .replace("__DONOR_DIR__", repr(str(donor_dir)) if donor_dir else "None")
+        .replace("__PRACTICE_DIR__", repr(str(practice_dir)))
+        .replace("__FROZEN__", repr(tuple(frozen)))
+        .replace("__PREFIX__", repr(prefix))
+    )
 
-    def __init__(self, run_dir: Path, *, model: str = "phi", donor: str | None = None, budget: int = 30,
-                 practice: list[dict], baseline: list[dict], max_python_runs: int = 300):  # fmt: skip
-        self.run_dir, self.work = run_dir, run_dir / "work"
-        self.model_name, self.donor_name, self.budget, self.max_python_runs = (
-            model,
-            donor,
+
+class BudgetedLab:
+    """Kernel, forward-pass budget and logging shared by the labs. A subclass implements `_dispatch`."""
+
+    lock_name = "gpu"
+
+    def _init_runtime(
+        self, run_dir: Path, *, budget: int, prelude: str, read_only: list[Path], max_python_runs: int = 300
+    ) -> None:
+        self.run_dir, self.work, self.budget, self.max_python_runs = (
+            run_dir,
+            run_dir / "work",
             budget,
             max_python_runs,
         )
-        self.practice = {item["id"]: item for item in practice}
-        self.practice_dir = self.work / "practice"
-        self.practice_dir.mkdir(parents=True, exist_ok=True)
-        model_dir = models.snapshot_dir(models.MODEL_IDS[model])
-        donor_dir = models.snapshot_dir(models.MODEL_IDS[donor]) if donor else None
-        medqa.save_jsonl(
-            [
-                {"id": i["id"], "question": i["question"], "options": i["options"], "answer": i["answer"]}
-                for i in practice
-            ],
-            self.practice_dir / "questions.jsonl",
-        )
-        medqa.save_jsonl(baseline, self.practice_dir / "original_results.jsonl")
-        self.tokenizer = models.load_tokenizer("phi")
-        example = medqa.build_prompt(self.tokenizer, practice[0])
-        (self.practice_dir / "eval_prompt_format.txt").write_text(
-            "The exact evaluation prompt for a question (the answer letter is read from the next-token logits at its end):\n\n"
-            + example + "\n"
-        )  # fmt: skip
-        prelude = (PRELUDE.replace("__MODEL_DIR__", repr(str(model_dir)))
-                   .replace("__DONOR_DIR__", repr(str(donor_dir)) if donor_dir else "None")
-                   .replace("__PRACTICE_DIR__", repr(str(self.practice_dir))).replace("__FROZEN__", repr(FROZEN)))  # fmt: skip
-        # The Hugging Face snapshot files are links into the repo's blob folder, so the whole repo folder is readable.
-        read_only = [model_dir.parents[1]] + ([donor_dir.parents[1]] if donor_dir else [])
         self.kernel = Kernel(self.work, prelude=prelude, read_only=read_only, timeout_s=900, max_out=10_000)
         self.state_path = run_dir / "lab_state.json"
         self.state = (
@@ -174,27 +169,15 @@ class MedQALab:
             else {"passes": 0, "requests": 0}
         )
 
+    def _dispatch(self, request: dict, index: int) -> tuple[dict, str]:
+        raise NotImplementedError
+
     # ------------------------------------------------------------------------------------------- kernel
     def run_python(self, code: str, _state=None) -> str:
         return self.kernel.run(code)
 
     def passes_left(self) -> int:
         return self.budget - self.state["passes"]
-
-    # --------------------------------------------------------------------------------------------- edits
-    def current_edits(self, model) -> dict[str, torch.Tensor]:
-        """Validated edits as tensors ready to be swapped in (rounded through bfloat16, like a saved checkpoint)."""
-        folder = self.work / "edited"
-        params = dict(model.named_parameters())
-        edits = {}
-        for path in sorted(folder.glob("*.npy")) if folder.is_dir() else []:
-            name = path.name[: -len(".npy")]
-            if name not in params:
-                raise ValueError(f"edited/{path.name}: {name} is not a tensor of the model")
-            new = torch.from_numpy(np.load(path)).to(torch.float32)
-            validate_edit(name, new, params[name].detach().cpu())
-            edits[name] = new.to(torch.bfloat16)
-        return edits
 
     # -------------------------------------------------------------------------------------- forward tool
     def forward(self, code: str, _state=None) -> str:
@@ -206,7 +189,7 @@ class MedQALab:
             if self.passes_left() <= 0:
                 raise RuntimeError("the forward-pass budget is used up")
             start = time.time()
-            with gpu_lock(f"lab {self.run_dir.name} pass {index}"), torch.no_grad():
+            with gpu_lock(f"lab {self.run_dir.name} pass {index}", name=self.lock_name), torch.no_grad():
                 summary, where = self._dispatch(request, index)
             summary["s"] = round(time.time() - start)
         except Exception as error:  # noqa: BLE001 - every failure is reported to the model, uncounted
@@ -236,6 +219,55 @@ class MedQALab:
     def _log(self, record: dict) -> None:
         with open(self.run_dir / "forward_calls.jsonl", "a") as f:
             f.write(json.dumps(record) + "\n")
+
+
+class MedQALab(BudgetedLab):
+    """Kernel + forward-pass tool + budget for one Astra session on a Phi-3.5-family model."""
+
+    def __init__(self, run_dir: Path, *, model: str = "phi", donor: str | None = None, budget: int = 30,
+                 practice: list[dict], baseline: list[dict], max_python_runs: int = 300):  # fmt: skip
+        self.work = run_dir / "work"
+        self.model_name, self.donor_name = model, donor
+        self.practice = {item["id"]: item for item in practice}
+        self.practice_dir = self.work / "practice"
+        self.practice_dir.mkdir(parents=True, exist_ok=True)
+        model_dir = models.snapshot_dir(models.MODEL_IDS[model])
+        donor_dir = models.snapshot_dir(models.MODEL_IDS[donor]) if donor else None
+        medqa.save_jsonl(
+            [
+                {"id": i["id"], "question": i["question"], "options": i["options"], "answer": i["answer"]}
+                for i in practice
+            ],
+            self.practice_dir / "questions.jsonl",
+        )
+        medqa.save_jsonl(baseline, self.practice_dir / "original_results.jsonl")
+        self.tokenizer = models.load_tokenizer("phi")
+        example = medqa.build_prompt(self.tokenizer, practice[0])
+        (self.practice_dir / "eval_prompt_format.txt").write_text(
+            "The exact evaluation prompt for a question (the answer letter is read from the next-token logits at its end):\n\n"
+            + example + "\n"
+        )  # fmt: skip
+        prelude = make_prelude(model_dir, self.practice_dir, FROZEN, donor_dir)
+        # The Hugging Face snapshot files are links into the repo's blob folder, so the whole repo folder is readable.
+        read_only = [model_dir.parents[1]] + ([donor_dir.parents[1]] if donor_dir else [])
+        self._init_runtime(
+            run_dir, budget=budget, prelude=prelude, read_only=read_only, max_python_runs=max_python_runs
+        )
+
+    # --------------------------------------------------------------------------------------------- edits
+    def current_edits(self, model) -> dict[str, torch.Tensor]:
+        """Validated edits as tensors ready to be swapped in (rounded through bfloat16, like a saved checkpoint)."""
+        folder = self.work / "edited"
+        params = dict(model.named_parameters())
+        edits = {}
+        for path in sorted(folder.glob("*.npy")) if folder.is_dir() else []:
+            name = path.name[: -len(".npy")]
+            if name not in params:
+                raise ValueError(f"edited/{path.name}: {name} is not a tensor of the model")
+            new = torch.from_numpy(np.load(path)).to(torch.float32)
+            validate_edit(name, new, params[name].detach().cpu())
+            edits[name] = new.to(torch.bfloat16)
+        return edits
 
     def _dispatch(self, request: dict, index: int) -> tuple[dict, str]:
         kind, which = request.get("type"), request.get("model", "original")
