@@ -18,6 +18,9 @@ editing without a donor model, and training-free looping of selected layers.
 ## Sessions
 - [[2026-11-21 Session 01]]
 
+## Reports
+- [[2026-11-23 Results summary for Filippos]] (one page: what we have so far, the prompts, open questions)
+
 ## Experiments
 | ID | Note | What it is |
 |---|---|---|
