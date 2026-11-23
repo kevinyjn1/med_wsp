@@ -1,0 +1,47 @@
+[note from the experimenters] Corrections about the tools (the session was interrupted by a machine restart and continues now). (1) Until now, hidden_states layer 32 in teacher-forced passes was the residual stream AFTER the final RMSNorm (model.norm), not before it as the task text says; layers 0 to 31 were as described. From now on layer 32 is the residual stream after layer 32 and BEFORE the final norm. Arrays in fwd_<k> folders written before this note keep the old convention. (2) Every forward pass now runs in a fresh process; nothing changes for you except that a pass takes about 20 seconds longer. (3) Your last forward request (pass 21) was not run and was not counted; send it again if you still want it.
+
+[note: the harness was restarted, so your kernel restarted too and its variables are gone]
+
+Forward pass 20 of 30 done (score); results in score_20.jsonl. Summary:
+```
+{
+ "ok": true,
+ "type": "score",
+ "model": "both",
+ "questions": 128,
+ "edited_tensors": [
+  "model.layers.26.mlp.down_proj.weight"
+ ],
+ "original": {
+  "accuracy": 0.5781,
+  "mean_margin": 5.3911,
+  "predicted": {
+   "A": 26,
+   "B": 34,
+   "C": 35,
+   "D": 33
+  }
+ },
+ "edited": {
+  "accuracy": 0.6094,
+  "mean_margin": 5.6965,
+  "predicted": {
+   "A": 28,
+   "B": 35,
+   "C": 33,
+   "D": 32
+  }
+ },
+ "paired": {
+  "accuracy_difference": 0.0312,
+  "standard_error": 0.019,
+  "wrong_to_right": 5,
+  "right_to_wrong": 1,
+  "sign_test_p": 0.2188,
+  "margin_difference": 0.3054,
+  "margin_difference_se": 0.4238
+ },
+ "s": 2254
+}
+```
+Forward passes left: 10.

@@ -1,0 +1,116 @@
+TASK. You are given the weights of a language model, Phi-3.5-mini-instruct (a decoder-only transformer: 32 layers of width 3,072; no biases anywhere; RMSNorm before attention (input_layernorm) and before the MLP (post_attention_layernorm); self-attention with 32 heads of size 96 and rotary position embeddings, stored as one fused matrix self_attn.qkv_proj.weight of shape 9,216 x 3,072 whose rows 0..3,071 are the queries, 3,072..6,143 the keys and 6,144..9,215 the values, head h using rows 96h..96h+95 of each part, and self_attn.o_proj.weight of shape 3,072 x 3,072 whose columns 96h..96h+95 belong to head h; a gated MLP of width 8,192: mlp.gate_up_proj.weight of shape 16,384 x 3,072 with rows 0..8,191 the gate and 8,192..16,383 the up projection, hidden = up * SiLU(gate), and mlp.down_proj.weight of shape 3,072 x 8,192; vocabulary 32,064 with separate input embedding and output layer; tensors are named model.layers.<l>.<...>, matrices are (out, in)). Your job is to make it better at answering medical licensing exam questions by EDITING ITS WEIGHTS DIRECTLY: find out what goes wrong inside the network on the questions it answers incorrectly and repair that with targeted changes.
+
+HOW IT WILL BE MEASURED. After you finish, your edited model and the unedited model are evaluated on a held-out set of four-option medical licensing questions (USMLE style) with this fixed protocol: the chat prompt shown in PRACTICE_DIR/eval_prompt_format.txt (an instruction, the question, the options A to D and "Answer:"), one forward pass and no generation; the answer is the letter among A, B, C and D with the highest next-token probability at the end of the prompt (the probabilities of the spellings "A" and " A" are added, likewise for the other letters). The config, tokenizer and prompt are fixed: only weight values can change (same tensor names and shapes). You never see the evaluation questions.
+
+WHAT COUNTS. We want edits that come from understanding the network: find out what goes wrong when it answers practice questions incorrectly, identify the components responsible (specific neurons, heads, directions or circuits) and change them in a way you can justify with evidence. Out of scope, and refused by save_edit and by the forward-pass tool: the final norm (model.norm.weight), the input embedding and the output layer (model.embed_tokens.weight, lm_head.weight), and any edit that only multiplies a whole tensor by a constant. Global knobs (making the whole output distribution sharper or flatter) are not what we are looking for. A systematic preference for or against particular answer letters is a real failure mechanism and repairing it is in scope, but then say clearly how much of any gain comes from that and how much from changes in how the model uses the content of the question.
+
+WHAT YOU HAVE.
+1. A persistent Python kernel (no internet, no GPU): variables survive between your code blocks, like a notebook. The model's files are read-only in MODEL_DIR, the practice files read-only in PRACTICE_DIR, and your current directory (WORK) is your read-write folder. Available: numpy, scipy, scikit-learn, PyTorch (CPU), pandas, sympy, networkx, safetensors, tokenizers. Defined in advance: NAMES (all tensor names), load(name) (a float32 torch tensor: your current edit if there is one, else the original), load_original(name), save_edit(name, tensor), drop_edit(name), edited() and tok (the tokenizer, a `tokenizers` object). Gradients are disabled. To run code, reply with your explanation followed by exactly one block that starts with ```python; if its last line is an expression, its value is shown. One execution may take up to 900 seconds and should stay under about 12 GB of memory (one large matrix as float32 is 0.1 to 0.2 GB); output is cut at 10,000 characters. You may run code up to 300 times. If the kernel is restarted (time limit or crash), its variables are lost and you are told so.
+2. Practice questions with answers (none of them is in the evaluation): PRACTICE_DIR/questions.jsonl, one JSON object per line with id, question, options (A to D) and answer, 4,272 questions; and PRACTICE_DIR/original_results.jsonl with the original model's result on each of them under the evaluation protocol: pred, correct, margin (log-probability of the correct letter minus the best other letter) and letter_logprobs (A, B, C, D). The original model answers 59.8 % of them correctly; the others are its failures.
+3. A forward-pass tool with a budget of 30 forward passes in total. A forward pass is one of two things, and each counts as one pass:
+ (a) SCORE: the model answers up to 1,024 practice questions with the evaluation protocol. Reply with your explanation followed by exactly one block that starts with ```forward and contains JSON:
+ {"type": "score", "model": "original", "edited" or "both", "questions": ["<practice id>", ...]}
+ "original" runs the unedited weights, "edited" your current edits (the tensors in WORK/edited, rounded to bfloat16 like a saved checkpoint), and "both" runs both on the same questions and returns a paired comparison (the accuracy difference edited - original with its standard error, how many questions went from wrong to right and back with a sign test, and the mean change of the margin with its standard error). You get the accuracy, the mean margin and the counts of predicted letters; per-question results are in WORK/score_<k>.jsonl. A pass with 1,024 questions takes about 5 minutes per model.
+ (b) TEACHER-FORCED: the model reads practice questions (as their evaluation prompts) and/or raw texts, with no generation. Reply with a ```forward block containing JSON:
+ {"type": "teacher_forced", "model": "original" or "edited", "questions": ["<practice id>", ...], "texts": ["raw text", ...] (optional), "return": {"positions": "last" or "all", "token_logprobs": true, "topk": k (at most 50), "hidden_states": [layers 0..32], "mlp_act": [layers 0..31], "attn_layers": [layers 0..31]}}
+ hidden_states layer 0 is the embeddings and layer l the residual stream after layer l; mlp_act is the input of mlp.down_proj (the 8,192 hidden units, after the gate); attn_layers gives attention probabilities per head. With "positions": "last" (the default) every array is taken at the last token of each text, where the answer letter is predicted, and up to 1,024 texts are allowed; with "all" arrays cover every token, right-padded, for at most 64 texts and 40,000 tokens in total. Attention is returned for at most 4 texts of at most 700 tokens each. The results are float16 .npy files with meta.json in WORK/fwd_<k>/.
+ A request that fails does not count against the budget.
+
+HOW TO WORK.
+1. Diagnose first. Look at how the model fails on practice questions: which letters it over- or under-predicts, how confident it is when wrong, whether failures cluster by kind of question. Go after the largest category you can explain.
+2. Localize causally. That a component is more active on correctly answered questions is not enough (those questions are easier). Before relying on a component, show that changing it changes the behaviour you predicted, and try several strengths to see a dose-response.
+3. Measure with enough power. Accuracy over n questions has a standard error of about 50/sqrt(n) percentage points: about 3.1 points at 256 questions, 1.6 at 1,024. Compare original and edited weights on the SAME questions with "model": "both": the paired difference has a much smaller standard error than two separate measurements. The margin is a denser signal than accuracy. Keep an edit only if its gain is clearly larger than its standard error on questions that were NOT used to choose it: set aside a part of the practice questions for a final confirmation and do not look at it before. Edits that change a tensor by a fraction of a percent usually have effects too small to see; test strengths large enough to matter and back off if they hurt.
+4. Plan your forward passes (see the budget above): for example teacher-forced passes to read activations on failures and successes, score passes to test candidate edits, and a final paired score pass on questions you have not used.
+5. Work efficiently: state the hypothesis of each code block in its first comment line; load things once into kernel variables; print compact summaries, never whole arrays or whole question texts (short excerpts of at most about 300 characters; outputs are shown in ASCII only); keep WORK/notes.md up to date (findings with numbers, edits tried and their measured effect, the current best edit, which questions are set aside; it is shown to you again if the conversation is restarted); keep copies of good edits (for example copy WORK/edited to WORK/best_1).
+
+RULES. Not allowed: (a) gradient descent or any other training: no backward passes, autograd or optimizers, and no iterative fitting of weights to a loss; (b) running the model other than through the forward-pass tool: do not implement or simulate the network's computation on any input in the kernel; (c) internet access or search (there is none). Allowed: any analysis of the weights and of forward-pass results, any use of the practice questions, and any direct edit of the weights that you compute and that is in scope.
+
+HOW THE SESSION RUNS. It continues until all 30 forward passes are used (replying without a code block does not end it earlier); after that, make your final choice (the tensors in WORK/edited when you finish are submitted; leave it empty if no edit earned its place) and reply without a code block, saying what you changed, the evidence for it and why you expect it to help. EXPLAIN EVERY STEP. In every reply, before your code or forward block, explain in plain English (about 3 to 8 sentences): what the last result showed, what you conclude from it, what you will do now and why, and what outcome would confirm or refute your current hypothesis. In your final answer, also summarize the path that led to your edits. These explanations are read by the experimenters.
+
+THIS IS A RESTARTED CONVERSATION (to keep it short): 40 replies happened before. Forward passes used: 17 of 30; Python runs used: 22 of 300. Your kernel is still running with its variables. Tensors currently edited: ['model.layers.26.mlp.down_proj.weight']. Files in WORK: ['candidate_l26_reverse', 'edited', 'fwd_1', 'fwd_12', 'fwd_13', 'fwd_4', 'fwd_8', 'notes.md', 'score_10.jsonl', 'score_11.jsonl', 'score_14.jsonl', 'score_15.jsonl', 'score_16.jsonl', 'score_17.jsonl', 'score_2.jsonl', 'score_3.jsonl', 'score_5.jsonl', 'score_6.jsonl', 'score_7.jsonl', 'score_9.jsonl', 'splits.json'].
+YOUR NOTEBOOK (WORK/notes.md, last 8,000 characters):
+```
+03 348:0.83::<|end|><|assistant|> | 346:0.07: Answer:<|end|><|assistant|> | 0:0.05:<|user|> The following
+  dev-01096    D    C     31    22     0.634 0.285 0.018 0.021 0.012 0.030                 0:0.30:<|user|> The following | 30:0.18:-year-old man | 348:0.15::<|end|><|assistant|>
+
+Attention interpretation: L25 head 9 reads option-end contextual representations, with ~93%-99% attention in option regions across four selected late-reversal cases. Delimiter boundaries corrected to associate separator tokens with the preceding option.
+         id true      A      B      C      D
+train-02877    A 0.3050 0.2363 0.3261 0.0573
+  dev-00323    A 0.3692 0.0510 0.3698 0.1311
+train-00230    D 0.0110 0.1084 0.0051 0.8607
+  dev-01096    D 0.0034 0.0031 0.0760 0.8936
+Candidate: scale only columns 864:960 of model.layers.25.self_attn.o_proj.weight by 1.5. Hypothesis is preserving content-dependent option evidence, not changing global temperature.
+
+Forward 9, L25 head9 scale=1.5, paired n=128: accuracy delta=+0.78125 pp, SE=1.36 pp; W->R=2, R->W=1; margin delta=-0.0886, SE=0.0485. No established benefit; test symmetric attenuation to scale=0.5.
+
+Forward 10, L25 head9 scale=0.5, paired n=128: accuracy delta=0 pp, SE=1.11 pp; W->R=1, R->W=1; margin delta=-0.0515, SE=0.0473. Neither amplification nor attenuation supported; removed this edit.
+Next candidate: L30 head24 output scale=0.5, columns 2304:2400. This head has letter-subspace fraction=0.1604 and attends mainly to prompt start and age/vital-sign tokens in inspected discovery failures. Potential over-weighting of demographic cues is a hypothesis, not an established failure.
+
+Forward 11, L30 head24 scale=0.5, paired n=128: no answer changes; margin delta=0.0017, SE=0.0083. Candidate removed for negligible behavioral effect.
+Next diagnostic pass: original model on the already-exposed first 512 selection questions, hidden layers 20:32 and MLP layers 20:31. These are development data, not final confirmation.
+All current edits cleared. No candidate has earned retention yet.
+
+Forwards 12 and 13: original activations for 128+384=512 exposed selection questions. Forward 12 accidentally requested only 128; forward 13 completed the intended batch.
+Larger intermediate transitions:
+ residual_layer  correct  correct_to_final_wrong  wrong_to_final_correct
+             20      279                      44                      56
+             21      284                      30                      37
+             22      298                      15                       8
+             23      290                      34                      35
+             24      297                      37                      31
+             25      292                      34                      33
+             26      290                      18                      19
+             27      292                      15                      14
+             28      290                      19                      20
+             29      295                      15                      11
+             30      297                      11                       5
+             31      296                      10                       5
+             32      290                       0                       1
+Centered neuron attribution is descriptive and can reflect confidence suppression; do not equate its sign with a causal accuracy effect.
+ layer  unit  discovery_raw  selection_raw  discovery_centered  selection_centered  selection_se                 selectivity  activation_mean  activation_sd  average_centered
+    28  1483          0.177         -3.749              -0.037              -3.733         0.740 [-0.54, -0.48, 1.45, -0.43]           -2.237          9.493            -1.885
+    27  2032         -2.092         -1.008              -1.761              -1.308         0.458 [-0.81, 2.81, -1.07, -0.93]           -3.089          3.082            -1.534
+    27  3642         -1.522         -1.941              -1.383              -1.624         0.351 [1.52, -0.49, -0.45, -0.58]           -3.022          4.417            -1.503
+    25  6028         -0.731         -0.530              -0.693              -0.589         0.184   [0.21, -0.57, 0.12, 0.25]            3.037          5.947            -0.641
+    29   990          0.466         -0.889              -0.299              -0.935         0.213 [-0.94, -0.55, 1.87, -0.38]           -4.236          2.484            -0.617
+    27  6821         -0.631         -0.775              -0.523              -0.642         0.140   [-1.16, 0.03, 0.59, 0.53]            1.860          2.365            -0.583
+    31  5937         -0.207         -0.784              -0.245              -0.822         0.240    [-2.4, 0.73, 0.82, 0.85]           -0.236          1.954            -0.534
+    30  6788         -0.554         -0.366              -0.425              -0.458         0.172  [-0.31, 1.24, -0.5, -0.43]           -2.295          2.737            -0.442
+    29  3755         -0.616         -0.184              -0.552              -0.314         0.232   [0.88, 0.81, 0.83, -2.52]            1.286          1.781            -0.433
+    30  3922         -0.499         -0.304              -0.427              -0.371         0.135  [-0.46, 1.54, -0.5, -0.57]           -1.283          1.694            -0.399
+    28  1016         -0.259         -0.650              -0.197              -0.492         0.181 [1.39, -0.54, -0.38, -0.47]           -1.637          2.521            -0.345
+    31  5507         -0.408         -0.173              -0.350              -0.286         0.288  [-0.93, -0.83, -0.84, 2.6]           -1.069          2.093            -0.318
+
+L27 mean-preserving proposal was NOT installed: no stable carrier met the prespecified criterion. Preparation assertion failed before save_edit.
+Replacement candidate: L31 neuron5937 centered ablation, scale=0; carrier4775. Carrier CV=0.061807, target/carrier mean ratio=-0.01698008. Centered attribution negative in discovery (-0.245) and selection (-0.822, SE=0.240). Ablate variable output, preserve its development-average vector contribution.
+
+Forward 14, centered L31:5937 ablation, n=128: accuracy delta=-0.78125 pp, SE=0.78 pp; W->R=0, R->W=1; margin delta=+0.2683, SE=0.0775. Rejected as a retention candidate: margin improvement without answer corrections is consistent with confidence changes, not improved task accuracy.
+Return to L26:4131, previously 3 corrections and 1 regression at full ablation. Test scale=-1 (column reversal), twice the original-to-zero perturbation. All other edits removed.
+
+Forward 15, L26:4131 scale=-1, paired n=128: 57.8125% -> 60.9375%; delta=+3.125 pp, SE=2.20 pp; W->R=6, R->W=2; margin delta=-0.3794, SE=0.2654. Provisional only, not independently established.
+Saved candidate copy to candidate_l26_reverse. Dose sequence scales 0.5,0,-1 gave screening accuracy deltas 0,+1.5625,+3.125 pp, but mean margins did not improve.
+Next: paired n=512 at unchanged scale=-1. If promising, test letter-subspace and orthogonal-component interventions separately for causal attribution.
+
+Forward 16, full L26:4131 reversal, paired n=512: 56.8359% -> 57.8125%; delta=+0.9765625 pp, SE=0.76 pp; W->R=10, R->W=5; margin delta=-0.2949, SE=0.1429. Not clearly established. The 384 questions outside the initial screen contribute only one net correction.
+Directional causal control: reflect only column4131's projection onto the rank-3 fixed answer-letter subspace; keep its orthogonal component original. Then compare the complementary intervention.
+
+Forward 17, L26:4131 letter-component-only reflection, n=128: accuracy delta=0 pp, SE=1.11 pp; W->R=1,R->W=1; margin delta=-0.4282, SE=0.1570. No support for isolated direct-letter edit.
+Next complementary control: letter component unchanged, orthogonal component reflected. The immediate perturbation has zero projection onto the chosen answer-letter contrasts; later layers can nevertheless transform it into letter or content effects.
+
+```
+Continue from here.
+
+Last result:
+OUTPUT of Python run 22 of at most 300:
+```
+Pass 17 centered log-probability change mean ABCD: [2.416, -0.453, -1.497, -0.466]
+Pass 17 centered log-probability change SD ABCD: [1.112, 0.469, 0.993, 0.576]
+true  n  original_correct  edited_correct  margin_delta
+   A 37                21              22         1.498
+   B 34                20              20        -0.975
+   C 39                21              21        -1.495
+   D 18                12              11        -1.043
+Installed orthogonal-component reversal only; relative tensor change: 0.023334
+Numerical direct-letter projection of edited direction: [-3.000000106112566e-07, -4.0000000467443897e-07, 2.0000000233721948e-07, 4.0000000467443897e-07]
+
+```

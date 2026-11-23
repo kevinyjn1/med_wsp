@@ -3,8 +3,10 @@ The preparation stopped before saving an edit because no layer-27 neuron met the
 ```python
 # Hypothesis: a mean-preserving ablation of L31 neuron 5937 isolates its question-dependent anti-A contribution.
 print("Current edits after failed preparation:", edited())
-print("Lowest L27 activation coefficients of variation:",
-      np.round(np.sort(cv[np.abs(center_mu) > 1])[:5], 4).tolist())
+print(
+    "Lowest L27 activation coefficients of variation:",
+    np.round(np.sort(cv[np.abs(center_mu) > 1])[:5], 4).tolist(),
+)
 
 center_layer = 31
 center_target = 5937
@@ -19,13 +21,27 @@ assert cv[center_carrier] < 0.10
 center_ratio = float(center_mu[center_target] / center_mu[center_carrier])
 print("Target and carrier:")
 for u in [center_target, center_carrier]:
-    print({"unit": u, "mean": round(float(center_mu[u]), 4),
-           "sd": round(float(center_sd[u]), 4), "cv": round(float(cv[u]), 4)})
+    print(
+        {
+            "unit": u,
+            "mean": round(float(center_mu[u]), 4),
+            "sd": round(float(center_sd[u]), 4),
+            "cv": round(float(cv[u]), 4),
+        }
+    )
 print("Mean-preserving ratio:", round(center_ratio, 6))
-print("Target activation by true letter:",
-      {a: round(float(large_acts[31][large_y == i, center_target].mean()), 3) for i, a in enumerate(letters)})
-print("Target activation by predicted letter:",
-      {a: round(float(large_acts[31][large_pred == i, center_target].mean()), 3) for i, a in enumerate(letters)})
+print(
+    "Target activation by true letter:",
+    {a: round(float(large_acts[31][large_y == i, center_target].mean()), 3) for i, a in enumerate(letters)},
+)
+print(
+    "Target activation by predicted letter:",
+    {
+        a: round(float(large_acts[31][large_pred == i, center_target].mean()), 3)
+        for i, a in enumerate(letters)
+    },
+)
+
 
 def set_centered_neuron(scale, centered=True):
     clear_current_edits()
@@ -34,10 +50,16 @@ def set_centered_neuron(scale, centered=True):
     if centered:
         w[:, center_carrier] += (1.0 - float(scale)) * center_ratio * center_original[:, center_target]
     save_edit(center_name, w)
-    candidate_history.append({"kind": f"L{center_layer}_neuron{center_target}",
-                              "scale": float(scale), "centered": centered,
-                              "carrier": center_carrier})
-    return float((w-center_original).norm() / center_original.norm())
+    candidate_history.append(
+        {
+            "kind": f"L{center_layer}_neuron{center_target}",
+            "scale": float(scale),
+            "centered": centered,
+            "carrier": center_carrier,
+        }
+    )
+    return float((w - center_original).norm() / center_original.norm())
+
 
 change = set_centered_neuron(0.0, centered=True)
 print("Installed centered L31:5937 ablation; relative tensor change:", round(change, 6))

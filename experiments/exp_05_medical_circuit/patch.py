@@ -37,13 +37,14 @@ EXP = Path(__file__).resolve().parent
 BASELINE = EXP.parent / "exp_04_medqa_baseline" / "processed"
 
 
-def question_sets(donor: str, per_set: int, seed: int = 0) -> dict[str, list[dict]]:
+def question_sets(donor: str, per_set: int, style: str = "chat", seed: int = 0) -> dict[str, list[dict]]:
+    prefix = "bare_" if style == "bare" else ""
     items, base, tuned = [], [], []
     for split in ("dev", "train"):
-        base_records = medqa.load_jsonl(BASELINE / f"phi_{split}.jsonl")
+        base_records = medqa.load_jsonl(BASELINE / f"{prefix}phi_{split}.jsonl")
         items += medqa.load_medqa(split)[: len(base_records)]
         base += base_records
-        tuned += medqa.load_jsonl(BASELINE / f"{donor}_{split}.jsonl")
+        tuned += medqa.load_jsonl(BASELINE / f"{prefix}{donor}_{split}.jsonl")
     assert [r["id"] for r in base] == [r["id"] for r in tuned] == [i["id"] for i in items]
     groups = {"gain": [], "loss": [], "both": []}
     for item, b, t in zip(items, base, tuned, strict=True):
@@ -63,10 +64,7 @@ def question_sets(donor: str, per_set: int, seed: int = 0) -> dict[str, list[dic
 
 
 def margin_of(logits: torch.Tensor, letter_ids: dict, gold: str) -> list[float]:
-    scores = medqa.letter_scores(logits, letter_ids).cpu()
-    index = medqa.LETTERS.index(gold)
-    others = torch.cat([scores[:, :index], scores[:, index + 1 :]], dim=1).max(dim=1).values
-    return [round(float(x), 4) for x in scores[:, index] - others]
+    return [round(float(x), 4) for x in medqa.gold_margins(logits, letter_ids, gold)]
 
 
 def main() -> None:
@@ -77,18 +75,21 @@ def main() -> None:
         "--mode", nargs="+", default=["activation", "weights"], choices=["activation", "weights"]
     )
     parser.add_argument("--rows", type=int, default=24, help="patches evaluated per forward pass")
+    parser.add_argument(
+        "--style", default="chat", choices=medqa.STYLES, help="prompt format (see wsp/medqa.py)"
+    )
     args = parser.parse_args()
 
-    out = EXP / "processed" / f"patch_{args.donor}"
+    out = EXP / "processed" / (f"patch_{args.donor}" + ("_bare" if args.style == "bare" else ""))
     out.mkdir(parents=True, exist_ok=True)
-    sets = question_sets(args.donor, args.per_set)
+    sets = question_sets(args.donor, args.per_set, args.style)
     (out / "question_sets.json").write_text(
         json.dumps({k: [i["id"] for i in v] for k, v in sets.items()}, indent=1)
     )
     print({k: len(v) for k, v in sets.items()}, flush=True)
 
     tokenizer = models.load_tokenizer("phi")
-    letter_ids = medqa.letter_token_ids(tokenizer)
+    letter_ids = medqa.letter_token_ids(tokenizer, args.style)
     base = models.load_model("phi")
     n_layers = base.config.num_hidden_layers
 
@@ -104,7 +105,9 @@ def main() -> None:
                     if item["id"] in done:
                         continue
                     enc = tokenizer(
-                        [medqa.build_prompt(tokenizer, item)], return_tensors="pt", add_special_tokens=False
+                        [medqa.build_prompt(tokenizer, item, args.style)],
+                        return_tensors="pt",
+                        add_special_tokens=False,
                     )
                     enc = {k: v.to(base.device) for k, v in enc.items()}
                     donor_cache = capture(donor, enc, layers=list(range(n_layers)))
@@ -136,7 +139,9 @@ def main() -> None:
         def evaluate(label: str) -> None:
             if label in done:
                 return
-            records = medqa.evaluate(base, tokenizer, everything, batch_size=16, progress=False)
+            records = medqa.evaluate(
+                base, tokenizer, everything, batch_size=16, progress=False, style=args.style
+            )
             row = {"config": label, "margins": {r["id"]: round(r["margin"], 4) for r in records},
                    "acc": {name: sum(r["correct"] for r in records if set_of[r["id"]] == name) / len(items)
                            for name, items in sets.items()}}  # fmt: skip

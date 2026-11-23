@@ -12,12 +12,17 @@ Filippos's main direction: on MedQA questions the medical fine-tune gets right a
 layers, heads, MLPs or features are causally responsible, and can that be moved into the base model by targeted
 weight edits?
 
+## Setting (decided by the researcher, 2026-11-22)
+Donor = `microsoft/MediPhi-Instruct`. Primary measure = MedQA with the bare lm-evaluation-harness prompt, where
+the donor beats Phi-3.5 (test: 54.6 % vs 48.5 %). Guardrail = the chat prompt, where they tie; an edit must not
+lower it. Background: [[EXP-04 MedQA baseline - Phi-3.5 vs MediPhi]].
+
 ## Parts
 | Part | What | Status |
 |---|---|---|
-| 05a | Weight difference MediPhi - Phi-3.5 per tensor, head and neuron | done |
-| 05b | Cross-model activation patching and per-layer weight swapping | queued |
-| 05c | Astra session with the donor checkpoint in the edit lab | not started (waiting on the donor question) |
+| 05a | Weight difference MediPhi - Phi-3.5 per tensor, head and neuron | done (for `microsoft/MediPhi`) |
+| 05b | Cross-model activation patching and per-layer weight swapping, MediPhi-Instruct, bare prompt | queued |
+| 05c | Astra session with the donor in the edit lab (`transfer1`, 30 passes) | queued behind the bare baselines |
 | 05d | Crosscoder on one residual layer of both models | not started |
 
 ## 05a - weight difference (done)
@@ -35,19 +40,26 @@ weight edits?
   MedWiki, Guidelines), densities 0.14-0.93, with Phi-3.5 as the base. See [[Corbeil et al. 2025 - MediPhi]].
 
 ## 05b - activation patching and weight swapping (queued)
-`experiments/exp_05_medical_circuit/patch.py`, tools in `wsp/patching.py` (tests in `tests/test_patching.py`).
-- Question sets from the discovery pool (dev + 3,000 training questions), 60 each: `gain` (donor right, base
-  wrong), `loss` (base right, donor wrong), `both` (both right).
+`experiments/exp_05_medical_circuit/patch.py --donor mediphi_instruct --style bare`, tools in `wsp/patching.py`.
+- Question sets from the discovery pool (dev + 3,000 training questions), 60 each, defined with the bare prompt:
+  `gain` (donor right, base wrong), `loss` (base right, donor wrong), `both` (both right).
 - Activation patching: the donor's attention output, MLP output or residual stream of one layer replaces the
   base's, all positions; 96 patches per question.
 - Weight swapping: one layer's attention weights or MLP weights copied from the donor into the base.
-- The `loss` set is the control: if patching "recovers" as much there in the wrong direction, the effect is
-  disagreement between two similar models rather than a medical gain.
+- The `loss` set is the control: if patching moves margins as much there in the wrong direction, the effect is
+  disagreement between two similar models rather than a transferable gain.
+- Output: `processed/patch_mediphi_instruct_bare/`.
 
-## The donor question (open, needs the researcher)
-Under letter scoring neither `microsoft/MediPhi` nor `microsoft/MediPhi-Instruct` is better than Phi-3.5 on
-MedQA ([[EXP-04 MedQA baseline - Phi-3.5 vs MediPhi]]). There is a set of questions MediPhi gets right and
-Phi gets wrong, and a set of about the same size in the other direction.
+## 05c - Astra with the donor (queued)
+`experiments/exp_05_medical_circuit/run_astra.py --name transfer1 --donor mediphi_instruct --budget 30`.
+- Lab: `wsp/lab.py` with `style="bare"`; task message `transfer_message` in `wsp/lab_session.py`.
+- Astra has both sets of weights (`load_donor`), practice results of both models under both prompts, and three
+  kinds of forward pass: score (bare or chat), teacher-forced reads, and activation patching (donor into the base,
+  per layer component or per head, up to 64 questions x 256 patches).
+- The message asks Astra to say whether the advantage is about the prompt format or about medical content, and to
+  report the share of weights its final edit changes.
+- Final measurement: original vs edited Phi-3.5 on the MedQA test split under both prompts
+  (`raw/transfer1/final_eval.json`).
 
 ## Visualizations
 Viewer dataset `weightdiff_mediphi_phi` ([[Visualization index]]).

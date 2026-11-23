@@ -3,6 +3,7 @@ The stronger layer-26 edit corrected six answers and harmed two, a 3.13-point sc
 ```python
 # Hypothesis: reversing L26 neuron 4131 changes answer selection beneficially, but the apparent gain needs a larger paired test.
 import shutil
+
 changes15 = paired_details(15)
 shutil.copytree(work / "edited", work / "candidate_l26_reverse", dirs_exist_ok=True)
 rows15 = score_records[15]
@@ -11,14 +12,17 @@ truth15 = np.array([letters.index(r["answer"]) for r in rows15])
 offset_only_pred = (old15 + changes15.mean(0)[None, :]).argmax(1)
 actual_pred15 = np.array([letters.index(r["edited"]["pred"]) for r in rows15])
 print("Descriptive constant-offset approximation, not a model forward pass:")
-print({"offset_only_accuracy": round(float((offset_only_pred == truth15).mean()), 4),
-       "actual_edited_accuracy": round(float((actual_pred15 == truth15).mean()), 4),
-       "prediction_agreement": round(float((offset_only_pred == actual_pred15).mean()), 4)})
+print(
+    {
+        "offset_only_accuracy": round(float((offset_only_pred == truth15).mean()), 4),
+        "actual_edited_accuracy": round(float((actual_pred15 == truth15).mean()), 4),
+        "prediction_agreement": round(float((offset_only_pred == actual_pred15).mean()), 4),
+    }
+)
 v26 = candidate_original[:, candidate_unit]
 v26_letter = letter_basis @ (letter_basis.T @ v26)
 v26_other = v26 - v26_letter
-print("L26:4131 column norm fraction in letter subspace:",
-      round(float(v26_letter.norm()/v26.norm()), 4))
+print("L26:4131 column norm fraction in letter subspace:", round(float(v26_letter.norm() / v26.norm()), 4))
 with (work / "notes.md").open("a") as f:
     f.write(
         "\nForward 15, L26:4131 scale=-1, paired n=128: 57.8125% -> 60.9375%; "

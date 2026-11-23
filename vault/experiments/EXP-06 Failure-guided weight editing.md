@@ -44,6 +44,13 @@ verify it. The lab was fixed on 2026-11-22 17:15 (layer 32 is now the pre-norm r
 `tests/integration_lab.py`), but `run1` was already running with the old behaviour and keeps it for the whole
 session, so its arrays are self-consistent. Later sessions use the fixed tool.
 
+## Interruption on 2026-11-22
+The lab loaded the model inside the session's own process for every forward pass; on Apple MPS that memory was
+not returned, and by pass 21 the process held 18 GB and the machine was swapping (pass 21 ran for two hours
+without finishing). The process was stopped at 20 of 30 passes and the machine was restarted. Fix: every pass now
+runs in a worker process (`wsp/lab_worker.py`). `run1` was resumed at 21:45 from its saved state with a note to
+Astra: kernel variables lost, pass 21 not counted, and hidden_states layer 32 now means the pre-norm residual.
+
 ## Runs
 - `run1`, started 2026-11-22 16:39, budget 30: `experiments/exp_06_failure_guided_editing/raw/run1/`
 

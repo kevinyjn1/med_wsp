@@ -1,6 +1,6 @@
 # Current State
 
-Checkpoint written 2026-11-22 16:50 (session 01, still in progress). Detailed log: `vault/sessions/2026-11-21 Session 01.md`.
+Checkpoint written 2026-11-22 21:55 (session 01, still in progress). Detailed log: `vault/sessions/2026-11-21 Session 01.md`.
 
 ## Objective
 
@@ -21,6 +21,8 @@ Checkpoint written 2026-11-22 16:50 (session 01, still in progress). Detailed lo
   is better than the base under this scoring.
 - EXP-04b (reasoning, 400 test questions): Phi-3.5 0.630, MediPhi 0.600, MediPhi-Instruct 0.578 (it answers
   directly instead of reasoning). No protocol shows a MedQA advantage for the medical models.
+- EXP-04c: the paper's MedQA numbers reproduce in the bare lm-evaluation-harness format (0.4855 / 0.4808 / 0.5460
+  vs 0.486 / 0.491 / 0.548); the MediPhi-Instruct gain exists only there.
 - EXP-05a: MediPhi - Phi-3.5 is a small (1.57 % relative norm), dense, high-rank change spread over every
   attention and MLP matrix; MediPhi is a `breadcrumbs_ties` merge of five experts.
 
@@ -30,6 +32,8 @@ None of the above has been reviewed by the researcher; nothing is in `research/0
 
 - Researcher: replicate MIT experiments 3, 7, 8; this Mac first, ask before cloud; Claude runs `codex exec`;
   commit and push as work proceeds.
+- Researcher (2026-11-22): donor experiment = MediPhi-Instruct into Phi-3.5 on the bare-prompt MedQA gap; success
+  needs bare accuracy up and chat accuracy not down; no extra benchmarks for now.
 - Claude (provisional): MedQA from `bigbio/med_qa`; letter-logit scoring; discovery pool = dev + first 3,000
   training questions, test split only for final numbers.
 
@@ -47,18 +51,20 @@ None of the above has been reviewed by the researcher; nothing is in `research/0
 
 ## Open Issues
 
-- Donor question: which base / fine-tune pair and benchmark show a gain worth explaining? (needs the researcher)
-- MIT exp 8 behaviour check and Astra rerun need long generations; this Mac is too slow (needs a GPU decision).
 - MIT exp 7 needs `google/gemma-3-270m-it`, gated for the researcher's Hugging Face account.
+- MIT exp 8 part C (Astra's own Qwen session) is paused: passes are slow on this Mac and MedQA has GPU priority.
 - Some Codex tool definitions cannot be disabled by flag; turns are audited for tool use instead.
+- Memory: keep GPU jobs behind `python -m wsp.gpu_lock` (`batch` for single-model sweeps, default `gpu` for lab
+  passes; a job that loads two models takes both, `batch` first).
 
 ## Next
 
-1. Collect the running jobs: reasoning-based MedQA evaluation (`logs/exp04_cot.log`), Astra editing session
-   (`experiments/exp_06_failure_guided_editing/raw/run1/`), Qwen MLX benchmark, activation patching, looping scan,
-   weight swaps (`logs/`).
-2. Write `RESULTS.md` for EXP-04, 05, 06, 07; export patching and looping results to the viewer.
-3. After the researcher answers the open issues: EXP-05c (Astra with a donor), EXP-02 (Gemma), EXP-03 parts B and C.
+1. Collect: bare baselines (`logs/exp04_bare.log`), EXP-06 `run1`, EXP-05c `transfer1`
+   (`experiments/exp_05_medical_circuit/raw/transfer1/`), weight swaps and patching
+   (`processed/patch_mediphi_instruct_bare/`), looping scan, Qwen behaviour check.
+2. Write `RESULTS.md` for EXP-05, 06, 07 and EXP-03b; export interventions and looping to the viewer
+   (`python -m wsp.viz_export interventions looping`; the interventions export still points at `patch_mediphi`).
+3. Restart EXP-03c with the smaller passes when the GPU is free; EXP-02 once Gemma access exists.
 
 ## Resume
 

@@ -15,8 +15,11 @@ float32 `.npy` files under <work>/edited/ and are re-validated on the host befor
 
 from __future__ import annotations
 
+import contextlib
 import gc
 import json
+import subprocess
+import sys
 import time
 from pathlib import Path
 
@@ -28,10 +31,12 @@ from wsp import medqa, models
 from wsp.gpu_lock import gpu_lock
 from wsp.harness.kernel import Kernel
 from wsp.looping import decoder_layers
-from wsp.patching import swapped_weights
+from wsp.patching import COMPONENTS, Patch, capture, run_patched, swapped_weights
 
 FROZEN = ("model.norm.weight", "model.embed_tokens.weight", "lm_head.weight")
 MAX_SCORE_QUESTIONS = 1024
+MAX_PATCH_QUESTIONS, MAX_PATCHES, PATCH_ROWS = 64, 256, 24
+REPO = Path(__file__).resolve().parents[1]
 MAX_TEXTS_LAST, MAX_TEXTS_ALL, MAX_TOKENS_ALL, MAX_ATTN_TEXTS, MAX_ATTN_TOKENS = 1024, 64, 40_000, 4, 700
 
 PRELUDE = r'''
@@ -147,10 +152,25 @@ def make_prelude(
     )
 
 
+class PassError(Exception):
+    """A forward pass that failed in a worker process; `label` is the original exception's type name."""
+
+    def __init__(self, label: str, message: str):
+        super().__init__(message)
+        self.label = label
+
+
+LOCK_ORDER = ("batch", "gpu")  # every holder of both takes them in this order, so two holders cannot deadlock
+
+
 class BudgetedLab:
     """Kernel, forward-pass budget and logging shared by the labs. A subclass implements `_dispatch`."""
 
     lock_name = "gpu"
+
+    def _locks(self, request: dict) -> tuple[str, ...]:
+        """Which job locks one request needs (see wsp/gpu_lock.py). Two-model requests need both."""
+        return (self.lock_name,)
 
     def _init_runtime(
         self, run_dir: Path, *, budget: int, prelude: str, read_only: list[Path], max_python_runs: int = 300
@@ -189,7 +209,12 @@ class BudgetedLab:
             if self.passes_left() <= 0:
                 raise RuntimeError("the forward-pass budget is used up")
             start = time.time()
-            with gpu_lock(f"lab {self.run_dir.name} pass {index}", name=self.lock_name), torch.no_grad():
+            with contextlib.ExitStack() as stack, torch.no_grad():
+                for name in sorted(
+                    self._locks(request),
+                    key=lambda n: LOCK_ORDER.index(n) if n in LOCK_ORDER else len(LOCK_ORDER),
+                ):
+                    stack.enter_context(gpu_lock(f"lab {self.run_dir.name} pass {index}", name=name))
                 summary, where = self._dispatch(request, index)
             summary["s"] = round(time.time() - start)
         except Exception as error:  # noqa: BLE001 - every failure is reported to the model, uncounted
@@ -199,10 +224,11 @@ class BudgetedLab:
                     "t": time.time(),
                     "ok": False,
                     "request": code[:4000],
-                    "error": f"{type(error).__name__}: {error}",
+                    "error": f"{getattr(error, 'label', type(error).__name__)}: {error}",
                 }
             )
-            return f"The forward pass failed and was not counted: {type(error).__name__}: {str(error)[:600]}"
+            label = getattr(error, "label", type(error).__name__)
+            return f"The forward pass failed and was not counted: {label}: {str(error)[:600]}"
         finally:
             gc.collect()
             if torch.backends.mps.is_available():
@@ -225,9 +251,9 @@ class MedQALab(BudgetedLab):
     """Kernel + forward-pass tool + budget for one Astra session on a Phi-3.5-family model."""
 
     def __init__(self, run_dir: Path, *, model: str = "phi", donor: str | None = None, budget: int = 30,
-                 practice: list[dict], baseline: list[dict], max_python_runs: int = 300):  # fmt: skip
+                 practice: list[dict], baseline: list[dict], max_python_runs: int = 300, style: str = "chat"):  # fmt: skip
         self.work = run_dir / "work"
-        self.model_name, self.donor_name = model, donor
+        self.model_name, self.donor_name, self.style = model, donor, style
         self.practice = {item["id"]: item for item in practice}
         self.practice_dir = self.work / "practice"
         self.practice_dir.mkdir(parents=True, exist_ok=True)
@@ -242,17 +268,63 @@ class MedQALab(BudgetedLab):
         )
         medqa.save_jsonl(baseline, self.practice_dir / "original_results.jsonl")
         self.tokenizer = models.load_tokenizer("phi")
-        example = medqa.build_prompt(self.tokenizer, practice[0])
-        (self.practice_dir / "eval_prompt_format.txt").write_text(
-            "The exact evaluation prompt for a question (the answer letter is read from the next-token logits at its end):\n\n"
-            + example + "\n"
-        )  # fmt: skip
+        if style == "chat":
+            (self.practice_dir / "eval_prompt_format.txt").write_text(
+                "The exact evaluation prompt for a question (the answer letter is read from the next-token logits at its end):\n\n"
+                + medqa.build_prompt(self.tokenizer, practice[0]) + "\n"
+            )  # fmt: skip
+        else:
+            (self.practice_dir / "eval_prompt_format.txt").write_text(
+                "The two evaluation prompts for one question. In both, the answer letter is read from the next-token\n"
+                "logits at the end of the prompt.\n\n===== BARE prompt (primary measure; plain text, no chat template) =====\n"
+                + medqa.build_prompt(self.tokenizer, practice[0], "bare")
+                + "\n\n===== CHAT prompt (must not get worse) =====\n"
+                + medqa.build_prompt(self.tokenizer, practice[0], "chat") + "\n"
+            )  # fmt: skip
         prelude = make_prelude(model_dir, self.practice_dir, FROZEN, donor_dir)
         # The Hugging Face snapshot files are links into the repo's blob folder, so the whole repo folder is readable.
         read_only = [model_dir.parents[1]] + ([donor_dir.parents[1]] if donor_dir else [])
         self._init_runtime(
             run_dir, budget=budget, prelude=prelude, read_only=read_only, max_python_runs=max_python_runs
         )
+
+    @classmethod
+    def for_worker(cls, run_dir: Path, model: str, donor: str | None, style: str) -> MedQALab:
+        """The model-running half of a lab, rebuilt inside a worker process from the files of a session."""
+        lab = cls.__new__(cls)
+        lab.run_dir, lab.work = run_dir, run_dir / "work"
+        lab.model_name, lab.donor_name, lab.style = model, donor, style
+        lab.tokenizer = models.load_tokenizer("phi")
+        lab.practice = {
+            item["id"]: item for item in medqa.load_jsonl(lab.work / "practice" / "questions.jsonl")
+        }
+        return lab
+
+    def _locks(self, request: dict) -> tuple[str, ...]:
+        # A patching pass holds the base and the donor at once (15 GB): nothing else may run next to it.
+        return ("batch", "gpu") if request.get("type") == "patch" else ("gpu",)
+
+    def _dispatch(self, request: dict, index: int) -> tuple[dict, str]:
+        """Run the pass in a fresh process, so every byte of model memory is returned when it ends."""
+        jobs = self.run_dir / "jobs"
+        jobs.mkdir(exist_ok=True)
+        job, out = jobs / f"pass_{index}.json", jobs / f"pass_{index}.out.json"
+        out.unlink(missing_ok=True)
+        job.write_text(json.dumps({"run_dir": str(self.run_dir), "model": self.model_name, "donor": self.donor_name,
+                                   "style": self.style, "request": request, "index": index, "out": str(out)}))  # fmt: skip
+        result = subprocess.run([sys.executable, "-m", "wsp.lab_worker", str(job)], capture_output=True, text=True,
+                                cwd=REPO, check=False)  # fmt: skip
+        if not out.exists():
+            tail = (
+                result.stderr.strip().splitlines()[-1]
+                if result.stderr.strip()
+                else f"exit code {result.returncode}"
+            )
+            raise PassError("WorkerError", f"the model process ended without a result ({tail})")
+        answer = json.loads(out.read_text())
+        if "error" in answer:
+            raise PassError(answer["error_type"], answer["error"])
+        return answer["summary"], answer["where"]
 
     # --------------------------------------------------------------------------------------------- edits
     def current_edits(self, model) -> dict[str, torch.Tensor]:
@@ -269,13 +341,23 @@ class MedQALab(BudgetedLab):
             edits[name] = new.to(torch.bfloat16)
         return edits
 
-    def _dispatch(self, request: dict, index: int) -> tuple[dict, str]:
+    def _dispatch_local(self, request: dict, index: int) -> tuple[dict, str]:
+        """The pass itself; runs inside the worker process."""
         kind, which = request.get("type"), request.get("model", "original")
         if kind == "score":
             return self._score(request, which, index)
         if kind == "teacher_forced":
             return self._teacher_forced(request, which, index)
-        raise ValueError(f'unknown type {kind!r}: use "score" or "teacher_forced"')
+        if kind == "patch":
+            return self._patch(request, which, index)
+        kinds = '"score", "teacher_forced" or "patch"' if self.donor_name else '"score" or "teacher_forced"'
+        raise ValueError(f"unknown type {kind!r}: use {kinds}")
+
+    def _style(self, request: dict) -> str:
+        style = request.get("prompt", self.style)
+        if style not in medqa.STYLES:
+            raise ValueError('"prompt" must be "bare" or "chat"')
+        return style
 
     def _items(self, ids: list[str]) -> list[dict]:
         unknown = [i for i in ids if i not in self.practice]
@@ -294,18 +376,21 @@ class MedQALab(BudgetedLab):
         items = self._items(request["questions"])
         if not 1 <= len(items) <= MAX_SCORE_QUESTIONS:
             raise ValueError(f"a score pass takes 1 to {MAX_SCORE_QUESTIONS} questions")
+        style = self._style(request)
         model = self._load(which)
         results = {}
         if which in ("original", "both", "donor"):
             results["donor" if which == "donor" else "original"] = medqa.evaluate(
-                model, self.tokenizer, items, 16, progress=False
+                model, self.tokenizer, items, 16, progress=False, style=style
             )
         if which in ("edited", "both"):
             edits = self.current_edits(model)
             if not edits:
                 raise ValueError("there are no edits in edited/ to score")
             with swapped_weights(model, edits):
-                results["edited"] = medqa.evaluate(model, self.tokenizer, items, 16, progress=False)
+                results["edited"] = medqa.evaluate(
+                    model, self.tokenizer, items, 16, progress=False, style=style
+                )
         del model
 
         def block(records: list[dict]) -> dict:
@@ -313,7 +398,7 @@ class MedQALab(BudgetedLab):
                     "mean_margin": round(float(np.mean([r["margin"] for r in records])), 4),
                     "predicted": {letter: sum(r["pred"] == letter for r in records) for letter in medqa.LETTERS}}  # fmt: skip
 
-        summary = {"ok": True, "type": "score", "model": which, "questions": len(items),
+        summary = {"ok": True, "type": "score", "model": which, "prompt": style, "questions": len(items),
                    "edited_tensors": sorted(p.name[:-4] for p in (self.work / "edited").glob("*.npy")) if which in ("edited", "both") else []}  # fmt: skip
         summary.update({name: block(records) for name, records in results.items()})
         rows = [{"id": item["id"], "answer": item["answer"]} for item in items]
@@ -349,8 +434,10 @@ class MedQALab(BudgetedLab):
         positions = want.get("positions", "last")
         if positions not in ("last", "all"):
             raise ValueError('"positions" must be "last" or "all"')
+        style = self._style(request)
         texts = [
-            medqa.build_prompt(self.tokenizer, item) for item in self._items(request.get("questions", []))
+            medqa.build_prompt(self.tokenizer, item, style)
+            for item in self._items(request.get("questions", []))
         ]
         texts += list(request.get("texts", []))
         ids = list(request.get("questions", [])) + [f"text-{i}" for i in range(len(request.get("texts", [])))]
@@ -489,3 +576,91 @@ class MedQALab(BudgetedLab):
         if logprob_count:
             summary["mean_token_logprob"] = round(logprob_sum / logprob_count, 4)
         return summary, f"fwd_{index}/"
+
+    def _patch(self, request: dict, which: str, index: int) -> tuple[dict, str]:
+        """Activation patching: donor activations placed into the base model's forward pass, one patch at a time."""
+        if not self.donor_name:
+            raise ValueError("no donor checkpoint in this session")
+        if which not in ("original", "edited"):
+            raise ValueError('"model" (the model that receives the patches) must be "original" or "edited"')
+        style = self._style(request)
+        items = self._items(request.get("questions", []))
+        if not 1 <= len(items) <= MAX_PATCH_QUESTIONS:
+            raise ValueError(f"a patch pass takes 1 to {MAX_PATCH_QUESTIONS} questions")
+        specs = request.get("patches", [])
+        if not isinstance(specs, list) or not 1 <= len(specs) <= MAX_PATCHES:
+            raise ValueError(f'"patches" is a list of 1 to {MAX_PATCHES} patches')
+        base = self._load("original")
+        n_layers, n_heads = base.config.num_hidden_layers, base.config.num_attention_heads
+        patches = []
+        for spec in specs:
+            layer, component, head = spec.get("layer"), spec.get("component"), spec.get("head")
+            if not isinstance(layer, int) or not 0 <= layer < n_layers:
+                raise ValueError(f"patch layer must be 0..{n_layers - 1}: {spec}")
+            if component not in (*COMPONENTS, "head"):
+                raise ValueError(f'patch component must be "attn", "mlp", "resid" or "head": {spec}')
+            if component == "head" and (not isinstance(head, int) or not 0 <= head < n_heads):
+                raise ValueError(f'a "head" patch needs "head" in 0..{n_heads - 1}: {spec}')
+            patches.append(Patch(layer, component, head if component == "head" else None))
+        edits = self.current_edits(base) if which == "edited" else {}
+        if which == "edited" and not edits:
+            raise ValueError("there are no edits in edited/")
+        donor = self._load("donor")
+        letter_ids = medqa.letter_token_ids(self.tokenizer, style)
+        layers = sorted({p.layer for p in patches})
+        components = tuple(c for c in COMPONENTS if any(p.component == c for p in patches))
+        heads = any(p.component == "head" for p in patches)
+        head_dim = base.config.hidden_size // n_heads
+        rows = []
+        with swapped_weights(base, edits):
+            for item in items:
+                enc = self.tokenizer(
+                    [medqa.build_prompt(self.tokenizer, item, style)],
+                    return_tensors="pt",
+                    add_special_tokens=False,
+                )
+                enc = {k: v.to(base.device) for k, v in enc.items()}
+                cache = capture(donor, enc, layers=layers, components=components, heads=heads)
+                base_margin = float(
+                    medqa.gold_margins(
+                        base(**enc, use_cache=False).logits[:, -1, :], letter_ids, item["answer"]
+                    )[0]
+                )
+                donor_margin = float(medqa.gold_margins(cache["logits"], letter_ids, item["answer"])[0])
+                margins: list[float] = []
+                for begin in range(0, len(patches), PATCH_ROWS):
+                    logits = run_patched(
+                        base, enc, cache, patches[begin : begin + PATCH_ROWS], head_dim=head_dim
+                    )
+                    margins += [float(x) for x in medqa.gold_margins(logits, letter_ids, item["answer"])]
+                rows.append({"id": item["id"], "answer": item["answer"], "base": round(base_margin, 4), "donor": round(donor_margin, 4),
+                             "patched": {p.label(): round(m, 4) for p, m in zip(patches, margins, strict=True)}})  # fmt: skip
+                del cache
+        del base, donor
+        medqa.save_jsonl(rows, self.work / f"patch_{index}.jsonl")
+
+        base_margins = np.array([r["base"] for r in rows])
+        donor_margins = np.array([r["donor"] for r in rows])
+        gap = float((donor_margins - base_margins).mean())
+        table = []
+        for patch in patches:
+            patched = np.array([r["patched"][patch.label()] for r in rows])
+            change = patched - base_margins
+            table.append({
+                "patch": patch.label(), "margin_change": round(float(change.mean()), 4),
+                "se": round(float(change.std(ddof=1) / np.sqrt(len(change))), 4) if len(change) > 1 else None,
+                "share_of_donor_gap": round(float(change.mean()) / gap, 3) if abs(gap) > 1e-6 else None,
+                "accuracy": round(float((patched > 0).mean()), 4),
+            })  # fmt: skip
+        table.sort(key=lambda row: -row["margin_change"])
+        shown = table if len(table) <= 40 else table[:25] + table[-15:]
+        summary = {
+            "ok": True, "type": "patch", "model": which, "prompt": style, "questions": len(items), "patches": len(patches),
+            "base": {"accuracy": round(float((base_margins > 0).mean()), 4), "mean_margin": round(float(base_margins.mean()), 4)},
+            "donor": {"accuracy": round(float((donor_margins > 0).mean()), 4), "mean_margin": round(float(donor_margins.mean()), 4)},
+            "note": "margin = log-prob of the correct letter minus the best other letter; a patch puts the donor's activation "
+                    "(all token positions) into the receiving model; rows are sorted by margin_change"
+                    + ("" if len(table) <= 40 else "; the 25 largest and 15 smallest are shown, all are in the file"),
+            "results": shown, "edited_tensors": sorted(edits),
+        }  # fmt: skip
+        return summary, f"patch_{index}.jsonl"

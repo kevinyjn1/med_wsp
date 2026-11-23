@@ -31,6 +31,8 @@ def main() -> None:
     parser.add_argument("--splits", nargs="+", default=["test", "dev", "train"])
     parser.add_argument("--train-pool", type=int, default=3000, help="first N training questions")
     parser.add_argument("--batch-size", type=int, default=16)
+    parser.add_argument("--style", default="chat", choices=medqa.STYLES,
+                        help='"chat": our chat prompt (files <model>_<split>.jsonl); "bare": the lm-evaluation-harness prompt (bare_<model>_<split>.jsonl)')  # fmt: skip
     args = parser.parse_args()
 
     data = {split: medqa.load_medqa(split) for split in args.splits}
@@ -41,15 +43,17 @@ def main() -> None:
     for name in args.models:
         model = models.load_model(name)
         for split, items in data.items():
-            out = OUT / f"{name}_{split}.jsonl"
+            out = OUT / f"{'bare_' if args.style == 'bare' else ''}{name}_{split}.jsonl"
             if out.exists() and len(medqa.load_jsonl(out)) == len(items):
                 print(f"{name} {split}: already done", flush=True)
                 continue
             start = time.time()
-            records = medqa.evaluate(model, tokenizer, items, batch_size=args.batch_size, progress=False)
+            records = medqa.evaluate(
+                model, tokenizer, items, batch_size=args.batch_size, progress=False, style=args.style
+            )
             medqa.save_jsonl(records, out)
             accuracy = sum(r["correct"] for r in records) / len(records)
-            print(json.dumps({"model": name, "split": split, "n": len(records), "acc": round(accuracy, 4),
+            print(json.dumps({"model": name, "style": args.style, "split": split, "n": len(records), "acc": round(accuracy, 4),
                               "seconds": round(time.time() - start)}), flush=True)  # fmt: skip
         del model
         gc.collect()

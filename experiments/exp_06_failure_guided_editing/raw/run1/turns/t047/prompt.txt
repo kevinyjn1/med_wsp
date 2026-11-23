@@ -1,0 +1,10 @@
+OUTPUT of Python run 26 of at most 300:
+```
+Full sample: {'n': 512, 'original': 0.568359375, 'edited': 0.578125, 'delta_pp': 0.9765625, 'se_pp': 0.5849173686495666, 'wr': 7, 'rw': 2, 'margin': 0.19247436831938103, 'margin_se': 0.11051001381859128}
+Outside initial screen: {'n': 384, 'original': 0.5651041666666666, 'edited': 0.5755208333333334, 'delta_pp': 1.0416666666666665, 'se_pp': 0.6364985208040823, 'wr': 5, 'rw': 1, 'margin': 0.12666829807373384, 'margin_se': 0.1314015850883678}
+Centered letter-shift mean / SD: [0.565, 0.054, -0.245, -0.374] [1.215, 1.71, 1.557, 1.941]
+Descriptive accuracies: {'original': 0.568359375, 'edited': 0.578125, 'mean_shift_only': 0.572265625, 'edited_minus_mean_shift': 0.580078125}
+By true letter: [('A', {'n': 134, 'original': 0.4925373134328358, 'edited': 0.5, 'delta_pp': 0.7462686567164178, 'se_pp': 0.7462686567164182, 'wr': 1, 'rw': 0, 'margin': 0.10960820895522388, 'margin_se': 0.17006257657721177}), ('B', {'n': 126, 'original': 0.5476190476190477, 'edited': 0.5714285714285714, 'delta_pp': 2.380952380952381, 'se_pp': 1.363602006026319, 'wr': 3, 'rw': 0, 'margin': 0.49268353340171633, 'margin_se': 0.22761437791433328}), ('C', {'n': 140, 'original': 0.6214285714285714, 'edited': 0.6357142857142857, 'delta_pp': 1.4285714285714286, 'se_pp': 1.0065123433632268, 'wr': 2, 'rw': 0, 'margin': 0.12522322407790593, 'margin_se': 0.20329885034325096}), ('D', {'n': 112, 'original': 0.6160714285714286, 'edited': 0.6071428571428571, 'delta_pp': -0.8928571428571428, 'se_pp': 1.5511110489912154, 'wr': 1, 'rw': 2, 'margin': 0.03794642857142857, 'margin_se': 0.2897711475202077})]
+Installed orthogonal scale=-3; relative tensor change: 0.046667203307151794
+
+```

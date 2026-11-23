@@ -3,7 +3,7 @@
 Same pieces as MIT's (persistent kernel over the weights, practice problems, a forward-pass tool with a budget of
 GENERATION and TEACHER-FORCED passes, the same rules), sized for one Apple M4 Max:
 
-  generation   MLX, the evaluation's sampling; at most 64 answers per pass (32 per model with "both") and at most
+  generation   MLX, the evaluation's sampling; at most 32 answers per pass (16 per model with "both") and at most
                16,384 new tokens (MIT: 512 answers, 32,768 tokens on a rented GPU)
   teacher      PyTorch; at most 256 texts of at most 4,096 tokens, 100,000 tokens in total (MIT: 1,024 texts,
                524,288 tokens)
@@ -31,7 +31,8 @@ from wsp.models import snapshot_dir
 QWEN = "Qwen/Qwen3.5-0.8B"
 PREFIX = "model.language_model."
 FROZEN = (PREFIX + "norm.weight", PREFIX + "embed_tokens.weight", "lm_head.weight")
-MAX_GENERATIONS, MAX_PER_MODEL_BOTH, MAX_TOKENS = 64, 32, 16_384
+MAX_GENERATIONS, MAX_PER_MODEL_BOTH, MAX_TOKENS = 32, 16, 16_384
+WORKER_BATCH = 16  # 32 answers of 16,384 tokens at once took 17 GB under MLX; 16 stays near 8 GB
 MAX_TEXTS, MAX_TEXT_TOKENS, MAX_TOTAL_TOKENS, MAX_ATTN_TEXTS, MAX_ATTN_TOKENS = 256, 4096, 100_000, 2, 2048
 EVAL_PREFIX = "<|im_start|>user\n"
 EVAL_SUFFIX = "\n" + mathqa.INSTRUCTION + "<|im_end|>\n<|im_start|>assistant\n<think>\n"
@@ -145,7 +146,7 @@ class QwenMathLab(BudgetedLab):
             out = self.run_dir / "jobs" / f"pass_{index}_{model}.out.json"
             self._worker("generate", {
                 "tag": model, "edited_dir": str(edited_dir) if model == "edited" else None, "max_tokens": max_tokens,
-                "seed": index, "batch_size": 32, "out": str(out), "user_messages": [item["message"] for item in items for _ in range(n)],
+                "seed": index, "batch_size": WORKER_BATCH, "out": str(out), "user_messages": [item["message"] for item in items for _ in range(n)],
             }, index)  # fmt: skip
             generations = json.loads(out.read_text())
             rows = []
@@ -282,7 +283,7 @@ WHAT YOU HAVE.
 HOW TO WORK.
 1. Diagnose first. Look at how the model fails on practice problems: a wrong final answer, finishing without an answer, or being cut off at the token limit (often while repeating itself in its thinking). The generation summary counts these; read some failing texts. Go after the largest category you can explain.
 2. Localize causally. That a component is more active on correct answers is not enough (correct answers come from easier and shorter problems). Before relying on a component, show that changing it changes the behaviour you predicted, and try several strengths to see a dose-response.
-3. Measure with enough power. Accuracy over n generations has a standard error of about 50/sqrt(n) percentage points: about 8.8 points at 32 generations, 6.3 at 64. Compare original and edited weights on the SAME problems with "model": "both"; do not compare with an accuracy measured on other problems. Keep an edit only if its gain is clearly larger than its standard error on problems that were not used to choose it. A lower share of cut-off answers does not by itself mean more correct answers: judge edits by accuracy. Dense measurements help too and are cheap: one teacher-forced pass can read reference solutions of practice problems (or the model's own good versus failing continuations) and gives a signal on every token. Edits that change a tensor by a fraction of a percent usually have effects too small to see; test strengths large enough to matter and back off if they hurt.
+3. Measure with enough power. Accuracy over n generations has a standard error of about 50/sqrt(n) percentage points: about 12.5 points at 16 generations, 8.8 at 32. Compare original and edited weights on the SAME problems with "model": "both"; do not compare with an accuracy measured on other problems. Keep an edit only if its gain is clearly larger than its standard error on problems that were not used to choose it. A lower share of cut-off answers does not by itself mean more correct answers: judge edits by accuracy. Dense measurements help too and are cheap: one teacher-forced pass can read reference solutions of practice problems (or the model's own good versus failing continuations) and gives a signal on every token. Edits that change a tensor by a fraction of a percent usually have effects too small to see; test strengths large enough to matter and back off if they hurt.
 4. Plan your forward passes (see the budget above): for example one diagnostic generation, teacher-forced passes for dense paired measurements, and a final paired generation ("model": "both") on problems you have not used to confirm.
 5. Work efficiently: state the hypothesis of each code block in its first comment line; work through the model in parts; load things once into kernel variables; print compact summaries, never whole arrays (and never raw lists of vocabulary tokens: the vocabulary contains offensive and adult strings and printing them can get the session refused by the provider's content filter; print digits, math symbols, common math words or token ids instead; outputs are shown in ASCII only, other characters appear as '?'; likewise print short excerpts of generated texts, at most about 300 characters each, not whole transcripts); before every pass, write to WORK/notes.md the exact current edit (tensors, what was changed, strength) and the problem set, so that you can rebuild them (findings with numbers, edits tried and their measured effect, the current best edit; the notebook is shown to you again if the conversation is restarted); keep copies of good edits (for example copy WORK/edited to WORK/best_1).
 

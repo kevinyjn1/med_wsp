@@ -17,11 +17,12 @@ def redact(text: str) -> str:
 
 
 def redact_tree(root: Path) -> int:
-    """Rewrite every text log under `root` (skipping work/ folders, which are not shared). Returns files changed."""
+    """Rewrite every text log under `root` (skipping work/ and jobs/ folders). Returns files changed."""
     changed = 0
     for path in root.rglob("*"):
-        if not path.is_file() or path.suffix not in TEXT_SUFFIXES or "work" in path.relative_to(root).parts:
-            continue
+        parts = path.relative_to(root).parts
+        if not path.is_file() or path.suffix not in TEXT_SUFFIXES or "work" in parts or "jobs" in parts:
+            continue  # work/ is never shared; jobs/ holds files that running workers still read
         try:
             text = path.read_text()
         except UnicodeDecodeError:

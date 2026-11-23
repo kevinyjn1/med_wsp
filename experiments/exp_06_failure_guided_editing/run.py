@@ -56,7 +56,7 @@ def main() -> None:
         if not state.done:
             return
     result = final_evaluation(run_dir, medqa.load_medqa("test"))
-    print(json.dumps({k: v for k, v in result.items() if k != "edited_tensors"}, indent=1), flush=True)
+    print(json.dumps(result["by_prompt"], indent=1), flush=True)
     print(
         "edited tensors:",
         [(t["name"], round(t["relative_change"], 5)) for t in result["edited_tensors"]],

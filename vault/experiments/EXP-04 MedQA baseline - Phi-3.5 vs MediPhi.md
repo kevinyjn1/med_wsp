@@ -33,16 +33,32 @@ gets wrong. Before that set means anything: is MediPhi actually better on MedQA?
 
 Full tables, paired tests and caveats: `experiments/exp_04_medqa_baseline/RESULTS.md`.
 
+## Why the paper's MedQA numbers looked different (resolved 2026-11-22)
+The paper never describes its MedQA protocol. Scored in the plain-text format of lm-evaluation-harness's
+`medqa_4options` task (no chat template, no instruction, compare the next tokens " A" to " D"), our numbers match
+the paper's Table 13:
+
+| Test split (1,273) | Phi-3.5 | MediPhi | MediPhi-Instruct |
+|---|---|---|---|
+| Paper | 0.486 | 0.491 | 0.548 |
+| Ours, bare harness prompt | 0.4855 | 0.4808 | 0.5460 |
+| Ours, chat prompt with instruction | 0.572 | 0.563 | 0.565 |
+| Probability on the four letters, bare prompt | 4 % | 10 % | 41 % |
+
+With the bare prompt Phi-3.5 would rather start a sentence ("The ...") than give a letter, so the letter it is
+scored on is a low-probability afterthought, skewed toward "A". MediPhi-Instruct goes straight to a letter. So the
+paper's +6 points for MediPhi-Instruct is real in that format (191 questions gained, 114 lost) and vanishes when
+the prompt asks for a letter.
+
 ## What this does and does not show
 Shows that, with these two protocols, MedQA has no MediPhi advantage to explain. Does not show that MediPhi is
 not better elsewhere (its paper's gains are on clinical tasks), and does not explain the paper's MedQA numbers.
 
-## Consequence for the plan (open, researcher's call)
-The "MediPhi right, Phi wrong" questions exist (46 on test, 53 on dev, 95 in the pool) but are matched by as
-many in the other direction, so they look like disagreement between two similar models rather than a medical
-gain. Options to put to Filippos: a benchmark where the fine-tune clearly wins (the paper's clinical tasks, for
-example ICD-10 coding), another pair (Gemma vs MedGemma, gated for now), or leaning on the donor-free experiments
-([[EXP-06 Failure-guided weight editing]], [[EXP-07 Training-free layer looping]]).
+## Consequence for the plan (decided 2026-11-22)
+The researcher chose to push on with MedQA using the bare-prompt gap: donor = MediPhi-Instruct, primary measure =
+bare prompt, guardrail = chat-prompt accuracy must not drop. See [[EXP-05 Medical circuit discovery and transfer]]
+and `research/09_DECISION_LOG.md`. The gap is about answering a raw prompt with a letter; whether any part of it
+depends on medical content is one of the things the donor experiment has to find out.
 
 ## Links
 [[Corbeil et al. 2025 - MediPhi]] - [[EXP-05 Medical circuit discovery and transfer]] - [[2026-11-21 Session 01]]

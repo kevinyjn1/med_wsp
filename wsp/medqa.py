@@ -44,13 +44,40 @@ def user_message(item: dict) -> str:
     return f"{INSTRUCTION}\n\n{item['question']}\n\n{options}\n\nAnswer:"
 
 
-def build_prompt(tokenizer, item: dict) -> str:
+STYLES = ("chat", "bare")
+
+
+def bare_prompt(item: dict) -> str:
+    """The plain-text prompt of lm-evaluation-harness's `medqa_4options` task: no chat template, no instruction."""
+    options = "".join(f"{letter}. {item['options'][letter]}\n" for letter in LETTERS)
+    return f"Question: {item['question']}\n{options}Answer:"
+
+
+def build_prompt(tokenizer, item: dict, style: str = "chat") -> str:
+    """ "chat": our instruction wrapped in the model's chat template. "bare": the harness's plain-text prompt."""
+    if style == "bare":
+        return bare_prompt(item)
+    if style != "chat":
+        raise ValueError(f"unknown prompt style {style!r}: use one of {STYLES}")
     messages = [{"role": "user", "content": user_message(item)}]
     return tokenizer.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
 
 
-def letter_token_ids(tokenizer) -> dict[str, list[int]]:
-    """Every single-token spelling of each letter ("A" and the word-initial " A")."""
+def letter_token_ids(tokenizer, style: str = "chat") -> dict[str, list[int]]:
+    """Token ids that count as each answer letter.
+
+    "chat": every single-token spelling ("A" and the word-initial " A"). "bare": only the continuation the harness
+    scores, " A" as it is tokenized right after "Answer:" (one token; encoded on its own it would be two).
+    """
+    if style == "bare":
+        stem = tokenizer.encode("Answer:", add_special_tokens=False)
+        ids = {}
+        for letter in LETTERS:
+            continuation = tokenizer.encode("Answer: " + letter, add_special_tokens=False)[len(stem) :]
+            if len(continuation) != 1:
+                raise ValueError(f"' {letter}' after 'Answer:' is not a single token: {continuation}")
+            ids[letter] = continuation
+        return ids
     ids = {}
     for letter in LETTERS:
         found = set()
@@ -74,13 +101,22 @@ def letter_scores(last_logits: torch.Tensor, letter_ids: dict[str, list[int]]) -
     )
 
 
+def gold_margins(last_logits: torch.Tensor, letter_ids: dict[str, list[int]], gold: str) -> torch.Tensor:
+    """(batch, vocab) next-token logits -> (batch,) log-prob of the gold letter minus the best other letter."""
+    scores = letter_scores(last_logits, letter_ids).cpu()
+    index = LETTERS.index(gold)
+    others = torch.cat([scores[:, :index], scores[:, index + 1 :]], dim=1).max(dim=1).values
+    return scores[:, index] - others
+
+
 @torch.no_grad()
-def evaluate(model, tokenizer, items: list[dict], batch_size: int = 8, progress: bool = True) -> list[dict]:
+def evaluate(model, tokenizer, items: list[dict], batch_size: int = 8, progress: bool = True,
+             style: str = "chat") -> list[dict]:  # fmt: skip
     """Score every item; returns one record per item with letter log-probs, prediction and margin."""
     from tqdm import tqdm
 
-    letter_ids = letter_token_ids(tokenizer)
-    prompts = [build_prompt(tokenizer, item) for item in items]
+    letter_ids = letter_token_ids(tokenizer, style)
+    prompts = [build_prompt(tokenizer, item, style) for item in items]
     order = sorted(range(len(items)), key=lambda i: len(prompts[i]))  # similar lengths per batch
     records: dict[int, dict] = {}
     for start in tqdm(range(0, len(order), batch_size), disable=not progress):

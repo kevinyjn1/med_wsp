@@ -13,16 +13,30 @@ print("\nVocabulary spellings:", json.dumps(answer_vocab, ensure_ascii=True))
 top_ids = np.load(fwd1 / "topk_ids.npy")
 top_lp = np.load(fwd1 / "topk_logprobs.npy").astype(float)
 unique, counts = np.unique(top_ids[:, 0], return_counts=True)
-print("Most likely next-token IDs:",
-      [{"id": int(i), "token": tok.id_to_token(int(i)).encode("ascii", "backslashreplace").decode(),
-        "count": int(n)} for i, n in sorted(zip(unique, counts), key=lambda t: -t[1])[:12]])
+print(
+    "Most likely next-token IDs:",
+    [
+        {
+            "id": int(i),
+            "token": tok.id_to_token(int(i)).encode("ascii", "backslashreplace").decode(),
+            "count": int(n),
+        }
+        for i, n in sorted(zip(unique, counts), key=lambda t: -t[1])[:12]
+    ],
+)
 print("Answer-spelling appearances in recorded top 8:")
 for a in letters:
     for token_id, token in answer_vocab[a]:
         mask = top_ids == token_id
-        print(a, token_id, token.encode("ascii", "backslashreplace").decode(),
-              "count", int(mask.sum()),
-              "top1", int((top_ids[:, 0] == token_id).sum()))
+        print(
+            a,
+            token_id,
+            token.encode("ascii", "backslashreplace").decode(),
+            "count",
+            int(mask.sum()),
+            "top1",
+            int((top_ids[:, 0] == token_id).sum()),
+        )
 
 selection_large_ids = selection_ids[:512]
 with (work / "notes.md").open("a") as f:

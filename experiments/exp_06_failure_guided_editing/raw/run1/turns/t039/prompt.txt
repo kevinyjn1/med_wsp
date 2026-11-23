@@ -1,0 +1,14 @@
+OUTPUT of Python run 21 of at most 300:
+```
+Pass 16 centered log-probability change mean ABCD: [3.629, -0.643, -2.113, -0.873]
+Pass 16 centered log-probability change SD ABCD: [1.223, 2.175, 2.61, 2.375]
+true   n  original_correct  edited_correct  margin_delta
+   A 134                66              69         2.598
+   B 126                69              72        -0.758
+   C 140                87              86        -2.008
+   D 112                69              69        -1.094
+Previously unscreened 384-question subset: {'accuracy_delta_pp': 0.26, 'se_pp': 0.69, 'wrong_to_right': 4, 'right_to_wrong': 3}
+Descriptive constant-shift approximation accuracy: 0.5684
+Installed letter-component reversal only; relative tensor change: 0.004829
+
+```

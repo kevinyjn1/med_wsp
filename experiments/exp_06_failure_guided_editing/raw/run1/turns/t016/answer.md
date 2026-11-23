@@ -6,10 +6,14 @@ print("Forward metadata note:", meta1.get("note", "not supplied"))
 gamma = final_norm.numpy()
 if np.all(np.abs(gamma) > 1e-8):
     export_rms = np.sqrt(np.mean((hidden[32] / gamma[None, :]) ** 2, axis=1))
-    print("RMS of exported hidden_32 divided by final-norm weights, quantiles:",
-          np.round(np.quantile(export_rms, [0, .25, .5, .75, 1]), 6).tolist())
-print("RMS of hidden_31, quantiles:",
-      np.round(np.quantile(np.sqrt(np.mean(hidden[31] ** 2, axis=1)), [0, .5, 1]), 4).tolist())
+    print(
+        "RMS of exported hidden_32 divided by final-norm weights, quantiles:",
+        np.round(np.quantile(export_rms, [0, 0.25, 0.5, 0.75, 1]), 6).tolist(),
+    )
+print(
+    "RMS of hidden_31, quantiles:",
+    np.round(np.quantile(np.sqrt(np.mean(hidden[31] ** 2, axis=1)), [0, 0.5, 1]), 4).tolist(),
+)
 print("Final-norm weight RMS:", round(float(final_norm.square().mean().sqrt()), 4))
 with (work / "notes.md").open("a") as f:
     f.write(
