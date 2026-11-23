@@ -1,0 +1,35 @@
+OUTPUT of Python run 29 of at most 300:
+```
+{'probe': 'word_apple', 'pred_base_donor_edit': ['B', 'B', 'B'], 'mass_base_donor_edit': [0.73228, 0.94967, 0.90318], 'conditional_base': [0.0, 1.0, 0.0, 0.0], 'conditional_donor': [0.0, 1.0, 0.0, 0.0], 'conditional_edit': [0.0, 1.0, 0.0, 0.0]}
+{'probe': 'word_plum', 'pred_base_donor_edit': ['C', 'C', 'C'], 'mass_base_donor_edit': [0.72747, 0.95849, 0.90296], 'conditional_base': [0.0, 0.0, 1.0, 0.0], 'conditional_donor': [0.0, 0.0, 1.0, 0.0], 'conditional_edit': [0.0, 0.0, 1.0, 0.0]}
+{'probe': 'word_blank', 'pred_base_donor_edit': ['B', 'B', 'B'], 'mass_base_donor_edit': [0.70953, 0.96018, 0.86779], 'conditional_base': [0.078, 0.833, 0.053, 0.037], 'conditional_donor': [0.162, 0.515, 0.189, 0.134], 'conditional_edit': [0.066, 0.829, 0.06, 0.045]}
+{'probe': 'medical_insulin', 'pred_base_donor_edit': ['A', 'A', 'A'], 'mass_base_donor_edit': [0.58997, 0.92688, 0.8219], 'conditional_base': [1.0, 0.0, 0.0, 0.0], 'conditional_donor': [0.999, 0.0, 0.0, 0.0], 'conditional_edit': [1.0, 0.0, 0.0, 0.0]}
+{'probe': 'medical_glucagon', 'pred_base_donor_edit': ['B', 'B', 'B'], 'mass_base_donor_edit': [0.8493, 0.96051, 0.93363], 'conditional_base': [0.0, 1.0, 0.0, 0.0], 'conditional_donor': [0.001, 0.999, 0.0, 0.0], 'conditional_edit': [0.0, 1.0, 0.0, 0.0]}
+{'probe': 'medical_blank', 'pred_base_donor_edit': ['B', 'B', 'B'], 'mass_base_donor_edit': [0.76579, 0.97577, 0.90048], 'conditional_base': [0.036, 0.652, 0.218, 0.094], 'conditional_donor': [0.252, 0.375, 0.235, 0.138], 'conditional_edit': [0.129, 0.649, 0.149, 0.073]}
+
+QUESTION-DEPENDENT CHANGE AFTER SUBTRACTING MATCHED QUESTIONLESS CHANGE
+donor word_apple [-0.844, 0.407, 0.218, 0.218]
+donor word_plum [-0.944, 1.993, -1.418, 0.369]
+donor medical_insulin [-2.624, 1.732, 0.638, 0.254]
+donor medical_glucagon [-1.541, 0.19, 0.692, 0.659]
+edited word_apple [-0.218, 0.279, 0.157, -0.218]
+edited word_plum [-0.116, -0.024, 0.256, -0.116]
+edited medical_insulin [-1.151, 0.304, 0.584, 0.263]
+edited medical_glucagon [-1.142, 0.153, 0.495, 0.494]
+
+DISCOVERY TOP NEXT TOKENS
+base [('The', 59), ('In', 2), ('R', 1), ('CD', 1), ('E', 1)]
+donor [('C', 13), ('The', 13), ('This', 11), ('D', 9), ('B', 8), ('A', 6), ('War', 1), ('Bac', 1)]
+candidate [('The', 55), ('C', 3), ('B', 2), ('A', 2), ('R', 1), ('In', 1)]
+
+RESIDUAL TRANSFER ALIGNMENT ON DISCOVERY
+{'layer': 1, 'delta_cosine': 0.991, 'donor_gap_norm_remaining': 0.1369}
+{'layer': 8, 'delta_cosine': 0.9892, 'donor_gap_norm_remaining': 0.1656}
+{'layer': 12, 'delta_cosine': 0.9313, 'donor_gap_norm_remaining': 0.3922}
+{'layer': 18, 'delta_cosine': 0.8731, 'donor_gap_norm_remaining': 0.5646}
+{'layer': 26, 'delta_cosine': 0.7998, 'donor_gap_norm_remaining': 0.6657}
+{'layer': 32, 'delta_cosine': 0.723, 'donor_gap_norm_remaining': 0.7102}
+
+Patch record schemas: ['id', 'answer', 'base', 'donor', 'patched'] ['id', 'answer', 'base', 'donor', 'patched']
+
+```

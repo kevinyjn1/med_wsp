@@ -1,0 +1,10 @@
+OUTPUT of Python run 31 of at most 300:
+```
+load_original source unavailable ('_read', '_where')
+load_donor source unavailable ('_donor', 'RuntimeError', '_read')
+load source unavailable ('_edit_path', 'os', 'path', 'exists', 'torch', 'from_numpy', 'np', 'load', 'load_original')
+DONOR-SUPPORT MISMATCHES [{'name': 'model.layers.0.mlp.down_proj.weight', 'different_bf16': 1, 'max_float_difference': 2.9103830456733704e-11}, {'name': 'model.layers.0.self_attn.o_proj.weight', 'different_bf16': 3, 'max_float_difference': 5.820766091346741e-11}, {'name': 'model.layers.0.self_attn.qkv_proj.weight', 'different_bf16': 11, 'max_float_difference': 5.820766091346741e-11}, {'name': 'model.layers.1.self_attn.o_proj.weight', 'different_bf16': 2, 'max_float_difference': 1.1641532182693481e-10}, {'name': 'model.layers.1.self_attn.qkv_proj.weight', 'different_bf16': 6, 'max_float_difference': 5.820766091346741e-11}, {'name': 'model.layers.2.self_attn.o_proj.weight', 'different_bf16': 1, 'max_float_difference': 1.1641532182693481e-10}, {'name': 'model.layers.2.self_attn.qkv_proj.weight', 'different_bf16': 3, 'max_float_difference': 8.731149137020111e-11}, {'name': 'model.layers.3.self_attn.qkv_proj.weight', 'different_bf16': 2, 'max_float_difference': 4.3655745685100555e-11}, {'name': 'model.layers.4.self_attn.o_proj.weight', 'different_bf16': 2, 'max_float_difference': 8.731149137020111e-11}, {'name': 'model.layers.5.self_attn.o_proj.weight', 'different_bf16': 2, 'max_float_difference': 8.731149137020111e-11}, {'name': 'model.layers.5.self_attn.qkv_proj.weight', 'different_bf16': 2, 'max_float_difference': 5.820766091346741e-11}, {'name': 'model.layers.6.self_attn.qkv_proj.weight', 'different_bf16': 6, 'max_float_difference': 5.820766091346741e-11}]
+SAVED-CANDIDATE MISMATCHES []
+Total mismatch counts: 45 0
+
+```

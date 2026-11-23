@@ -1,0 +1,6 @@
+OUTPUT of Python run 15 of at most 300:
+```
+Selected 256 units/layer; fraction of weighted activation-difference energy: [[0, 0.6917], [1, 0.4164], [2, 0.3985], [3, 0.348], [4, 0.4159], [5, 0.3745], [6, 0.4979], [7, 0.4699]]
+Approximate touched slots: 320913408
+
+```

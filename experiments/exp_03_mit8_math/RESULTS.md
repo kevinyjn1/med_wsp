@@ -40,9 +40,10 @@ COMPLETE for parts A and B as scoped. Part B is a scaled-down check, not a repli
 - No contract exists.
 - From MIT's evaluation protocol (all by design of the scaled-down check): 48 problems instead of 1,319; one
   sample per problem; 16,384 instead of 32,768 new tokens; MLX on Apple silicon instead of vLLM on a rented GPU.
-- The unedited run's process was suspended by the experimenter from 12:14 to 12:33 (the Mac was on battery), and
-  the Mac slept with the lid closed from 12:00 to 12:12 and from 12:26 to 12:32. The process continued from the
-  same state each time.
+- The unedited run's process was suspended by the experimenter from 12:14 to 12:33 (the Mac was on battery). The
+  Mac was also asleep during that run from 10:07 to 11:17 (battery empty, hibernation) and with the lid closed
+  from 11:40 to 11:59, 12:00 to 12:12 and 12:26 to 12:32 (`pmset -g log`). The process continued from the same
+  state each time.
 
 ## Artifacts
 - `processed/edit_p50c_report.json` - part A: per tensor, hash checks, changed entries and columns, relative
@@ -110,7 +111,7 @@ limit: accuracy 13.8 % to 67.1 %, share at the token limit 87.5 % to 7.2 %, mean
 
 ## Anomalies
 - Wall time is not a measure of speed here. The unedited run took 9,943 s and the edited run 2,079 s, but the
-  unedited run includes the suspension and two sleeps listed above and shared the GPU with the Astra donor
+  unedited run includes the suspension and the sleeps listed above and shared the GPU with the Astra donor
   session, and its answers are longer.
 - One unedited answer (`gsm8k-202`) is graded correct although it hit the token limit without closing the
   thinking block: it repeats "I'll make sure to use `\boxed{100}`" until the limit, and the grader takes the last

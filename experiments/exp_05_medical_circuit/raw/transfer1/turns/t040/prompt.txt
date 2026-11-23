@@ -1,0 +1,36 @@
+OUTPUT of Python run 20 of at most 300:
+```
+Validation BARE effects conditional on unedited CHAT correctness: {
+  "True": {
+    "n": 310,
+    "rescues": 30,
+    "losses": 17,
+    "bare_accuracy_change_pp": 4.193548387096775
+  },
+  "False": {
+    "n": 202,
+    "rescues": 12,
+    "losses": 15,
+    "bare_accuracy_change_pp": -1.4851485148514851
+  }
+}
+Validation output diagnostic: {
+  "pass": 18,
+  "mean_letter_mass_base_edit": [
+    0.04638838256850188,
+    0.13302087804919466
+  ],
+  "relative_letter_offset_ABCD": [
+    -0.17178505859374993,
+    0.3987149414062497,
+    -0.37076064453124974,
+    0.14383076171875006
+  ],
+  "base_accuracy": 0.4921875,
+  "edited_accuracy": 0.51171875,
+  "base_plus_common_offset_accuracy": 0.49609375,
+  "edited_minus_common_offset_accuracy": 0.48828125,
+  "common_fraction_of_relative_delta_energy": 0.10970839425626176
+}
+
+```

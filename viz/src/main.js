@@ -84,6 +84,7 @@ precision highp sampler2D;
 uniform sampler2D tData;
 uniform vec2 uSize;          // cols, rows
 uniform float uSigned, uQuantized, uSqrt, uVmax, uColorMax, uGamma, uDim;
+uniform float uHasMissing, uMissing;   // cells holding uMissing were not measured
 uniform vec2 uHover;         // col, row of the hovered cell, or -1
 uniform vec2 uBand;          // band size in cols, rows (0 = none)
 uniform vec3 uNeutral, uNegMid, uNegMax, uPosMid, uPosMax, uSeq0, uSeq1, uSeq2, uSeq3, uGap;
@@ -119,6 +120,13 @@ void main() {
   vec2 perPixel = max(fwidth(cellf), vec2(1e-6));   // cells per screen pixel
   vec2 pixels = 1.0 / perPixel;                      // screen pixels per cell
   vec2 f = fract(cellf);
+
+  // Not measured: the background with a diagonal hatch, so it cannot be read as a value of zero.
+  if (uHasMissing > 0.5 && raw == uMissing) {
+    float stripes = max(2.0, floor(min(pixels.x, pixels.y) / 9.0));
+    float hatch = smoothstep(0.42, 0.5, abs(fract((f.x + f.y) * 0.5 * stripes) - 0.5));
+    color = mix(uGap, uNeutral, mix(0.3, hatch * 0.75, smoothstep(10.0, 22.0, min(pixels.x, pixels.y))));
+  }
   vec2 edge = min(f, 1.0 - f) / perPixel;            // distance to the cell border, in pixels
 
   // Marks: dim what is outside, draw a 2 px frame around each marked band.
@@ -190,6 +198,8 @@ function panelMaterial(panel, texture, gamma) {
       uColorMax: { value: panel.colorMax ?? panel.vmax },
       uGamma: { value: gamma },
       uDim: { value: 0 },
+      uHasMissing: { value: panel.missing === undefined ? 0 : 1 },
+      uMissing: { value: panel.missing ?? 0 },
       uHover: { value: new THREE.Vector2(-1, -1) },
       uBand: { value: new THREE.Vector2(panel.colBands ? panel.colBands[0].size : 0, panel.rowBands ? panel.rowBands[0].size : 0) },
       uNeutral: { value: v3(PALETTE.neutral) },
@@ -236,7 +246,13 @@ function addLabel(labels, className, html, position, opts = {}) {
   el.className = `label ${className}`;
   el.innerHTML = html;
   dom.labels.appendChild(el);
-  labels.push({ el, position, anchor: opts.anchor || "left-bottom", minPixels: opts.minPixels || 0, span: opts.span || 0, clip: !!opts.clip, room: opts.room || 0, roomPixels: opts.roomPixels || 17 });
+  labels.push({
+    el, position, anchor: opts.anchor || "left-bottom", minPixels: opts.minPixels || 0, span: opts.span || 0, clip: !!opts.clip,
+    room: opts.room || 0, roomPixels: opts.roomPixels || 17,
+    // `fit`: the width (in scene units) this label may take, e.g. its column; it is hidden while its text is wider
+    fit: opts.fit || 0, width: opts.fit ? el.offsetWidth : 0,
+  });
+  return el;
 }
 
 function layoutGroup(group, maxRowWidth) {
@@ -285,6 +301,7 @@ async function loadDataset(id) {
   manifest.layers.forEach((layer, layerIndex) => {
     const top = y;
     let layerMaxX = 0;
+    let labelPixels = 0; // widest row label left of the layer's first column of panels
     layer.groups.forEach((group) => {
       const z = GROUP_Z[group.kind] ?? 0;
       addLabel(labels, "group", group.name, new THREE.Vector3(-24, y + 8, z), { anchor: "right-bottom" });
@@ -333,14 +350,16 @@ async function loadDataset(id) {
             const stride = Math.ceil(panel.colLabels.length / 16);
             panel.colLabels.forEach((text, c) => {
               if (c % stride) return;
-              addLabel(labels, "band", text, new THREE.Vector3(x + (c + 0.5) * cellW, y - h - 6, z),
-                { anchor: "center-top", minPixels: 200, span: w, ...below });
+              // one word per line, so a label of several words still fits under a narrow column
+              addLabel(labels, "band column", text.replaceAll(" ", "<br>"), new THREE.Vector3(x + (c + 0.5) * cellW, y - h - 6, z),
+                { anchor: "center-top", minPixels: 200, span: w, fit: stride * cellW, ...below });
             });
           }
           if (panel.rowLabels) {
             panel.rowLabels.forEach((text, r) => {
-              addLabel(labels, "band", text, new THREE.Vector3(x - 8, y - (r + 0.5) * cell, z),
+              const el = addLabel(labels, "band", text, new THREE.Vector3(x - 8, y - (r + 0.5) * cell, z),
                 { anchor: "right-middle", minPixels: 200, span: w });
+              if (x === 0) labelPixels = Math.max(labelPixels, el.offsetWidth);
             });
           }
           for (const mark of panel.highlights || []) {
@@ -362,7 +381,7 @@ async function loadDataset(id) {
       y -= GAP.group - GAP.row;
     });
     const bottom = y + GAP.group;
-    layerBoxes.push({ top, bottom, width: layerMaxX, name: layer.name });
+    layerBoxes.push({ top, bottom, width: layerMaxX, name: layer.name, labelPixels });
     addLabel(labels, "layer", layer.name, new THREE.Vector3(0, top + 96, 0), { anchor: "left-bottom" });
     maxX = Math.max(maxX, layerMaxX);
     y -= GAP.layer - GAP.group;
@@ -471,25 +490,50 @@ function fitDistance(width, height) {
   return Math.max(fitH, fitW) * 1.22;
 }
 
+// Row labels keep their size in pixels, so the further away the camera is, the more of the scene they cover.
+// Returns the distance at which a box of `width` units and its `labelPixels` wide labels fit side by side, and
+// how many scene units the labels take at that distance.
+function roomForLabels(width, labelPixels, minDistance, slack = 1) {
+  const { clientWidth, clientHeight } = dom.stage;
+  const unitsToPixels = clientHeight / (2 * Math.tan(THREE.MathUtils.degToRad(camera.fov) / 2));
+  const forLabels = (slack * unitsToPixels * width) / Math.max(clientWidth - labelPixels - 80, 240);
+  const distance = Math.max(minDistance, labelPixels ? forLabels : 0);
+  return { distance, labelUnits: (labelPixels * distance) / unitsToPixels };
+}
+
 function frameLayer(index, animate) {
   const box = current.layerBoxes[index];
   const height = box.top - box.bottom;
-  const target = new THREE.Vector3(box.width / 2 - 40, (box.top + box.bottom) / 2, -60);
-  flyTo(target, fitDistance(box.width + 320, height + 160), animate);
+  // (1.12: the view is tilted, so the right-hand side is nearer to the camera and drawn larger)
+  const { distance, labelUnits } = roomForLabels(box.width + 120, box.labelPixels, fitDistance(box.width + 320, height + 160), 1.12);
+  const target = new THREE.Vector3(box.width / 2 - Math.max(40, labelUnits / 2), (box.top + box.bottom) / 2, -60);
+  flyTo(target, distance, animate);
   markCurrentLayer(index);
 }
 
 function framePanel(record) {
+  markCurrentLayer(record.layerIndex);
+  if (record.panel.rowNames) {
+    // Its rows are labelled once, left of the first panel of the row: show the whole row with those labels.
+    const row = current.panels.filter((p) => p.layerIndex === record.layerIndex && p.y === record.y && p.z === record.z);
+    const left = Math.min(...row.map((p) => p.x));
+    const width = Math.max(...row.map((p) => p.x + p.w)) - left;
+    const height = Math.max(...row.map((p) => p.h));
+    const labelPixels = current.layerBoxes[record.layerIndex].labelPixels;
+    const { distance, labelUnits } = roomForLabels(width + 60, labelPixels, fitDistance(width * 1.08, height * 1.25));
+    flyTo(new THREE.Vector3(left + (width - labelUnits) / 2, record.y - height / 2, record.z), distance, true, false);
+    return;
+  }
   const labelRoom = record.panel.rowLabels || record.panel.rowBands ? record.w * 0.3 : 0;
   const target = new THREE.Vector3(record.x + (record.w - labelRoom) / 2, record.y - record.h / 2, record.z);
   flyTo(target, fitDistance(record.w * 1.15 + labelRoom, Math.max(record.h, record.w * 0.2) * 1.25), true, false);
-  markCurrentLayer(record.layerIndex);
 }
 
 // ------------------------------------------------------------------------------------ interaction
 function decode(record, row, col) {
   const { panel, data } = record;
   const raw = data[row * panel.cols + col];
+  if (panel.missing !== undefined && raw === Math.fround(panel.missing)) return null;
   if (panel.dtype !== "uint8") return raw;
   const q = panel.signed ? (raw - 128) / 127 : raw / 255;
   return (panel.encoding === "sqrt" ? Math.sign(q) * q * q : q) * panel.vmax;
@@ -509,14 +553,17 @@ const UNIT_LABEL = {
   outcome: "Outcome",
   share: "Answered correctly",
   count: "Changed",
+  tensors: "Taken from the donor",
 };
 
 function formatValue(value, unit) {
+  if (value === null) return "not measured";
   if (unit === "relative change") return `${(100 * value).toFixed(2)} %`;
   if (unit === "margin change" || unit === "margin" || unit === "push") return `${value >= 0 ? "+" : ""}${value.toFixed(3)}`;
   if (unit === "outcome") return value > 0 ? "fixed (wrong to right)" : value < 0 ? "broken (right to wrong)" : "same result as before";
   if (unit === "share") return `${(100 * value).toFixed(1)} % of the set`;
   if (unit === "count") return `${value.toFixed(0)} questions`;
+  if (unit === "tensors") return `${value.toFixed(0)} of the layer's 6 weight tensors`;
   if (unit === "points") return `${value >= 0 ? "+" : ""}${value.toFixed(2)} points`;
   const abs = Math.abs(value);
   return abs !== 0 && abs < 0.001 ? value.toExponential(2) : value.toFixed(4);
@@ -555,7 +602,7 @@ function onMove(event) {
   record.material.uniforms.uHover.value.set(col, row);
   redraw = true;
   const value = decode(record, row, col);
-  const rowBand = bandLabel(panel.rowBands, row) ?? panel.rowLabels?.[row];
+  const rowBand = bandLabel(panel.rowBands, row) ?? panel.rowLabels?.[row] ?? panel.rowNames?.[row];
   const colBand = bandLabel(panel.colBands, col) ?? panel.colLabels?.[col];
   const mark = (panel.highlights || []).find((m) => {
     const i = m.axis === "row" ? row : col;
@@ -648,6 +695,7 @@ function updateLabels(width, height) {
     const pixelsPerUnit = unitsToPixels / Math.max(depth, 1);
     const visible = depth > 0 && Math.abs(projected.x) < 1.15 && Math.abs(projected.y) < 1.15
       && (label.span ? label.span * pixelsPerUnit >= label.minPixels : true)
+      && label.fit * pixelsPerUnit >= (label.fit ? label.width + 4 : 0)
       && label.room * pixelsPerUnit >= (label.room ? label.roomPixels : 0); // labels in a gap need free pixels there
     label.el.style.display = visible ? "" : "none";
     if (!visible) continue;

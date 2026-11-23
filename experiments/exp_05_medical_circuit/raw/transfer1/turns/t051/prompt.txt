@@ -1,0 +1,75 @@
+Forward pass 24 of 30 done (score); results in score_24.jsonl. Summary:
+```
+{
+ "ok": true,
+ "type": "score",
+ "model": "both",
+ "prompt": "bare",
+ "questions": 512,
+ "edited_tensors": [
+  "model.layers.13.mlp.down_proj.weight",
+  "model.layers.13.mlp.gate_up_proj.weight",
+  "model.layers.13.self_attn.o_proj.weight",
+  "model.layers.13.self_attn.qkv_proj.weight",
+  "model.layers.15.mlp.down_proj.weight",
+  "model.layers.15.mlp.gate_up_proj.weight",
+  "model.layers.15.self_attn.o_proj.weight",
+  "model.layers.15.self_attn.qkv_proj.weight",
+  "model.layers.16.mlp.down_proj.weight",
+  "model.layers.16.mlp.gate_up_proj.weight",
+  "model.layers.16.self_attn.o_proj.weight",
+  "model.layers.16.self_attn.qkv_proj.weight",
+  "model.layers.18.mlp.down_proj.weight",
+  "model.layers.18.mlp.gate_up_proj.weight",
+  "model.layers.18.self_attn.o_proj.weight",
+  "model.layers.18.self_attn.qkv_proj.weight",
+  "model.layers.19.mlp.down_proj.weight",
+  "model.layers.19.mlp.gate_up_proj.weight",
+  "model.layers.19.self_attn.o_proj.weight",
+  "model.layers.19.self_attn.qkv_proj.weight",
+  "model.layers.25.mlp.down_proj.weight",
+  "model.layers.25.mlp.gate_up_proj.weight",
+  "model.layers.25.self_attn.o_proj.weight",
+  "model.layers.25.self_attn.qkv_proj.weight",
+  "model.layers.27.mlp.down_proj.weight",
+  "model.layers.27.mlp.gate_up_proj.weight",
+  "model.layers.27.self_attn.o_proj.weight",
+  "model.layers.27.self_attn.qkv_proj.weight",
+  "model.layers.30.mlp.down_proj.weight",
+  "model.layers.30.mlp.gate_up_proj.weight",
+  "model.layers.30.self_attn.o_proj.weight",
+  "model.layers.30.self_attn.qkv_proj.weight"
+ ],
+ "original": {
+  "accuracy": 0.4922,
+  "mean_margin": 0.0241,
+  "predicted": {
+   "A": 191,
+   "B": 88,
+   "C": 135,
+   "D": 98
+  }
+ },
+ "edited": {
+  "accuracy": 0.4883,
+  "mean_margin": 0.0454,
+  "predicted": {
+   "A": 188,
+   "B": 90,
+   "C": 140,
+   "D": 94
+  }
+ },
+ "paired": {
+  "accuracy_difference": -0.0039,
+  "standard_error": 0.0073,
+  "wrong_to_right": 6,
+  "right_to_wrong": 8,
+  "sign_test_p": 0.7905,
+  "margin_difference": 0.0213,
+  "margin_difference_se": 0.0167
+ },
+ "s": 321
+}
+```
+Forward passes left: 6.

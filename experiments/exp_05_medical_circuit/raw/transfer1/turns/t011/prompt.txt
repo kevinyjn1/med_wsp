@@ -1,0 +1,45 @@
+Forward pass 4 of 30 done (score); results in score_4.jsonl. Summary:
+```
+{
+ "ok": true,
+ "type": "score",
+ "model": "both",
+ "prompt": "bare",
+ "questions": 256,
+ "edited_tensors": [
+  "model.layers.11.mlp.down_proj.weight",
+  "model.layers.11.mlp.gate_up_proj.weight"
+ ],
+ "original": {
+  "accuracy": 0.4609,
+  "mean_margin": -0.2875,
+  "predicted": {
+   "A": 98,
+   "B": 39,
+   "C": 74,
+   "D": 45
+  }
+ },
+ "edited": {
+  "accuracy": 0.4688,
+  "mean_margin": -0.2982,
+  "predicted": {
+   "A": 100,
+   "B": 40,
+   "C": 72,
+   "D": 44
+  }
+ },
+ "paired": {
+  "accuracy_difference": 0.0078,
+  "standard_error": 0.0078,
+  "wrong_to_right": 3,
+  "right_to_wrong": 1,
+  "sign_test_p": 0.625,
+  "margin_difference": -0.0107,
+  "margin_difference_se": 0.0061
+ },
+ "s": 4334
+}
+```
+Forward passes left: 26.

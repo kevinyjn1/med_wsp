@@ -1,0 +1,293 @@
+Forward pass 2 of 30 done (teacher_forced); results in fwd_2/. Summary:
+```
+{
+ "ok": true,
+ "type": "teacher_forced",
+ "model": "donor",
+ "texts": 68,
+ "positions": "last",
+ "longest": 564,
+ "files": {
+  "input_ids.npy": [
+   68,
+   564
+  ],
+  "token_logprobs.npy": [
+   68,
+   563
+  ],
+  "topk_logprobs.npy": [
+   68,
+   12
+  ],
+  "topk_ids.npy": [
+   68,
+   12
+  ],
+  "hidden_0.npy": [
+   68,
+   3072
+  ],
+  "hidden_1.npy": [
+   68,
+   3072
+  ],
+  "hidden_2.npy": [
+   68,
+   3072
+  ],
+  "hidden_3.npy": [
+   68,
+   3072
+  ],
+  "hidden_4.npy": [
+   68,
+   3072
+  ],
+  "hidden_5.npy": [
+   68,
+   3072
+  ],
+  "hidden_6.npy": [
+   68,
+   3072
+  ],
+  "hidden_7.npy": [
+   68,
+   3072
+  ],
+  "hidden_8.npy": [
+   68,
+   3072
+  ],
+  "hidden_9.npy": [
+   68,
+   3072
+  ],
+  "hidden_10.npy": [
+   68,
+   3072
+  ],
+  "hidden_11.npy": [
+   68,
+   3072
+  ],
+  "hidden_12.npy": [
+   68,
+   3072
+  ],
+  "hidden_13.npy": [
+   68,
+   3072
+  ],
+  "hidden_14.npy": [
+   68,
+   3072
+  ],
+  "hidden_15.npy": [
+   68,
+   3072
+  ],
+  "hidden_16.npy": [
+   68,
+   3072
+  ],
+  "hidden_17.npy": [
+   68,
+   3072
+  ],
+  "hidden_18.npy": [
+   68,
+   3072
+  ],
+  "hidden_19.npy": [
+   68,
+   3072
+  ],
+  "hidden_20.npy": [
+   68,
+   3072
+  ],
+  "hidden_21.npy": [
+   68,
+   3072
+  ],
+  "hidden_22.npy": [
+   68,
+   3072
+  ],
+  "hidden_23.npy": [
+   68,
+   3072
+  ],
+  "hidden_24.npy": [
+   68,
+   3072
+  ],
+  "hidden_25.npy": [
+   68,
+   3072
+  ],
+  "hidden_26.npy": [
+   68,
+   3072
+  ],
+  "hidden_27.npy": [
+   68,
+   3072
+  ],
+  "hidden_28.npy": [
+   68,
+   3072
+  ],
+  "hidden_29.npy": [
+   68,
+   3072
+  ],
+  "hidden_30.npy": [
+   68,
+   3072
+  ],
+  "hidden_31.npy": [
+   68,
+   3072
+  ],
+  "hidden_32.npy": [
+   68,
+   3072
+  ],
+  "mlp_act_0.npy": [
+   68,
+   8192
+  ],
+  "mlp_act_1.npy": [
+   68,
+   8192
+  ],
+  "mlp_act_2.npy": [
+   68,
+   8192
+  ],
+  "mlp_act_3.npy": [
+   68,
+   8192
+  ],
+  "mlp_act_4.npy": [
+   68,
+   8192
+  ],
+  "mlp_act_5.npy": [
+   68,
+   8192
+  ],
+  "mlp_act_6.npy": [
+   68,
+   8192
+  ],
+  "mlp_act_7.npy": [
+   68,
+   8192
+  ],
+  "mlp_act_8.npy": [
+   68,
+   8192
+  ],
+  "mlp_act_9.npy": [
+   68,
+   8192
+  ],
+  "mlp_act_10.npy": [
+   68,
+   8192
+  ],
+  "mlp_act_11.npy": [
+   68,
+   8192
+  ],
+  "mlp_act_12.npy": [
+   68,
+   8192
+  ],
+  "mlp_act_13.npy": [
+   68,
+   8192
+  ],
+  "mlp_act_14.npy": [
+   68,
+   8192
+  ],
+  "mlp_act_15.npy": [
+   68,
+   8192
+  ],
+  "mlp_act_16.npy": [
+   68,
+   8192
+  ],
+  "mlp_act_17.npy": [
+   68,
+   8192
+  ],
+  "mlp_act_18.npy": [
+   68,
+   8192
+  ],
+  "mlp_act_19.npy": [
+   68,
+   8192
+  ],
+  "mlp_act_20.npy": [
+   68,
+   8192
+  ],
+  "mlp_act_21.npy": [
+   68,
+   8192
+  ],
+  "mlp_act_22.npy": [
+   68,
+   8192
+  ],
+  "mlp_act_23.npy": [
+   68,
+   8192
+  ],
+  "mlp_act_24.npy": [
+   68,
+   8192
+  ],
+  "mlp_act_25.npy": [
+   68,
+   8192
+  ],
+  "mlp_act_26.npy": [
+   68,
+   8192
+  ],
+  "mlp_act_27.npy": [
+   68,
+   8192
+  ],
+  "mlp_act_28.npy": [
+   68,
+   8192
+  ],
+  "mlp_act_29.npy": [
+   68,
+   8192
+  ],
+  "mlp_act_30.npy": [
+   68,
+   8192
+  ],
+  "mlp_act_31.npy": [
+   68,
+   8192
+  ]
+ },
+ "edited_tensors": [],
+ "mean_token_logprob": -1.1739,
+ "s": 66
+}
+```
+Forward passes left: 28.

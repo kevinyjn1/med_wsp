@@ -1,0 +1,17 @@
+{
+ "thread_id": "01a20985-f66a-7852-a4f5-a016cf5beba0",
+ "turn": 69,
+ "runs": {
+  "python": 36,
+  "forward": 32
+ },
+ "nudges": 0,
+ "done": true,
+ "next_message": null,
+ "failures": 0,
+ "wall_s": 3059.7999999999993,
+ "handoffs": 1,
+ "turns_in_thread": 29,
+ "unexplained": 0,
+ "notices_delivered": []
+}

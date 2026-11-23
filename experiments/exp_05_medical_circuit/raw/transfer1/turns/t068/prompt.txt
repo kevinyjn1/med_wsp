@@ -1,0 +1,89 @@
+Forward pass 30 of 30 done (score); results in score_30.jsonl. Summary:
+```
+{
+ "ok": true,
+ "type": "score",
+ "model": "both",
+ "prompt": "chat",
+ "questions": 1024,
+ "edited_tensors": [
+  "model.layers.0.input_layernorm.weight",
+  "model.layers.0.mlp.down_proj.weight",
+  "model.layers.0.mlp.gate_up_proj.weight",
+  "model.layers.0.post_attention_layernorm.weight",
+  "model.layers.0.self_attn.o_proj.weight",
+  "model.layers.0.self_attn.qkv_proj.weight",
+  "model.layers.1.input_layernorm.weight",
+  "model.layers.1.mlp.down_proj.weight",
+  "model.layers.1.mlp.gate_up_proj.weight",
+  "model.layers.1.post_attention_layernorm.weight",
+  "model.layers.1.self_attn.o_proj.weight",
+  "model.layers.1.self_attn.qkv_proj.weight",
+  "model.layers.2.input_layernorm.weight",
+  "model.layers.2.mlp.down_proj.weight",
+  "model.layers.2.mlp.gate_up_proj.weight",
+  "model.layers.2.post_attention_layernorm.weight",
+  "model.layers.2.self_attn.o_proj.weight",
+  "model.layers.2.self_attn.qkv_proj.weight",
+  "model.layers.3.input_layernorm.weight",
+  "model.layers.3.mlp.down_proj.weight",
+  "model.layers.3.mlp.gate_up_proj.weight",
+  "model.layers.3.post_attention_layernorm.weight",
+  "model.layers.3.self_attn.o_proj.weight",
+  "model.layers.3.self_attn.qkv_proj.weight",
+  "model.layers.4.input_layernorm.weight",
+  "model.layers.4.mlp.down_proj.weight",
+  "model.layers.4.mlp.gate_up_proj.weight",
+  "model.layers.4.post_attention_layernorm.weight",
+  "model.layers.4.self_attn.o_proj.weight",
+  "model.layers.4.self_attn.qkv_proj.weight",
+  "model.layers.5.input_layernorm.weight",
+  "model.layers.5.mlp.down_proj.weight",
+  "model.layers.5.mlp.gate_up_proj.weight",
+  "model.layers.5.post_attention_layernorm.weight",
+  "model.layers.5.self_attn.o_proj.weight",
+  "model.layers.5.self_attn.qkv_proj.weight",
+  "model.layers.6.mlp.down_proj.weight",
+  "model.layers.6.mlp.gate_up_proj.weight",
+  "model.layers.6.post_attention_layernorm.weight",
+  "model.layers.6.self_attn.o_proj.weight",
+  "model.layers.6.self_attn.qkv_proj.weight",
+  "model.layers.7.mlp.down_proj.weight",
+  "model.layers.7.mlp.gate_up_proj.weight",
+  "model.layers.7.post_attention_layernorm.weight",
+  "model.layers.7.self_attn.o_proj.weight",
+  "model.layers.7.self_attn.qkv_proj.weight"
+ ],
+ "original": {
+  "accuracy": 0.6113,
+  "mean_margin": 5.24,
+  "predicted": {
+   "A": 206,
+   "B": 285,
+   "C": 268,
+   "D": 265
+  }
+ },
+ "edited": {
+  "accuracy": 0.6084,
+  "mean_margin": 5.0278,
+  "predicted": {
+   "A": 205,
+   "B": 292,
+   "C": 270,
+   "D": 257
+  }
+ },
+ "paired": {
+  "accuracy_difference": -0.0029,
+  "standard_error": 0.0081,
+  "wrong_to_right": 33,
+  "right_to_wrong": 36,
+  "sign_test_p": 0.8099,
+  "margin_difference": -0.2121,
+  "margin_difference_se": 0.1262
+ },
+ "s": 649
+}
+```
+Forward passes left: 0.

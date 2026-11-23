@@ -1,0 +1,170 @@
+Forward pass 28 of 30 done (patch); results in patch_28.jsonl. Summary:
+```
+{
+ "ok": true,
+ "type": "patch",
+ "model": "edited",
+ "prompt": "bare",
+ "questions": 64,
+ "patches": 14,
+ "base": {
+  "accuracy": 0.5,
+  "mean_margin": 0.2026
+ },
+ "donor": {
+  "accuracy": 0.5625,
+  "mean_margin": 0.3765
+ },
+ "note": "margin = log-prob of the correct letter minus the best other letter; a patch puts the donor's activation (all token positions) into the receiving model; rows are sorted by margin_change",
+ "results": [
+  {
+   "patch": "L15.resid",
+   "margin_change": 0.2022,
+   "se": 0.1689,
+   "share_of_donor_gap": 1.163,
+   "accuracy": 0.5938
+  },
+  {
+   "patch": "L18.attn",
+   "margin_change": 0.1128,
+   "se": 0.0955,
+   "share_of_donor_gap": 0.649,
+   "accuracy": 0.5312
+  },
+  {
+   "patch": "L11.mlp",
+   "margin_change": 0.1016,
+   "se": 0.0615,
+   "share_of_donor_gap": 0.584,
+   "accuracy": 0.5312
+  },
+  {
+   "patch": "L7.resid",
+   "margin_change": 0.0801,
+   "se": 0.0938,
+   "share_of_donor_gap": 0.461,
+   "accuracy": 0.5312
+  },
+  {
+   "patch": "L18.head5",
+   "margin_change": 0.0718,
+   "se": 0.0384,
+   "share_of_donor_gap": 0.413,
+   "accuracy": 0.5469
+  },
+  {
+   "patch": "L25.attn",
+   "margin_change": 0.0527,
+   "se": 0.0669,
+   "share_of_donor_gap": 0.303,
+   "accuracy": 0.5
+  },
+  {
+   "patch": "L7.mlp",
+   "margin_change": 0.0391,
+   "se": 0.0516,
+   "share_of_donor_gap": 0.225,
+   "accuracy": 0.5156
+  },
+  {
+   "patch": "L4.mlp",
+   "margin_change": 0.0376,
+   "se": 0.0333,
+   "share_of_donor_gap": 0.216,
+   "accuracy": 0.5
+  },
+  {
+   "patch": "L25.head9",
+   "margin_change": 0.0205,
+   "se": 0.0576,
+   "share_of_donor_gap": 0.118,
+   "accuracy": 0.5
+  },
+  {
+   "patch": "L7.head1",
+   "margin_change": 0.0176,
+   "se": 0.0143,
+   "share_of_donor_gap": 0.101,
+   "accuracy": 0.5
+  },
+  {
+   "patch": "L18.head7",
+   "margin_change": 0.0127,
+   "se": 0.0197,
+   "share_of_donor_gap": 0.073,
+   "accuracy": 0.5
+  },
+  {
+   "patch": "L7.head16",
+   "margin_change": 0.0078,
+   "se": 0.0052,
+   "share_of_donor_gap": 0.045,
+   "accuracy": 0.5
+  },
+  {
+   "patch": "L0.mlp",
+   "margin_change": 0.0044,
+   "se": 0.0061,
+   "share_of_donor_gap": 0.025,
+   "accuracy": 0.5
+  },
+  {
+   "patch": "L18.head9",
+   "margin_change": 0.0015,
+   "se": 0.0175,
+   "share_of_donor_gap": 0.008,
+   "accuracy": 0.5156
+  }
+ ],
+ "edited_tensors": [
+  "model.layers.0.input_layernorm.weight",
+  "model.layers.0.mlp.down_proj.weight",
+  "model.layers.0.mlp.gate_up_proj.weight",
+  "model.layers.0.post_attention_layernorm.weight",
+  "model.layers.0.self_attn.o_proj.weight",
+  "model.layers.0.self_attn.qkv_proj.weight",
+  "model.layers.1.input_layernorm.weight",
+  "model.layers.1.mlp.down_proj.weight",
+  "model.layers.1.mlp.gate_up_proj.weight",
+  "model.layers.1.post_attention_layernorm.weight",
+  "model.layers.1.self_attn.o_proj.weight",
+  "model.layers.1.self_attn.qkv_proj.weight",
+  "model.layers.2.input_layernorm.weight",
+  "model.layers.2.mlp.down_proj.weight",
+  "model.layers.2.mlp.gate_up_proj.weight",
+  "model.layers.2.post_attention_layernorm.weight",
+  "model.layers.2.self_attn.o_proj.weight",
+  "model.layers.2.self_attn.qkv_proj.weight",
+  "model.layers.3.input_layernorm.weight",
+  "model.layers.3.mlp.down_proj.weight",
+  "model.layers.3.mlp.gate_up_proj.weight",
+  "model.layers.3.post_attention_layernorm.weight",
+  "model.layers.3.self_attn.o_proj.weight",
+  "model.layers.3.self_attn.qkv_proj.weight",
+  "model.layers.4.input_layernorm.weight",
+  "model.layers.4.mlp.down_proj.weight",
+  "model.layers.4.mlp.gate_up_proj.weight",
+  "model.layers.4.post_attention_layernorm.weight",
+  "model.layers.4.self_attn.o_proj.weight",
+  "model.layers.4.self_attn.qkv_proj.weight",
+  "model.layers.5.input_layernorm.weight",
+  "model.layers.5.mlp.down_proj.weight",
+  "model.layers.5.mlp.gate_up_proj.weight",
+  "model.layers.5.post_attention_layernorm.weight",
+  "model.layers.5.self_attn.o_proj.weight",
+  "model.layers.5.self_attn.qkv_proj.weight",
+  "model.layers.6.mlp.down_proj.weight",
+  "model.layers.6.mlp.gate_up_proj.weight",
+  "model.layers.6.post_attention_layernorm.weight",
+  "model.layers.6.self_attn.o_proj.weight",
+  "model.layers.6.self_attn.qkv_proj.weight",
+  "model.layers.7.mlp.down_proj.weight",
+  "model.layers.7.mlp.gate_up_proj.weight",
+  "model.layers.7.post_attention_layernorm.weight",
+  "model.layers.7.self_attn.o_proj.weight",
+  "model.layers.7.self_attn.qkv_proj.weight"
+ ],
+ "s": 259
+}
+```
+Forward passes left: 2.

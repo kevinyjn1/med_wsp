@@ -1,0 +1,52 @@
+{
+ "by_prompt": {
+  "bare": {
+   "n": 1273,
+   "original_accuracy": 0.4870384917517675,
+   "edited_accuracy": 0.4870384917517675,
+   "accuracy_difference": 0.0,
+   "wrong_to_right": 0,
+   "right_to_wrong": 0,
+   "sign_test_p": 1.0,
+   "margin_difference": 0.0,
+   "margin_difference_se": 0.0,
+   "predicted_original": {
+    "A": 486,
+    "B": 164,
+    "C": 359,
+    "D": 264
+   },
+   "predicted_edited": {
+    "A": 486,
+    "B": 164,
+    "C": 359,
+    "D": 264
+   }
+  },
+  "chat": {
+   "n": 1273,
+   "original_accuracy": 0.5718774548311076,
+   "edited_accuracy": 0.5718774548311076,
+   "accuracy_difference": 0.0,
+   "wrong_to_right": 0,
+   "right_to_wrong": 0,
+   "sign_test_p": 1.0,
+   "margin_difference": 0.0,
+   "margin_difference_se": 0.0,
+   "predicted_original": {
+    "A": 252,
+    "B": 324,
+    "C": 364,
+    "D": 333
+   },
+   "predicted_edited": {
+    "A": 252,
+    "B": 324,
+    "C": 364,
+    "D": 333
+   }
+  }
+ },
+ "edited_tensors": [],
+ "share_of_weights_changed": 0.0
+}

@@ -1,0 +1,55 @@
+Forward pass 10 of 30 done (score); results in score_10.jsonl. Summary:
+```
+{
+ "ok": true,
+ "type": "score",
+ "model": "both",
+ "prompt": "bare",
+ "questions": 256,
+ "edited_tensors": [
+  "model.layers.0.mlp.down_proj.weight",
+  "model.layers.1.mlp.down_proj.weight",
+  "model.layers.10.mlp.down_proj.weight",
+  "model.layers.11.mlp.down_proj.weight",
+  "model.layers.12.mlp.down_proj.weight",
+  "model.layers.2.mlp.down_proj.weight",
+  "model.layers.4.mlp.down_proj.weight",
+  "model.layers.5.mlp.down_proj.weight",
+  "model.layers.6.mlp.down_proj.weight",
+  "model.layers.7.mlp.down_proj.weight",
+  "model.layers.8.mlp.down_proj.weight",
+  "model.layers.9.mlp.down_proj.weight"
+ ],
+ "original": {
+  "accuracy": 0.4609,
+  "mean_margin": -0.2875,
+  "predicted": {
+   "A": 98,
+   "B": 39,
+   "C": 74,
+   "D": 45
+  }
+ },
+ "edited": {
+  "accuracy": 0.4727,
+  "mean_margin": -0.2877,
+  "predicted": {
+   "A": 106,
+   "B": 36,
+   "C": 70,
+   "D": 44
+  }
+ },
+ "paired": {
+  "accuracy_difference": 0.0117,
+  "standard_error": 0.013,
+  "wrong_to_right": 7,
+  "right_to_wrong": 4,
+  "sign_test_p": 0.5488,
+  "margin_difference": -0.0002,
+  "margin_difference_se": 0.0285
+ },
+ "s": 4539
+}
+```
+Forward passes left: 20.

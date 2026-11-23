@@ -1,0 +1,62 @@
+OUTPUT of Python run 22 of at most 300:
+```
+DIRECT EDIT CONTRASTS
+{'passes': [13, 20], 'n': 256, 'accuracy_difference_pp': np.float64(1.562), 'paired_se_pp': np.float64(0.777), 'margin_difference': np.float64(0.0421), 'margin_se': np.float64(0.0176), 'better_worse': [4, 0]}
+{'passes': [13, 8], 'n': 256, 'accuracy_difference_pp': np.float64(1.172), 'paired_se_pp': np.float64(0.674), 'margin_difference': np.float64(0.0477), 'margin_se': np.float64(0.0186), 'better_worse': [3, 0]}
+{'passes': [11, 13], 'n': 256, 'accuracy_difference_pp': np.float64(0.0), 'paired_se_pp': np.float64(1.836), 'margin_difference': np.float64(0.1208), 'margin_se': np.float64(0.0343), 'better_worse': [11, 11]}
+{'passes': [16, 5], 'n': 256, 'accuracy_difference_pp': np.float64(0.0), 'paired_se_pp': np.float64(0.783), 'margin_difference': np.float64(0.0063), 'margin_se': np.float64(0.018), 'better_worse': [2, 2]}
+{'passes': [9, 5], 'n': 256, 'accuracy_difference_pp': np.float64(0.391), 'paired_se_pp': np.float64(0.391), 'margin_difference': np.float64(-0.0159), 'margin_se': np.float64(0.0097), 'better_worse': [1, 0]}
+{'passes': [13, 17], 'n': 256, 'accuracy_difference_pp': np.float64(2.734), 'paired_se_pp': np.float64(2.172), 'margin_difference': np.float64(0.104), 'margin_se': np.float64(0.0963), 'better_worse': [19, 12]}
+
+ID PANEL SIZES
+explore_ids.json 256
+development_check_ids.json 1024
+validation_ids.json 512
+confirmation_ids.json 1024
+discovery_ids.json 64
+tuning_ids.json 512
+
+PATCH TABLE COLUMNS ['patch', 'mean', 'se', 'weighted_mean', 'weighted_se', 'donor_only', 'base_only', 'both', 'neither']
+    patch     mean       se  weighted_mean  weighted_se  donor_only  base_only     both   neither
+ L0.resid 0.128427 0.043006       0.160731     0.058838    0.235679  -0.099612 0.226583  0.119817
+ L1.resid 0.203123 0.069974       0.225507     0.094313    0.399733  -0.130856 0.294267  0.164067
+ L2.resid 0.229984 0.129663       0.254644     0.175091    0.628912  -0.404306 0.265633  0.242200
+ L3.resid 0.284678 0.156172       0.301956     0.209154    0.839829  -0.554675 0.403667  0.174525
+ L4.resid 0.370120 0.191318       0.388605     0.246700    1.196617  -0.861344 0.570317  0.158883
+ L5.resid 0.390138 0.217105       0.424251     0.278245    1.458329  -1.228512 0.580733  0.221358
+ L6.resid 0.457037 0.245291       0.489391     0.291010    1.865883  -1.646488 0.739608  0.161475
+ L7.resid 0.507806 0.279988       0.512860     0.295656    2.268217  -2.035181 0.893233 -0.007792
+ L8.resid 0.450192 0.292913       0.435601     0.322867    2.298158  -2.177738 0.710933 -0.002575
+ L9.resid 0.486817 0.301344       0.456710     0.319086    2.438783  -2.253913 0.765650 -0.041642
+L10.resid 0.530777 0.315513       0.472429     0.327004    2.619796  -2.343738 0.742225 -0.026025
+L11.resid 0.519044 0.323590       0.429230     0.337316    2.684892  -2.394531 0.661475 -0.070317
+L12.resid 0.585453 0.331037       0.497478     0.339369    2.819012  -2.431650 0.697925  0.028667
+L13.resid 0.592286 0.330487       0.484642     0.343612    2.825508  -2.380856 0.622408  0.059908
+L14.resid 0.625489 0.334625       0.519037     0.350524    2.888021  -2.394538 0.614600  0.138017
+L15.resid 0.629886 0.331263       0.531801     0.350253    2.860667  -2.365238 0.591175  0.200533
+L16.resid 0.630867 0.326466       0.527209     0.350674    2.808604  -2.277350 0.515625  0.268258
+L17.resid 0.616703 0.321544       0.495012     0.349733    2.764325  -2.208994 0.403658  0.302100
+L18.resid 0.600592 0.317503       0.472102     0.346986    2.717450  -2.167975 0.299492  0.359400
+L19.resid 0.581064 0.313434       0.443187     0.345406    2.666662  -2.123050 0.203167  0.393250
+L20.resid 0.576662 0.311310       0.437780     0.344333    2.641921  -2.097662 0.148458  0.440117
+L21.resid 0.572269 0.310181       0.438220     0.343051    2.626300  -2.097663 0.135433  0.460950
+L22.resid 0.583005 0.309773       0.451080     0.341828    2.635417  -2.089862 0.140617  0.484392
+L23.resid 0.591311 0.310660       0.460897     0.342449    2.645829  -2.087900 0.156258  0.489608
+L24.resid 0.605477 0.311034       0.481738     0.342049    2.654937  -2.082031 0.177108  0.518267
+L25.resid 0.602058 0.310945       0.476237     0.343540    2.647137  -2.074231 0.171900  0.510442
+L26.resid 0.602542 0.310710       0.478876     0.342075    2.649729  -2.082044 0.169292  0.520867
+L27.resid 0.603998 0.310598       0.478843     0.341813    2.656242  -2.084000 0.179692  0.507817
+L28.resid 0.605958 0.310684       0.488105     0.341594    2.656246  -2.095719 0.203142  0.510433
+L29.resid 0.614745 0.311897       0.501950     0.342049    2.675779  -2.113288 0.242175  0.502625
+L30.resid 0.622077 0.314101       0.507739     0.342906    2.707025  -2.134762 0.302100  0.447942
+L31.resid 0.569336 0.309472       0.442182     0.337858    2.643213  -2.144538 0.161483  0.447933
+
+FORWARD FILES ['hidden_0.npy', 'hidden_1.npy', 'hidden_10.npy', 'hidden_11.npy', 'hidden_12.npy', 'hidden_13.npy', 'hidden_14.npy', 'hidden_15.npy', 'hidden_16.npy', 'hidden_17.npy', 'hidden_18.npy', 'hidden_19.npy', 'hidden_2.npy', 'hidden_20.npy']
+
+SNAPSHOT FILES ['model.layers.0.input_layernorm.weight.npy', 'model.layers.0.mlp.down_proj.weight.npy', 'model.layers.0.mlp.gate_up_proj.weight.npy', 'model.layers.0.post_attention_layernorm.weight.npy', 'model.layers.0.self_attn.o_proj.weight.npy']
+
+RESULT KEYS ['base_bare', 'donor_bare', 'base_chat', 'donor_chat']
+
+HELPER NAMES ['load_original', 'load_donor', 'edited', 'load', 'drop_edit', 'save_edit', 'qid', 'read_development_results', 'lp_array', 'read_npy', 'token_string', 'clear_edits', 'set_full_components', 'set_head_edit', 'panel_baseline', 'set_sparse_prefix', 'score_analysis', 'set_structured_layers', 'conditional_extraction_diagnostic', 'read_score', 'compare_scores']
+
+```

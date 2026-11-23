@@ -1,0 +1,21 @@
+OUTPUT of Python run 25 of at most 300:
+```
+Dose 1.5 versus 1.0, BARE: {'passes': [22, 18], 'n': 512, 'accuracy_difference_pp': np.float64(2.344), 'paired_se_pp': np.float64(1.536), 'margin_difference': np.float64(0.259), 'margin_se': np.float64(0.0536), 'better_worse': [37, 25]}
+Dose 1.5 versus 1.0, CHAT: {'passes': [23, 19], 'n': 512, 'accuracy_difference_pp': np.float64(-0.977), 'paired_se_pp': np.float64(0.805), 'margin_difference': np.float64(-0.6448), 'margin_se': np.float64(0.1124), 'better_worse': [6, 11]}
+Restored candidate: 46 edited tensors
+
+Teacher-forced metadata:
+{'ids': ['train-01186', 'dev-00253', 'dev-01221', 'train-01200', 'train-01451', 'train-01601', 'dev-01098', 'train-01177', 'train-01163', 'train-01905', 'train-02166', 'dev-00881', 'train-02221', 'train-02867', 'train-00624', 'dev-01164', 'train-02948', 'train-00533', 'train-02665', 'train-00288', 'dev-00300', 'train-01153', 'train-01137', 'train-01127', 'train-00103', 'train-02839', 'train-00160', 'train-01073', 'dev-00047', 'dev-00874', 'train-01541', 'train-00379', 'train-00566', 'train-02732', 'dev-00416', 'dev-00852', 'dev-00782', 'dev-01195', 'train-01946', 'train-00874', 'dev-00288', 'train-00123', 'dev-00153', 'train-00793', 'train-00240', 'dev-00451', 'train-00421', 'train-00688', 'dev-00219', 'dev-00908', 'train-00611', 'train-01321', 'dev-00408', 'train-01450', 'train-01446', 'dev-00333', 'train-02243', 'dev-00447', 'train-02617', 'train-02012', 'train-01001', 'train-00817', 'train-02711', 'train-02175', 'text-0', 'text-1', 'text-2', 'text-3'], 'lengths': [215, 183, 231, 214, 222, 211, 113, 195, 302, 165, 148, 376, 421, 241, 241, 473, 131, 331, 198, 241, 251, 238, 285, 157, 194, 202, 444, 161, 473, 250, 179, 201, 564, 289, 419, 245, 225, 82, 237, 229, 119, 321, 368, 146, 155, 363, 210, 235, 553, 163, 251, 236, 336, 241, 197, 248, 243, 192, 295, 180, 194, 333, 191, 142, 21, 31, 31, 33], 'positions': 'last', 'model': 'original', 'note': "arrays are float16; with positions 'last' they are taken at each text's last token; with 'all' they are right-padded to the longest text; input_ids is padded with -1"}
+
+Non-hidden output files:
+input_ids.npy (68, 564) int32
+token_logprobs.npy (68, 563) float16
+topk_ids.npy (68, 12) int32
+topk_logprobs.npy (68, 12) float16
+
+Existing probe texts: ['Question:\nA. option\nB. option\nC. option\nD. option\nAnswer:', 'Question: Which option contains the word apple?\nA. pear\nB. apple\nC. plum\nD. grape\nAnswer:', 'Question: Which option contains the word apple?\nA. pear\nB. plum\nC. grape\nD. apple\nAnswer:', 'Question: What is 2 + 2?\nA. 3\nB. 5\nC. 4\nD. 6\nAnswer:']
+
+Control mapping structure:
+{'13': [3616, 2486, 3273, 2405, 884, 1676, 1392, 7438, 2120, 4323, 4372, 5434, 386, 752, 4353, 217, 1416, 1029, 5191, 768, 5165, 377, 3845, 4327, 6658, 8075, 1956, 775, 2503, 6302, 685, 5587, 5884, 1229, 5653, 183, 17, 6353, 2963, 172, 6378, 6884, 2333, 7123, 6184, 6326, 4191, 4825, 2474, 6760, 7588, 6558, 2070, 3709, 1129, 5693, 714, 1643, 3347, 2366, 3260, 7594, 6492, 3754, 1221, 3004, 3448, 7766, 1540, 4193, 7232, 3644, 5467, 1466, 4845, 3629, 7479, 4182, 6654, 2737, 3728, 6395, 1433, 6508, 2
+
+```

@@ -1,0 +1,8 @@
+OUTPUT of Python run 13 of at most 300:
+```
+Exploration baseline accuracies: {'base_bare': 46.094, 'donor_bare': 53.125, 'base_chat': 55.859, 'donor_chat': 53.516}
+Paired score row schema: {"id": "train-01687", "answer": "A", "original": {"pred": "A", "correct": true, "margin": 1.90625, "letter_logprobs": [-7.7752, -9.6814, -11.1189, -11.0564]}, "edited": {"pred": "A", "correct": true, "margin": 0.875, "letter_logprobs": [-8.0582, -8.9332, -11.027, -10.4645]}}
+Prefix active tensors: 48
+Layers 0-7 weight slots: 906018816
+
+```

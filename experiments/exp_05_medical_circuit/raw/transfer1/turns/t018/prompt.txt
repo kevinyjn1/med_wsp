@@ -1,0 +1,6 @@
+OUTPUT of Python run 10 of at most 300:
+```
+Early attention-only weight slots: 302014464
+Active tensor count: 24
+
+```

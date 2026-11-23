@@ -1,7 +1,7 @@
 ---
 type: experiment
 id: EXP-05
-status: running
+status: awaiting-review
 tags: [experiment, weight-diff, activation-patching, medqa]
 ---
 
@@ -22,7 +22,7 @@ lower it. Background: [[EXP-04 MedQA baseline - Phi-3.5 vs MediPhi]].
 |---|---|---|
 | 05a | Weight difference MediPhi - Phi-3.5 per tensor, head and neuron | done (for `microsoft/MediPhi`) |
 | 05b | Cross-model activation patching and per-layer weight swapping, MediPhi-Instruct, bare prompt | done 2026-11-23, awaiting review |
-| 05c | Astra session with the donor in the edit lab (`transfer1`, 30 passes) | running since 2026-11-22 23:31 (10 passes used at 11:20 on 11-23) |
+| 05c | Astra session with the donor in the edit lab (`transfer1`, 30 passes) | done 2026-11-23 14:22, no edit submitted, awaiting review |
 | 05d | Crosscoder on one residual layer of both models | not started |
 
 ## 05a - weight difference (done)
@@ -70,7 +70,7 @@ Means over 60 questions per set, margin in log-probability units.
   medical content and how much is handling a prompt without a chat template
   ([[EXP-04 MedQA baseline - Phi-3.5 vs MediPhi]]: with the template around the same text the two models tie).
 
-## 05c - Astra with the donor (queued)
+## 05c - Astra with the donor (done 2026-11-23)
 `experiments/exp_05_medical_circuit/run_astra.py --name transfer1 --donor mediphi_instruct --budget 30`.
 - Lab: `wsp/lab.py` with `style="bare"`; task message `transfer_message` in `wsp/lab_session.py`.
 - Astra has both sets of weights (`load_donor`), practice results of both models under both prompts, and three
@@ -80,13 +80,53 @@ Means over 60 questions per set, margin in log-probability units.
   report the share of weights its final edit changes.
 - Final measurement: original vs edited Phi-3.5 on the MedQA test split under both prompts
   (`raw/transfer1/final_eval.json`).
+- Handoff: `experiments/exp_05_medical_circuit/RESULTS_05c.md`. Checks: `check_session.py` ->
+  `processed/check_transfer1.json`, `check_transfer1_questions.jsonl`.
+
+### 05c results (factual, awaiting review)
+Session: 2026-11-22 23:31 to 2026-11-23 14:09, 69 replies, 30 forward passes (22 score, 5 teacher-forced, 3
+patching). Astra split the 4,272 practice questions itself: 1,024 set aside for confirmation, the rest for
+development (64 for patching, 256 to compare transfers, 512 as a second check).
+- `[OBSERVATION]` Astra submitted no edit. Test split, 1,273 questions: 48.70 % (bare) and 57.19 % (chat) before
+  and after.
+- The candidate it built and then withdrew: MediPhi-Instruct's attention weights and norm vectors in layers 0 to
+  7, plus 256 of 8,192 MLP units per layer. 8.40 % of the model's weights are in the transfer, 4.25 % differ.
+- `[OBSERVATION]` Candidate against the unedited model, bare prompt: +4.30 points (SE 2.23) on the 256 questions
+  used to choose it, +1.95 (SE 1.68) on 512 fresh development questions, +1.76 (SE 1.32; 100 fixed, 82 broken) on
+  the 1,024 confirmation questions. Chat prompt: -0.39, 0.00, -0.29 points. MediPhi-Instruct itself is +3.6 points
+  above Phi-3.5 on those confirmation questions.
+- Astra's rule, written before the confirmation passes: keep the edit only if the bare-prompt gain exceeds 2
+  standard errors and chat accuracy does not fall. Neither held.
+- `[OBSERVATION]` On the confirmation questions the bare-prompt gain sits where the unedited model is already
+  right under the chat prompt: +6.07 points (SE 1.73) on those 626 questions, -5.03 (SE 1.96) on the other 398.
+- `[OBSERVATION]` The candidate raises the probability the model puts on the four answer letters under the bare
+  prompt from 0.043 to 0.134 (MediPhi-Instruct: 0.413).
+- `[OBSERVATION]` Copying the weights of the components with the largest patching effects did nothing: the whole
+  MLP of layer 11 +0.78 points, six attention heads +0.39 points (256 questions). Every transfer above +2 points
+  contains the attention weights of layers 0 to 7.
+- `[OBSERVATION]` Copying every weight of layers 0 to 7 gave the same accuracy as the candidate. The candidate at
+  1.5 times strength gave +4.30 points (SE 1.97) under the bare prompt and -0.98 under the chat prompt.
+- `[OBSERVATION]` Astra's final answer reads the result as "prompt adaptation and extraction of existing answers,
+  not demonstrated acquisition of medical knowledge". That is Astra's reading, not a reviewed conclusion.
+- Checked by Claude: all 22 score passes recount exactly from the lab's files; the confirmation questions appear
+  in no earlier pass; the saved candidate contains only donor values inside the transfer and base values outside;
+  scoring the saved candidate again reproduces both confirmation passes with no difference on any question.
+- Not established: that the candidate has no effect (interval -0.8 to +4.3 points); that it beats a control of the
+  same size; anything on the test split for the candidate; medical content against prompt handling.
 
 ## Visualizations
-Viewer datasets `weightdiff_mediphi_phi` and `interventions_mediphi_instruct_bare_phi` ([[Visualization index]]).
+Viewer datasets `weightdiff_mediphi_phi`, `interventions_mediphi_instruct_bare_phi` and
+`exp05c_transfer_transfer1` ([[Visualization index]]).
 
 ![[viz_exp05b_patching_activations.jpg]]
 
 ![[viz_exp05b_patching_weights.jpg]]
+
+![[viz_exp05c_transfers.jpg]]
+
+![[viz_exp05c_candidate_weights.jpg]]
+
+![[viz_exp05c_per_question.jpg]]
 
 ## Links
 [[Activation patching]] - [[Crosscoders]] - [[Transcoders]] - [[Tan et al. 2026 - Efficient Transcoder Adaptation]]

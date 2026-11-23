@@ -1,0 +1,305 @@
+Forward pass 6 of 30 done (patch); results in patch_6.jsonl. Summary:
+```
+{
+ "ok": true,
+ "type": "patch",
+ "model": "original",
+ "prompt": "bare",
+ "questions": 64,
+ "patches": 128,
+ "base": {
+  "accuracy": 0.4219,
+  "mean_margin": -0.2251
+ },
+ "donor": {
+  "accuracy": 0.5625,
+  "mean_margin": 0.3765
+ },
+ "note": "margin = log-prob of the correct letter minus the best other letter; a patch puts the donor's activation (all token positions) into the receiving model; rows are sorted by margin_change; the 25 largest and 15 smallest are shown, all are in the file",
+ "results": [
+  {
+   "patch": "L25.head9",
+   "margin_change": 0.3477,
+   "se": 0.1373,
+   "share_of_donor_gap": 0.578,
+   "accuracy": 0.5625
+  },
+  {
+   "patch": "L18.head5",
+   "margin_change": 0.2168,
+   "se": 0.0528,
+   "share_of_donor_gap": 0.36,
+   "accuracy": 0.5156
+  },
+  {
+   "patch": "L18.head7",
+   "margin_change": 0.1929,
+   "se": 0.0525,
+   "share_of_donor_gap": 0.321,
+   "accuracy": 0.5312
+  },
+  {
+   "patch": "L7.head1",
+   "margin_change": 0.186,
+   "se": 0.0429,
+   "share_of_donor_gap": 0.309,
+   "accuracy": 0.5156
+  },
+  {
+   "patch": "L18.head9",
+   "margin_change": 0.103,
+   "se": 0.0292,
+   "share_of_donor_gap": 0.171,
+   "accuracy": 0.5
+  },
+  {
+   "patch": "L7.head16",
+   "margin_change": 0.0933,
+   "se": 0.0219,
+   "share_of_donor_gap": 0.155,
+   "accuracy": 0.5
+  },
+  {
+   "patch": "L18.head17",
+   "margin_change": 0.0576,
+   "se": 0.0197,
+   "share_of_donor_gap": 0.096,
+   "accuracy": 0.4531
+  },
+  {
+   "patch": "L25.head8",
+   "margin_change": 0.0571,
+   "se": 0.0205,
+   "share_of_donor_gap": 0.095,
+   "accuracy": 0.4688
+  },
+  {
+   "patch": "L18.head25",
+   "margin_change": 0.0552,
+   "se": 0.0214,
+   "share_of_donor_gap": 0.092,
+   "accuracy": 0.4531
+  },
+  {
+   "patch": "L18.head24",
+   "margin_change": 0.0474,
+   "se": 0.0161,
+   "share_of_donor_gap": 0.079,
+   "accuracy": 0.4219
+  },
+  {
+   "patch": "L18.head10",
+   "margin_change": 0.0464,
+   "se": 0.0284,
+   "share_of_donor_gap": 0.077,
+   "accuracy": 0.4375
+  },
+  {
+   "patch": "L18.head18",
+   "margin_change": 0.0425,
+   "se": 0.0215,
+   "share_of_donor_gap": 0.071,
+   "accuracy": 0.4219
+  },
+  {
+   "patch": "L18.head27",
+   "margin_change": 0.042,
+   "se": 0.0129,
+   "share_of_donor_gap": 0.07,
+   "accuracy": 0.4688
+  },
+  {
+   "patch": "L25.head23",
+   "margin_change": 0.04,
+   "se": 0.0141,
+   "share_of_donor_gap": 0.067,
+   "accuracy": 0.4375
+  },
+  {
+   "patch": "L0.head6",
+   "margin_change": 0.0264,
+   "se": 0.007,
+   "share_of_donor_gap": 0.044,
+   "accuracy": 0.4375
+  },
+  {
+   "patch": "L0.head10",
+   "margin_change": 0.0259,
+   "se": 0.0061,
+   "share_of_donor_gap": 0.043,
+   "accuracy": 0.4375
+  },
+  {
+   "patch": "L0.head27",
+   "margin_change": 0.022,
+   "se": 0.0081,
+   "share_of_donor_gap": 0.037,
+   "accuracy": 0.4375
+  },
+  {
+   "patch": "L18.head1",
+   "margin_change": 0.0205,
+   "se": 0.0106,
+   "share_of_donor_gap": 0.034,
+   "accuracy": 0.4375
+  },
+  {
+   "patch": "L7.head4",
+   "margin_change": 0.0195,
+   "se": 0.006,
+   "share_of_donor_gap": 0.032,
+   "accuracy": 0.4219
+  },
+  {
+   "patch": "L18.head11",
+   "margin_change": 0.0186,
+   "se": 0.0322,
+   "share_of_donor_gap": 0.031,
+   "accuracy": 0.4531
+  },
+  {
+   "patch": "L7.head0",
+   "margin_change": 0.0181,
+   "se": 0.0087,
+   "share_of_donor_gap": 0.03,
+   "accuracy": 0.4062
+  },
+  {
+   "patch": "L25.head11",
+   "margin_change": 0.0171,
+   "se": 0.0113,
+   "share_of_donor_gap": 0.028,
+   "accuracy": 0.4375
+  },
+  {
+   "patch": "L25.head30",
+   "margin_change": 0.0151,
+   "se": 0.0154,
+   "share_of_donor_gap": 0.025,
+   "accuracy": 0.4531
+  },
+  {
+   "patch": "L0.head12",
+   "margin_change": 0.0147,
+   "se": 0.0066,
+   "share_of_donor_gap": 0.024,
+   "accuracy": 0.4375
+  },
+  {
+   "patch": "L0.head19",
+   "margin_change": 0.0146,
+   "se": 0.0052,
+   "share_of_donor_gap": 0.024,
+   "accuracy": 0.4219
+  },
+  {
+   "patch": "L25.head16",
+   "margin_change": -0.0181,
+   "se": 0.008,
+   "share_of_donor_gap": -0.03,
+   "accuracy": 0.4219
+  },
+  {
+   "patch": "L25.head5",
+   "margin_change": -0.019,
+   "se": 0.0077,
+   "share_of_donor_gap": -0.032,
+   "accuracy": 0.4219
+  },
+  {
+   "patch": "L7.head29",
+   "margin_change": -0.02,
+   "se": 0.0082,
+   "share_of_donor_gap": -0.033,
+   "accuracy": 0.4219
+  },
+  {
+   "patch": "L7.head18",
+   "margin_change": -0.0225,
+   "se": 0.012,
+   "share_of_donor_gap": -0.037,
+   "accuracy": 0.4219
+  },
+  {
+   "patch": "L25.head24",
+   "margin_change": -0.023,
+   "se": 0.0075,
+   "share_of_donor_gap": -0.038,
+   "accuracy": 0.4219
+  },
+  {
+   "patch": "L0.head7",
+   "margin_change": -0.0244,
+   "se": 0.018,
+   "share_of_donor_gap": -0.041,
+   "accuracy": 0.4219
+  },
+  {
+   "patch": "L18.head6",
+   "margin_change": -0.0244,
+   "se": 0.0086,
+   "share_of_donor_gap": -0.041,
+   "accuracy": 0.4375
+  },
+  {
+   "patch": "L7.head6",
+   "margin_change": -0.0259,
+   "se": 0.0077,
+   "share_of_donor_gap": -0.043,
+   "accuracy": 0.4219
+  },
+  {
+   "patch": "L7.head22",
+   "margin_change": -0.0273,
+   "se": 0.0125,
+   "share_of_donor_gap": -0.045,
+   "accuracy": 0.4219
+  },
+  {
+   "patch": "L18.head4",
+   "margin_change": -0.0273,
+   "se": 0.0163,
+   "share_of_donor_gap": -0.045,
+   "accuracy": 0.4219
+  },
+  {
+   "patch": "L7.head8",
+   "margin_change": -0.0308,
+   "se": 0.0143,
+   "share_of_donor_gap": -0.051,
+   "accuracy": 0.4219
+  },
+  {
+   "patch": "L18.head22",
+   "margin_change": -0.0547,
+   "se": 0.0189,
+   "share_of_donor_gap": -0.091,
+   "accuracy": 0.4219
+  },
+  {
+   "patch": "L18.head15",
+   "margin_change": -0.0884,
+   "se": 0.0325,
+   "share_of_donor_gap": -0.147,
+   "accuracy": 0.4219
+  },
+  {
+   "patch": "L18.head23",
+   "margin_change": -0.1099,
+   "se": 0.0303,
+   "share_of_donor_gap": -0.183,
+   "accuracy": 0.4219
+  },
+  {
+   "patch": "L18.head20",
+   "margin_change": -0.1387,
+   "se": 0.0526,
+   "share_of_donor_gap": -0.231,
+   "accuracy": 0.4062
+  }
+ ],
+ "edited_tensors": [],
+ "s": 25445
+}
+```
+Forward passes left: 24.

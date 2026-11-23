@@ -1,6 +1,6 @@
 # Current State
 
-Checkpoint written 2026-11-23 13:20 (session 01, still in progress). Detailed log: `vault/sessions/2026-11-21 Session 01.md`.
+Checkpoint written 2026-11-23 14:50 (session 01, still in progress). Detailed log: `vault/sessions/2026-11-21 Session 01.md`.
 
 ## Objective
 
@@ -37,6 +37,13 @@ Checkpoint written 2026-11-23 13:20 (session 01, still in progress). Detailed lo
   set): the donor's residual stream after layer 10 or later makes Phi-3.5's remaining layers reproduce the donor's
   margins; no single layer's weights carry the difference (largest swap +0.24 of +2.92, attention weights of
   layer 1); raising the gain set mostly lowers the loss set (`experiments/exp_05_medical_circuit/RESULTS.md`).
+- EXP-05c `transfer1` (Astra with the donor, 30 passes): Astra submitted no edit; test accuracy unchanged at
+  0.4870 (bare) and 0.5719 (chat). Its candidate (MediPhi-Instruct's attention weights and norms in layers 0 to 7
+  plus 256 MLP units per layer, 4.25 % of the weights changed) gained +1.76 points (SE 1.32) under the bare prompt
+  and -0.29 (SE 0.81) under the chat prompt on 1,024 untouched practice questions, against +3.6 points for the
+  whole donor; the gain sits on questions the unedited model already answers correctly under the chat prompt
+  (+6.07 points there, -5.03 elsewhere). All of Astra's figures were recounted and the saved candidate re-scored
+  with identical results (`experiments/exp_05_medical_circuit/RESULTS_05c.md`).
 - EXP-07 first scan (Phi-3.5, 600 dev questions, 28 looping configurations): none raises accuracy with p < 0.05;
   best is the damped rule on layers 10-13, +1.83 points (p = 0.19), margin +0.63 (SE 0.19); plain repetition of
   early layers costs 3.8 to 7.0 points (`experiments/exp_07_layer_looping/RESULTS.md`).
@@ -62,9 +69,9 @@ None of the above has been reviewed by the researcher; nothing is in `research/0
 
 ## Verification
 
-- `ruff check wsp experiments tests` clean; `pytest tests` 27 passed.
+- `ruff check wsp experiments tests` clean; `pytest tests` 27 passed (2026-11-23 14:50).
 - `python tests/integration_lab.py <scratch>` passes on the real Phi-3.5 weights.
-- Viewer builds (`npm run build --prefix viz`) and was checked in the browser for all eight datasets.
+- Viewer builds (`npm run build --prefix viz`) and was checked in the browser for all nine datasets.
 
 ## Open Issues
 
@@ -78,16 +85,21 @@ None of the above has been reviewed by the researcher; nothing is in `research/0
   sleeps when it is empty. Jobs now hold a no-sleep assertion on AC power (`wsp/keep_awake.py`), which does not
   help once the battery is empty. A closed lid always sleeps.
 - EXP-05b has no control swap and no score on unselected questions; EXP-07's best window is unconfirmed.
+- EXP-05c: the withdrawn candidate was never scored on the test split, and its controls were not scored on the
+  confirmation questions. The saved candidate is local only (`raw/transfer1/work/candidate_sparse_full/`, 3.5 GB).
+- Harness gap: a lab pass records the names of the edited tensors, not their content, so a withdrawn edit can be
+  tied to a pass only by scoring a saved copy again (done for `transfer1`). A digest of the edits in each pass
+  record would close it; not implemented.
 
 ## Next
 
-1. Collect when it ends: EXP-05c `transfer1` (`experiments/exp_05_medical_circuit/raw/transfer1/`, 23 of 30
-   passes at 13:20 on 11-23; final scores under both prompts in `final_eval.json`). The sweep queue is finished.
-2. Then: add EXP-05c to `experiments/exp_05_medical_circuit/RESULTS.md`, export the donor edit to the viewer,
-   redact and commit `raw/transfer1`.
-3. Researcher decisions pending: control and unselected-question scoring for EXP-05b; `around` sweep for EXP-07;
-   whether the bare prompt stays the primary measure; a second no-donor session (EXP-06).
-4. Restart EXP-03c with the smaller passes when the GPU is free; EXP-02 once Gemma access exists.
+1. Nothing is running. All queued runs and both Astra sessions on Phi-3.5 are finished and written up.
+2. Researcher decisions pending: whether to score the withdrawn EXP-05c candidate (and the EXP-06 one) on the
+   test split; control and unselected-question scoring for EXP-05b; `around` sweep for EXP-07; whether the bare
+   prompt stays the primary measure, given that both the chat-template control and the EXP-05c split point at
+   prompt handling; a second donor or no-donor session.
+3. Restart EXP-03c with the smaller passes (the GPU is free now); EXP-02 once Gemma access exists; EXP-05d
+   (crosscoder) not started.
 
 ## Resume
 

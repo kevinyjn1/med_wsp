@@ -1,0 +1,10 @@
+OUTPUT of Python run 36 of at most 300:
+```
+BARE: {"n": 1024, "original_accuracy": 0.51171875, "candidate_accuracy": 0.529296875, "difference_pp": 1.7578125, "paired_se_pp": 1.3169523472998172, "approx_95pct_ci_pp": [-0.8234141007076416, 4.339039100707642], "rescues": 100, "regressions": 82, "sign_test_p": 0.20750339701863751, "margin_difference": 0.12280273874057457, "margin_se": 0.05211980056757877, "original_letter_mass": 0.042886523373805906, "candidate_letter_mass": 0.1337285342202404}
+CHAT: {"n": 1024, "original_accuracy": 0.611328125, "candidate_accuracy": 0.6083984375, "difference_pp": -0.29296875, "paired_se_pp": 0.8115384267521352, "approx_95pct_ci_pp": [-1.8835840664341847, 1.2976465664341847], "rescues": 33, "regressions": 36, "sign_test_p": 0.8099490529189248, "margin_difference": -0.21212768577970564, "margin_se": 0.12616540354798422, "original_letter_mass": 0.998913698257779, "candidate_letter_mass": 0.9997359669005508}
+CONTENT/EXTRACTION: {"True": {"n": 626, "rescues": 79, "regressions": 41, "difference_pp": 6.070287539936102, "paired_se_pp": 1.734397655224771}, "False": {"n": 398, "rescues": 21, "regressions": 41, "difference_pp": -5.025125628140704, "paired_se_pp": 1.9647633074417832}}
+FIXED OFFSET: {"offset_source": "separate exploration score13, no confirmation fitting", "base_plus_fixed_offset_accuracy": 0.515625, "candidate_minus_fixed_offset_accuracy": 0.521484375, "caution": "Descriptive and nonadditive; not proof of medical-knowledge transfer."}
+FINAL ACTIVE EDITS: []
+ACTIVE EDIT DIRECTORY: []
+
+```

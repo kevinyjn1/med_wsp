@@ -1,0 +1,33 @@
+Forward pass 25 of 30 done (teacher_forced); results in fwd_25/. Summary:
+```
+{
+ "ok": true,
+ "type": "teacher_forced",
+ "model": "original",
+ "texts": 30,
+ "positions": "last",
+ "longest": 44,
+ "files": {
+  "input_ids.npy": [
+   30,
+   44
+  ],
+  "token_logprobs.npy": [
+   30,
+   43
+  ],
+  "topk_logprobs.npy": [
+   30,
+   12
+  ],
+  "topk_ids.npy": [
+   30,
+   12
+  ]
+ },
+ "edited_tensors": [],
+ "mean_token_logprob": -1.4795,
+ "s": 11
+}
+```
+Forward passes left: 5.

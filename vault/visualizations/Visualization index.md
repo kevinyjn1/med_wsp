@@ -6,7 +6,7 @@ tags: [visualization]
 # Visualization index
 
 All interactive views live in the viewer under `viz/` (see `viz/README.md`): run
-`python -m wsp.viz_export mit3 mit8 weightdiff exp06 interventions looping`, then `npm run dev --prefix viz`, and open http://localhost:5173.
+`python -m wsp.viz_export mit3 mit8 weightdiff exp06 interventions looping exp05c`, then `npm run dev --prefix viz`, and open http://localhost:5173.
 
 ## MIT experiment 3: the blocks Astra read
 Datasets `mit3_python`, `mit3_romaji`, `mit3_english`. Each of the four blocks shows LayerNorm gains, W_q,
@@ -80,5 +80,25 @@ clear margin gain (+0.63, SE 0.19); its accuracy gain of +1.83 points has p = 0.
 
 Source: [[EXP-07 Training-free layer looping]].
 
-## Planned
-- Astra's donor edit on Phi-3.5 (EXP-05c), before and after, once `transfer1` ends.
+## EXP-05c: the weight transfer Astra built and withdrew
+Dataset `exp05c_transfer_transfer1`. Three levels.
+
+![[viz_exp05c_transfers.jpg]]
+Every transfer Astra scored, one per row in the order it tried them. Left: in which layers it took
+MediPhi-Instruct's weights (brighter = more of the layer's six weight tensors). Middle and right: the change of
+accuracy and of the correct answer's margin on Astra's three question sets under both prompts (hatched = not
+measured). The candidate is the row with all six cells filled.
+
+![[viz_exp05c_candidate_weights.jpg]]
+The candidate's weights. Top: how much MediPhi-Instruct differs from Phi-3.5 in each layer and tensor. Below: how
+much of that the candidate takes (attention and norms of layers 0 to 7 in full, the MLP only through 256 units per
+layer, shown as the eight dotted tiles).
+
+![[viz_exp05c_per_question.jpg]]
+One cell per practice question, sorted by the unedited model's margin. On the 1,024 confirmation questions the
+candidate fixes 100 and breaks 82 under the bare prompt, and fixes 33 and breaks 36 under the chat prompt; the
+last column shows MediPhi-Instruct itself on the same questions. Bottom row: the bare-prompt outcome with the
+questions ordered by the unedited model's chat margin (broken answers sit mostly where the chat answer is wrong,
+fixed ones where it is right).
+
+Source: [[EXP-05 Medical circuit discovery and transfer]].

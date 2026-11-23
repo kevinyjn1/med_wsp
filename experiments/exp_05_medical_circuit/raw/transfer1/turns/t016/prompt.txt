@@ -1,0 +1,11 @@
+OUTPUT of Python run 9 of at most 300:
+```
+Selected heads: {7: [1, 16], 18: [5, 7, 9], 25: [9]} editable head weight slots: 7077888
+L7.head1 mean delta 0.186 weighted delta 0.2369
+L7.head16 mean delta 0.0933 weighted delta 0.1056
+L18.head5 mean delta 0.2168 weighted delta 0.2201
+L18.head7 mean delta 0.1929 weighted delta 0.195
+L18.head9 mean delta 0.103 weighted delta 0.1393
+L25.head9 mean delta 0.3477 weighted delta 0.369
+
+```

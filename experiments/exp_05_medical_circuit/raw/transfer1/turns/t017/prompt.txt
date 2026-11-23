@@ -1,0 +1,49 @@
+Forward pass 7 of 30 done (score); results in score_7.jsonl. Summary:
+```
+{
+ "ok": true,
+ "type": "score",
+ "model": "both",
+ "prompt": "bare",
+ "questions": 256,
+ "edited_tensors": [
+  "model.layers.18.self_attn.o_proj.weight",
+  "model.layers.18.self_attn.qkv_proj.weight",
+  "model.layers.25.self_attn.o_proj.weight",
+  "model.layers.25.self_attn.qkv_proj.weight",
+  "model.layers.7.self_attn.o_proj.weight",
+  "model.layers.7.self_attn.qkv_proj.weight"
+ ],
+ "original": {
+  "accuracy": 0.4609,
+  "mean_margin": -0.2875,
+  "predicted": {
+   "A": 98,
+   "B": 39,
+   "C": 74,
+   "D": 45
+  }
+ },
+ "edited": {
+  "accuracy": 0.4648,
+  "mean_margin": -0.2904,
+  "predicted": {
+   "A": 99,
+   "B": 40,
+   "C": 69,
+   "D": 48
+  }
+ },
+ "paired": {
+  "accuracy_difference": 0.0039,
+  "standard_error": 0.0068,
+  "wrong_to_right": 2,
+  "right_to_wrong": 1,
+  "sign_test_p": 1.0,
+  "margin_difference": -0.0029,
+  "margin_difference_se": 0.0073
+ },
+ "s": 317
+}
+```
+Forward passes left: 23.

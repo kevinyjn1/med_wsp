@@ -1,0 +1,7 @@
+OUTPUT of Python run 24 of at most 300:
+```
+Unit-map structure: dict [('0', 256), ('1', 256), ('2', 256), ('3', 256), ('4', 256), ('5', 256), ('6', 256), ('7', 256)]
+Installed fixed 1.5-dose sparse prefix: 46 tensors
+Full prefix versus sparse on development: {'passes': [21, 18], 'n': 512, 'accuracy_difference_pp': np.float64(0.0), 'paired_se_pp': np.float64(1.071), 'margin_difference': np.float64(0.0841), 'margin_se': np.float64(0.0237), 'better_worse': [15, 15]}
+
+```

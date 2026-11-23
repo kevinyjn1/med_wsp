@@ -1,0 +1,8 @@
+OUTPUT of Python run 26 of at most 300:
+```
+Selected support: 320907264 of 3821079552 = 8.39834 %
+Actually different: 162464387 after bfloat16: 162464387 share: 4.25179 %
+Installed location control; layers: [13, 15, 16, 18, 19, 25, 27, 30]
+Next request uses validation_ids, same 512 questions as scores18/19.
+
+```

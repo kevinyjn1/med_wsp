@@ -1,0 +1,8 @@
+OUTPUT of Python run 30 of at most 300:
+```
+Traceback (most recent call last):
+  File "<string>", line 12, in <module>
+  File "<block>", line 29, in <module>
+AssertionError: model.layers.0.mlp.down_proj.weight
+
+```

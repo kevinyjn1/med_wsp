@@ -1,0 +1,11 @@
+OUTPUT of Python run 28 of at most 300:
+```
+word_apple pred B letter_mass 0.73228 conditional_ABCD [0.0, 1.0, 0.0, 0.0] top3 [('B', 0.73047), ('The', 0.09283), ('Option', 0.08722)]
+word_plum pred C letter_mass 0.72747 conditional_ABCD [0.0, 0.0, 1.0, 0.0] top3 [('C', 0.72412), ('C', 0.12585), ('The', 0.08929)]
+word_blank pred B letter_mass 0.70953 conditional_ABCD [0.078, 0.833, 0.053, 0.037] top3 [('B', 0.58984), ('\n', 0.09052), ('A', 0.05664)]
+medical_insulin pred A letter_mass 0.58997 conditional_ABCD [1.0, 0.0, 0.0, 0.0] top3 [('A', 0.59326), ('Ins', 0.17529), ('\n', 0.08826)]
+medical_glucagon pred B letter_mass 0.8493 conditional_ABCD [0.0, 1.0, 0.0, 0.0] top3 [('B', 0.84717), ('\n', 0.04779), ('Pan', 0.03961)]
+medical_blank pred B letter_mass 0.76579 conditional_ABCD [0.036, 0.652, 0.218, 0.094] top3 [('B', 0.49805), ('C', 0.16675), ('\n', 0.09802)]
+Candidate effect conditional on original CHAT correctness: {'True': {'n': 310, 'rescues': 30, 'regressions': 17, 'accuracy_change_pp': np.float64(4.194), 'paired_se_pp': np.float64(2.202), 'margin_change': np.float64(0.1959)}, 'False': {'n': 202, 'rescues': 12, 'regressions': 15, 'accuracy_change_pp': np.float64(-1.485), 'paired_se_pp': np.float64(2.577), 'margin_change': np.float64(0.033)}}
+
+```

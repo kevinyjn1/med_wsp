@@ -1,0 +1,96 @@
+OUTPUT of Python run 16 of at most 300:
+```
+[
+  {
+    "pass": 5,
+    "mean_letter_mass_base_edit": [
+      0.03284571851710157,
+      0.032617754422992
+    ],
+    "relative_letter_offset_ABCD": [
+      -0.06249970703125003,
+      0.021362792968750037,
+      0.014527246093750005,
+      0.02660966796875
+    ],
+    "base_accuracy": 0.4609375,
+    "edited_accuracy": 0.46875,
+    "base_plus_common_offset_accuracy": 0.46484375,
+    "edited_minus_common_offset_accuracy": 0.46484375,
+    "common_fraction_of_relative_delta_energy": 0.10882381525356503
+  },
+  {
+    "pass": 8,
+    "mean_letter_mass_base_edit": [
+      0.03284571851710158,
+      0.11623861225015318
+    ],
+    "relative_letter_offset_ABCD": [
+      -0.21685595703125002,
+      0.39483544921875025,
+      -0.3702997070312501,
+      0.19232021484374998
+    ],
+    "base_accuracy": 0.4609375,
+    "edited_accuracy": 0.4921875,
+    "base_plus_common_offset_accuracy": 0.4609375,
+    "edited_minus_common_offset_accuracy": 0.48046875,
+    "common_fraction_of_relative_delta_energy": 0.11650680757174474
+  },
+  {
+    "pass": 11,
+    "mean_letter_mass_base_edit": [
+      0.03284571851710157,
+      0.17067917091971258
+    ],
+    "relative_letter_offset_ABCD": [
+      -0.44976787109375005,
+      0.5148317382812501,
+      -0.4138795898437502,
+      0.34881572265625
+    ],
+    "base_accuracy": 0.4609375,
+    "edited_accuracy": 0.50390625,
+    "base_plus_common_offset_accuracy": 0.44921875,
+    "edited_minus_common_offset_accuracy": 0.4765625,
+    "common_fraction_of_relative_delta_energy": 0.15182854049399722
+  },
+  {
+    "pass": 13,
+    "mean_letter_mass_base_edit": [
+      0.03284571851710157,
+      0.1238630232109097
+    ],
+    "relative_letter_offset_ABCD": [
+      -0.2964793945312498,
+      0.45291162109375027,
+      -0.36312861328124996,
+      0.2066963867187499
+    ],
+    "base_accuracy": 0.4609375,
+    "edited_accuracy": 0.50390625,
+    "base_plus_common_offset_accuracy": 0.453125,
+    "edited_minus_common_offset_accuracy": 0.47265625,
+    "common_fraction_of_relative_delta_energy": 0.12546835349104832
+  },
+  {
+    "pass": 14,
+    "mean_letter_mass_base_edit": [
+      0.9998206479723108,
+      1.000001914117394
+    ],
+    "relative_letter_offset_ABCD": [
+      0.059127636718749974,
+      0.38829208984375024,
+      0.06376240234374994,
+      -0.5111821289062497
+    ],
+    "base_accuracy": 0.5625,
+    "edited_accuracy": 0.55859375,
+    "base_plus_common_offset_accuracy": 0.56640625,
+    "edited_minus_common_offset_accuracy": 0.55078125,
+    "common_fraction_of_relative_delta_energy": 0.025078894531403172
+  }
+]
+
+```

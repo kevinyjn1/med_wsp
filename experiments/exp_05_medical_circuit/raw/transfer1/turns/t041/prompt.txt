@@ -1,0 +1,268 @@
+TASK. You are given the weights of two language models with the same architecture: Phi-3.5-mini-instruct (the BASE) and MediPhi-Instruct (the DONOR), a medical fine-tune of the base. (A decoder-only transformer: 32 layers of width 3,072; no biases anywhere; RMSNorm before attention (input_layernorm) and before the MLP (post_attention_layernorm); self-attention with 32 heads of size 96 and rotary position embeddings, stored as one fused matrix self_attn.qkv_proj.weight of shape 9,216 x 3,072 whose rows 0..3,071 are the queries, 3,072..6,143 the keys and 6,144..9,215 the values, head h using rows 96h..96h+95 of each part, and self_attn.o_proj.weight of shape 3,072 x 3,072 whose columns 96h..96h+95 belong to head h; a gated MLP of width 8,192: mlp.gate_up_proj.weight of shape 16,384 x 3,072 with rows 0..8,191 the gate and 8,192..16,383 the up projection, hidden = up * SiLU(gate), and mlp.down_proj.weight of shape 3,072 x 8,192; vocabulary 32,064 with separate input embedding and output layer; tensors are named model.layers.<l>.<...>, matrices are (out, in).) On medical licensing questions asked as a plain-text prompt (the BARE prompt below) the donor answers correctly more often than the base: 54.2 % against 48.5 % on the practice questions. With a chat-formatted prompt (the CHAT prompt) the two are about equally accurate: 57.9 % against 59.8 %. Your job is to find out which weight changes in the donor are responsible for its advantage with the bare prompt, and to move only those into the base by EDITING THE BASE'S WEIGHTS DIRECTLY, so that the edited base does better with the bare prompt without doing worse with the chat prompt.
+
+HOW IT WILL BE MEASURED. After you finish, your edited base and the unedited base are evaluated on a held-out set of four-option medical licensing questions (USMLE style) under two fixed prompts, both shown in PRACTICE_DIR/eval_prompt_format.txt. BARE (the primary measure): the plain text "Question: <question>", one line per option "A. <option>" to "D. <option>", and "Answer:", with no chat template and no instruction (the format of the medqa_4options task of lm-evaluation-harness); one forward pass; the answer is the letter whose token " A", " B", " C" or " D" has the highest next-token probability at the end of the prompt. CHAT (the guardrail): a chat prompt with an instruction to answer with the letter of the correct option only, the question, the options and "Answer:"; one forward pass; the answer is the letter with the highest next-token probability (the spellings "A" and " A" are added, likewise for the other letters). Your edit succeeds if it raises accuracy with the BARE prompt and does not lower accuracy with the CHAT prompt. The config, tokenizer and prompts are fixed: only weight values of the base can change (same tensor names and shapes). You never see the evaluation questions.
+
+WHAT COUNTS. We want a transfer that comes from understanding the two networks: find which components (layers, attention heads, MLP units, directions) carry the donor's advantage, show it causally, and change only those in the base. Copying whole donor tensors into the base is allowed as an experiment, and as part of the final edit when you can say why those tensors and not the rest; replacing most of the base by the donor is not what we are looking for, so report which share of the weights your final edit changes. Say what the transferred computation does. Be precise about what the advantage is: if it comes mostly from how the model treats this prompt format (for example how readily it answers with a letter at all, or which letters it prefers) rather than from medical knowledge, say so and give the evidence, and report separately any part that does depend on the content of the question. Out of scope, and refused by save_edit and by the forward-pass tool: the final norm (model.norm.weight), the input embedding and the output layer (model.embed_tokens.weight, lm_head.weight), and any edit that only multiplies a whole tensor by a constant.
+
+WHAT YOU HAVE.
+1. A persistent Python kernel (no internet, no GPU): variables survive between your code blocks, like a notebook. The base's files are read-only in MODEL_DIR, the donor's in DONOR_DIR, the practice files read-only in PRACTICE_DIR, and your current directory (WORK) is your read-write folder. Available: numpy, scipy, scikit-learn, PyTorch (CPU), pandas, sympy, networkx, safetensors, tokenizers. Defined in advance: NAMES (all tensor names), load(name) (a float32 torch tensor: your current edit of the base if there is one, else the original base), load_original(name), load_donor(name), save_edit(name, tensor), drop_edit(name), edited() and tok (the tokenizer, a `tokenizers` object). Gradients are disabled. To run code, reply with your explanation followed by exactly one block that starts with ```python; if its last line is an expression, its value is shown. One execution may take up to 900 seconds and must stay under about 12 GB of memory (the kernel is restarted above 14 GB; one large matrix as float32 is 0.1 to 0.2 GB); output is cut at 10,000 characters. You may run code up to 300 times. If the kernel is restarted (time limit, memory limit or crash), its variables are lost and you are told so.
+2. Practice questions with answers (none of them is in the evaluation): PRACTICE_DIR/questions.jsonl, one JSON object per line with id, question, options (A to D) and answer, 4,272 questions. Results of both unedited models on each of them, one JSON object per line with pred, correct, margin (log-probability of the correct letter minus the best other letter), letter_logprobs (A, B, C, D) and letter_mass (the total next-token probability on the four letters): original_results.jsonl and donor_results.jsonl for the BARE prompt, original_results_chat.jsonl and donor_results_chat.jsonl for the CHAT prompt.
+3. A forward-pass tool with a budget of 30 forward passes in total. A forward pass is one of three things, and each counts as one pass:
+ (a) SCORE: a model answers up to 1,024 practice questions under one of the two prompts. Reply with your explanation followed by exactly one block that starts with ```forward and contains JSON:
+ {"type": "score", "model": "original", "edited", "both" or "donor", "prompt": "bare" (the default) or "chat", "questions": ["<practice id>", ...]}
+ "original" runs the unedited base, "edited" the base with your current edits (the tensors in WORK/edited, rounded to bfloat16 like a saved checkpoint), "donor" the unedited donor, and "both" runs original and edited on the same questions and returns a paired comparison (the accuracy difference edited - original with its standard error, how many questions went from wrong to right and back with a sign test, and the mean change of the margin with its standard error). You get the accuracy, the mean margin and the counts of predicted letters; per-question results are in WORK/score_<k>.jsonl. A pass with 1,024 questions takes about 5 minutes per model.
+ (b) TEACHER-FORCED: a model reads practice questions (as their BARE or CHAT prompts) and/or raw texts, with no generation:
+ {"type": "teacher_forced", "model": "original", "edited" or "donor", "prompt": "bare" or "chat", "questions": ["<practice id>", ...], "texts": ["raw text", ...] (optional), "return": {"positions": "last" or "all", "token_logprobs": true, "topk": k (at most 50), "hidden_states": [layers 0..32], "mlp_act": [layers 0..31], "attn_layers": [layers 0..31]}}
+ hidden_states layer 0 is the embeddings and layer l the residual stream after layer l (layer 32 is the last residual stream, before the final norm); mlp_act is the input of mlp.down_proj (the 8,192 hidden units, after the gate); attn_layers gives attention probabilities per head. With "positions": "last" (the default) every array is taken at the last token of each text, where the answer letter is predicted, and up to 1,024 texts are allowed; with "all" arrays cover every token, right-padded, for at most 64 texts and 40,000 tokens in total. Attention is returned for at most 4 texts of at most 700 tokens each. The results are float16 .npy files with meta.json in WORK/fwd_<k>/.
+ (c) PATCH (activation patching): for each question, the donor reads the prompt, and one piece of its activity is placed into the receiving model's forward pass on the same prompt, at every token position, one patch at a time:
+ {"type": "patch", "model": "original" (the default) or "edited" (the receiving model), "prompt": "bare" or "chat", "questions": ["<practice id>", ... at most 64], "patches": [{"layer": 0..31, "component": "attn", "mlp", "resid" or "head", "head": 0..31 (only for "head")}, ... at most 256]}
+ "attn" is the output of the layer's attention block, "mlp" the output of its MLP block, "resid" the residual stream after the layer (everything computed up to there), and "head" one attention head's output before the output projection (the receiving model's o_proj is kept). For every patch you get the mean change of the margin of the correct letter with its standard error, that change as a share of the donor-minus-receiver margin gap on these questions, and the accuracy with the patch; per-question margins are in WORK/patch_<k>.jsonl. A pass with 64 questions and 96 patches takes about 10 minutes.
+ A request that fails does not count against the budget.
+
+HOW TO WORK.
+1. Diagnose first. Compare the two models on the practice results: on which questions the donor is right and the base wrong (and the reverse), how the predicted letters and the letter_mass differ, and what each model would rather say after "Answer:" (the top next tokens). Decide what the advantage consists of before looking for where it lives.
+2. Localize causally. A large weight difference is not necessarily an important one, and the two models differ a little everywhere. Use patching to find where the donor's activity changes the base's answer, then test the weights themselves: copy candidate donor tensors or parts of them into the base (save_edit(name, ...) built from load_donor) and score "both". Before relying on a component, show a dose-response (for example by interpolating between base and donor weights) and compare with a control of the same size chosen at random.
+3. Measure with enough power. Accuracy over n questions has a standard error of about 50/sqrt(n) percentage points: about 3.1 points at 256 questions, 1.6 at 1,024. The paired difference from "model": "both" has a much smaller standard error than two separate measurements, and the margin is a denser signal than accuracy. Keep an edit only if its gain is clearly larger than its standard error on questions that were NOT used to choose it: set aside a part of the practice questions for a final confirmation and do not look at it before. Check the CHAT prompt on your candidate before the end.
+4. Plan your forward passes (see the budget above): for example a few teacher-forced and patch passes to localize, score passes to test candidate edits, and final paired score passes with both prompts on questions you have not used.
+5. Work efficiently: state the hypothesis of each code block in its first comment line; load things once into kernel variables but keep few large tensors in memory at a time; print compact summaries, never whole arrays or whole question texts (short excerpts of at most about 300 characters; outputs are shown in ASCII only); keep WORK/notes.md up to date (findings with numbers, edits tried and their measured effect, the current best edit, which questions are set aside; it is shown to you again if the conversation is restarted); keep copies of good edits (for example copy WORK/edited to WORK/best_1).
+
+RULES. Not allowed: (a) gradient descent or any other training: no backward passes, autograd or optimizers, and no iterative fitting of weights to a loss; (b) running a model other than through the forward-pass tool: do not implement or simulate a network's computation on any input in the kernel; (c) internet access or search (there is none). Allowed: any analysis of the two sets of weights and of forward-pass results, any use of the practice questions, and any direct edit of the base's weights that you compute and that is in scope.
+
+HOW THE SESSION RUNS. It continues until all 30 forward passes are used (replying without a code block does not end it earlier); after that, make your final choice (the tensors in WORK/edited when you finish are submitted; leave it empty if no edit earned its place) and reply without a code block, saying what you changed, which share of the weights that is, the evidence for it, what the transferred computation does and why you expect it to help. EXPLAIN EVERY STEP. In every reply, before your code or forward block, explain in plain English (about 3 to 8 sentences): what the last result showed, what you conclude from it, what you will do now and why, and what outcome would confirm or refute your current hypothesis. In your final answer, also summarize the path that led to your edits. These explanations are read by the experimenters.
+
+THIS IS A RESTARTED CONVERSATION (to keep it short): 40 replies happened before. Forward passes used: 20 of 30; Python runs used: 20 of 300. Your kernel is still running with its variables. Tensors currently edited: ['model.layers.0.input_layernorm.weight', 'model.layers.0.mlp.down_proj.weight', 'model.layers.0.mlp.gate_up_proj.weight', 'model.layers.0.post_attention_layernorm.weight', 'model.layers.0.self_attn.o_proj.weight', 'model.layers.0.self_attn.qkv_proj.weight', 'model.layers.1.input_layernorm.weight', 'model.layers.1.mlp.down_proj.weight', 'model.layers.1.mlp.gate_up_proj.weight', 'model.layers.1.post_attention_layernorm.weight', 'model.layers.1.self_attn.o_proj.weight', 'model.layers.1.self_attn.qkv_proj.weight', 'model.layers.2.input_layernorm.weight', 'model.layers.2.mlp.down_proj.weight', 'model.layers.2.mlp.gate_up_proj.weight', 'model.layers.2.post_attention_layernorm.weight', 'model.layers.2.self_attn.o_proj.weight', 'model.layers.2.self_attn.qkv_proj.weight', 'model.layers.3.input_layernorm.weight', 'model.layers.3.mlp.down_proj.weight', 'model.layers.3.mlp.gate_up_proj.weight', 'model.layers.3.post_attention_layernorm.weight', 'model.layers.3.self_attn.o_proj.weight', 'model.layers.3.self_attn.qkv_proj.weight', 'model.layers.4.input_layernorm.weight', 'model.layers.4.mlp.down_proj.weight', 'model.layers.4.mlp.gate_up_proj.weight', 'model.layers.4.post_attention_layernorm.weight', 'model.layers.4.self_attn.o_proj.weight', 'model.layers.4.self_attn.qkv_proj.weight', 'model.layers.5.input_layernorm.weight', 'model.layers.5.mlp.down_proj.weight', 'model.layers.5.mlp.gate_up_proj.weight', 'model.layers.5.post_attention_layernorm.weight', 'model.layers.5.self_attn.o_proj.weight', 'model.layers.5.self_attn.qkv_proj.weight', 'model.layers.6.mlp.down_proj.weight', 'model.layers.6.mlp.gate_up_proj.weight', 'model.layers.6.post_attention_layernorm.weight', 'model.layers.6.self_attn.o_proj.weight', 'model.layers.6.self_attn.qkv_proj.weight', 'model.layers.7.mlp.down_proj.weight', 'model.layers.7.mlp.gate_up_proj.weight', 'model.layers.7.post_attention_layernorm.weight', 'model.layers.7.self_attn.o_proj.weight', 'model.layers.7.self_attn.qkv_proj.weight']. Files in WORK: ['candidate_sparse_full', 'confirmation_ids.json', 'development_check_ids.json', 'development_ids.json', 'discovery_ids.json', 'edited', 'explore_ids.json', 'fwd_1', 'fwd_2', 'notes.md', 'patch3_analysis.csv', 'patch_3.jsonl', 'patch_6.jsonl', 'random_early_units.json', 'random_location_control.json', 'score_10.jsonl', 'score_11.jsonl', 'score_12.jsonl', 'score_13.jsonl', 'score_14.jsonl', 'score_15.jsonl', 'score_16.jsonl', 'score_17.jsonl', 'score_18.jsonl', 'score_19.jsonl', 'score_20.jsonl', 'score_4.jsonl', 'score_5.jsonl', 'score_7.jsonl', 'score_8.jsonl', 'score_9.jsonl', 'sparse_units.json', 'tuning_ids.json', 'validation_ids.json'].
+YOUR NOTEBOOK (WORK/notes.md, last 8,000 characters):
+```
+.4974  -0.1979
+
+Experiment A: full donor L11 gate_up and down matrices, alpha=1, no norm transfer. Selected by patch_3. Exploration uses first 256 tuning IDs, disjoint from discovery and sealed confirmation. Awaiting direct-weight score.
+
+Forward passes used: 4/30. REJECT L11 MLP full donor transfer: 256 BARE, accuracy +0.78 +/- 0.78 pp, flips 3 better/1 worse, margin -0.0107 +/- 0.0061. No active edits. Beneficial activation patch did not establish local weight sufficiency.
+
+Normalization inspection: L0 input relative delta 0.133918, L1 input 0.054556, L0 post-attention 0.018321, L2 input 0.006757. L0 input delta is 99.99% nonscalar by norm. Experiment B: only donor model.layers.0.input_layernorm.weight.
+
+Forward passes used: 6/30. Norm0-only score_5: BARE +0.78 +/-0.78 pp, margin +0.0438 +/-0.0135 (256 questions), insufficient accuracy evidence.
+Head patch_6: L25H9 +0.3477 +/-0.1373 margin, L18H5 +0.2168 +/-0.0528, L18H7 +0.1929 +/-0.0525, L7H1 +0.1860 +/-0.0429, L18H9 +0.1030 +/-0.0292, L7H16 +0.0933 +/-0.0219.
+Experiment C: six selected heads Q/K/V rows and O columns, alpha=1, no norms or MLP changes. Weight slots 7077888.
+
+Forward passes used: 7/30. REJECT six-head local transfer: score_7 BARE +0.39 +/-0.68 pp; margin -0.0029 +/-0.0073. Heads appear downstream readers, not sufficient local weight sources.
+Experiment D: donor attention QKV/O plus input norms, layers 0-7 only; all MLPs and post-attention norms remain base. This broader source-localization experiment changes ~302 million slots.
+
+Forward passes used: 8/30. Early attention-only layers0-7 score_8: BARE +3.12 +/-2.21 pp, margin +0.0923 +/-0.1010; inconclusive and broad, not retained.
+Experiment E: four early normalization vectors (L0 input/post, L1 input, L2 input), alpha=1; all matrices base. 12,288 weight slots.
+
+Forward passes used: 9/30. Four-early-norm edit score_9: BARE +1.17 +/-0.87 pp, margin +0.0280 +/-0.0158; not established.
+Experiment F: down-projection-only transfer for positive early MLP patches at layers [0, 1, 2, 4, 5, 6, 7, 8, 9, 10, 11, 12]. All feature detectors, attention, norms, and late MLPs remain base. Broad source experiment before sparse-unit decomposition.
+
+Forward passes used: 10/30. Early down-projection-only score_10: BARE +1.17 +/-1.30 pp, margin -0.0002 +/-0.0285; rejected.
+Exploration unedited accuracies: {"base_bare": 46.094, "donor_bare": 53.125, "base_chat": 55.859, "donor_chat": 53.516}
+Experiment G: complete donor layers0-7 (8/32 blocks) as bounded sufficiency test of interactions. This is broader than desired final edit and will require decomposition, dose/control, CHAT and independent confirmation.
+
+Forward passes used: 11/30. Full layers0-7 score_11: BARE +4.30 +/-2.61 pp; margin +0.2609 +/-0.1206; letter counts A/B/C/D 75/51/64/66 vs base98/39/74/45. Broad exploratory gain, not yet independent confirmation.
+Experiment H: layers0-7 gate_up matrices plus L0 input norm only, all attention matrices, down projections, other norms and later layers base.
+
+Forward passes used: 12/30. Early gate_up + norm0 score_12: BARE +0.78 +/-0.96 pp, margin +0.0571 +/-0.0263; weak.
+Experiment I: attention/norms layers0-7 plus 256 MLP units per layer, selected label-free from weighted captured activation differences. Units saved in sparse_units.json. Selection is descriptive, requires direct tests and control.
+
+Forward passes used: 14/30. Sparse prefix score_13 BARE +4.30 +/-2.23 pp (22 rescues,11 regressions), margin +0.1400 +/-0.1060. score_14 CHAT -0.39 +/-1.79 pp (10 rescues,11 regressions), margin -0.4137 +/-0.2812. No independent success established.
+Full-dose candidate snapshot: candidate_sparse_full. Experiment J: same sparse-prefix edit at alpha=0.5.
+Output diagnostics:
+[
+  {
+    "pass": 5,
+    "mean_letter_mass_base_edit": [
+      0.03284571851710157,
+      0.032617754422992
+    ],
+    "relative_letter_offset_ABCD": [
+      -0.06249970703125003,
+      0.021362792968750037,
+      0.014527246093750005,
+      0.02660966796875
+    ],
+    "base_accuracy": 0.4609375,
+    "edited_accuracy": 0.46875,
+    "base_plus_common_offset_accuracy": 0.46484375,
+    "edited_minus_common_offset_accuracy": 0.46484375,
+    "common_fraction_of_relative_delta_energy": 0.10882381525356503
+  },
+  {
+    "pass": 8,
+    "mean_letter_mass_base_edit": [
+      0.03284571851710158,
+      0.11623861225015318
+    ],
+    "relative_letter_offset_ABCD": [
+      -0.21685595703125002,
+      0.39483544921875025,
+      -0.3702997070312501,
+      0.19232021484374998
+    ],
+    "base_accuracy": 0.4609375,
+    "edited_accuracy": 0.4921875,
+    "base_plus_common_offset_accuracy": 0.4609375,
+    "edited_minus_common_offset_accuracy": 0.48046875,
+    "common_fraction_of_relative_delta_energy": 0.11650680757174474
+  },
+  {
+    "pass": 11,
+    "mean_letter_mass_base_edit": [
+      0.03284571851710157,
+      0.17067917091971258
+    ],
+    "relative_letter_offset_ABCD": [
+      -0.44976787109375005,
+      0.5148317382812501,
+      -0.4138795898437502,
+      0.34881572265625
+    ],
+    "base_accuracy": 0.4609375,
+    "edited_accuracy": 0.50390625,
+    "base_plus_common_offset_accuracy": 0.44921875,
+    "edited_minus_common_offset_accuracy": 0.4765625,
+    "common_fraction_of_relative_delta_energy": 0.15182854049399722
+  },
+  {
+    "pass": 13,
+    "mean_letter_mass_base_edit": [
+      0.03284571851710157,
+      0.1238630232109097
+    ],
+    "relative_letter_offset_ABCD": [
+      -0.2964793945312498,
+      0.45291162109375027,
+      -0.36312861328124996,
+      0.2066963867187499
+    ],
+    "base_accuracy": 0.4609375,
+    "edited_accuracy": 0.50390625,
+    "base_plus_common_offset_accuracy": 0.453125,
+    "edited_minus_common_offset_accuracy": 0.47265625,
+    "common_fraction_of_relative_delta_energy": 0.12546835349104832
+  },
+  {
+    "pass": 14,
+    "mean_letter_mass_base_edit": [
+      0.9998206479723108,
+      1.000001914117394
+    ],
+    "relative_letter_offset_ABCD": [
+      0.059127636718749974,
+      0.38829208984375024,
+      0.06376240234374994,
+      -0.5111821289062497
+    ],
+    "base_accuracy": 0.5625,
+    "edited_accuracy": 0.55859375,
+    "base_plus_common_offset_accuracy": 0.56640625,
+    "edited_minus_common_offset_accuracy": 0.55078125,
+    "common_fraction_of_relative_delta_energy": 0.025078894531403172
+  }
+]
+
+Forward passes used: 15/30. Sparse prefix half-dose score_15: BARE +0.39 +/-1.41 pp, margin +0.0162 +/-0.0567; full dose +4.30 pp/+0.1400 margin. Dose pattern nonlinear and uncertain.
+Experiment K: complete donor layer0 only, testing a simpler early source and avoiding unnecessary downstream interventions. Sparse full snapshot retained.
+
+Forward passes used: 16/30. Full L0 score_16: BARE +0.78 +/-0.96 pp, margin +0.0502 +/-0.0214; little beyond norm0, not selected.
+Experiment L: size-matched random-location control, 8 later layers [13, 15, 16, 18, 19, 25, 27, 30], complete attention plus256 random MLP units each and available donor norm changes. Same matrix slot count; norm differences can be zero in later layers.
+
+Forward passes used: 17/30. Random later-location control score_17: BARE +1.56 +/-0.95 pp, margin +0.0360 +/-0.0243. Selected early candidate +4.30 pp/+0.1400 margin but contrast not established on n256.
+Restored full-dose sparse early candidate. Next: 512 separate development questions (first512 development_check_ids) under both prompts. Sealed 1024 confirmation IDs remain unexamined.
+
+Forward passes used: 19/30. Independent development n512: score_18 BARE +1.95 +/-1.68 pp (42/32 flips), margin +0.1316 +/-0.0684; score_19 CHAT 0.00 +/-1.00 pp (13/13 flips), margin -0.3750 +/-0.1681. Not yet clear accuracy success.
+Experiment M: same early attention/norms, replace selected256 MLP units/layer with256 random nonselected units/layer, fixed seed622081.
+Conditional extraction diagnostic: {"True": {"n": 310, "rescues": 30, "losses": 17, "bare_accuracy_change_pp": 4.193548387096775}, "False": {"n": 202, "rescues": 12, "losses": 15, "bare_accuracy_change_pp": -1.4851485148514851}}
+
+```
+Continue from here.
+
+Last result:
+Forward pass 20 of 30 done (score); results in score_20.jsonl. Summary:
+```
+{
+ "ok": true,
+ "type": "score",
+ "model": "both",
+ "prompt": "bare",
+ "questions": 256,
+ "edited_tensors": [
+  "model.layers.0.input_layernorm.weight",
+  "model.layers.0.mlp.down_proj.weight",
+  "model.layers.0.mlp.gate_up_proj.weight",
+  "model.layers.0.post_attention_layernorm.weight",
+  "model.layers.0.self_attn.o_proj.weight",
+  "model.layers.0.self_attn.qkv_proj.weight",
+  "model.layers.1.input_layernorm.weight",
+  "model.layers.1.mlp.down_proj.weight",
+  "model.layers.1.mlp.gate_up_proj.weight",
+  "model.layers.1.post_attention_layernorm.weight",
+  "model.layers.1.self_attn.o_proj.weight",
+  "model.layers.1.self_attn.qkv_proj.weight",
+  "model.layers.2.input_layernorm.weight",
+  "model.layers.2.mlp.down_proj.weight",
+  "model.layers.2.mlp.gate_up_proj.weight",
+  "model.layers.2.post_attention_layernorm.weight",
+  "model.layers.2.self_attn.o_proj.weight",
+  "model.layers.2.self_attn.qkv_proj.weight",
+  "model.layers.3.input_layernorm.weight",
+  "model.layers.3.mlp.down_proj.weight",
+  "model.layers.3.mlp.gate_up_proj.weight",
+  "model.layers.3.post_attention_layernorm.weight",
+  "model.layers.3.self_attn.o_proj.weight",
+  "model.layers.3.self_attn.qkv_proj.weight",
+  "model.layers.4.input_layernorm.weight",
+  "model.layers.4.mlp.down_proj.weight",
+  "model.layers.4.mlp.gate_up_proj.weight",
+  "model.layers.4.post_attention_layernorm.weight",
+  "model.layers.4.self_attn.o_proj.weight",
+  "model.layers.4.self_attn.qkv_proj.weight",
+  "model.layers.5.input_layernorm.weight",
+  "model.layers.5.mlp.down_proj.weight",
+  "model.layers.5.mlp.gate_up_proj.weight",
+  "model.layers.5.post_attention_layernorm.weight",
+  "model.layers.5.self_attn.o_proj.weight",
+  "model.layers.5.self_attn.qkv_proj.weight",
+  "model.layers.6.mlp.down_proj.weight",
+  "model.layers.6.mlp.gate_up_proj.weight",
+  "model.layers.6.post_attention_layernorm.weight",
+  "model.layers.6.self_attn.o_proj.weight",
+  "model.layers.6.self_attn.qkv_proj.weight",
+  "model.layers.7.mlp.down_proj.weight",
+  "model.layers.7.mlp.gate_up_proj.weight",
+  "model.layers.7.post_attention_layernorm.weight",
+  "model.layers.7.self_attn.o_proj.weight",
+  "model.layers.7.self_attn.qkv_proj.weight"
+ ],
+ "original": {
+  "accuracy": 0.4609,
+  "mean_margin": -0.2875,
+  "predicted": {
+   "A": 98,
+   "B": 39,
+   "C": 74,
+   "D": 45
+  }
+ },
+ "edited": {
+  "accuracy": 0.4883,
+  "mean_margin": -0.1896,
+  "predicted": {
+   "A": 92,
+   "B": 48,
+   "C": 62,
+   "D": 54
+  }
+ },
+ "paired": {
+  "accuracy_difference": 0.0273,
+  "standard_error": 0.0224,
+  "wrong_to_right": 20,
+  "right_to_wrong": 13,
+  "sign_test_p": 0.2962,
+  "margin_difference": 0.0979,
+  "margin_difference_se": 0.1023
+ },
+ "s": 189
+}
+```
+Forward passes left: 10.

@@ -2,7 +2,7 @@
 
 This file covers part b of EXP-05 (activation patching and per-layer weight swapping). Part a (weight
 difference) is recorded in `vault/experiments/EXP-05 Medical circuit discovery and transfer.md` and has no
-handoff file yet. Part c (the Astra donor session `transfer1`) is still running and will be added when it ends.
+handoff file yet. Part c (the Astra donor session `transfer1`) is in `RESULTS_05c.md` in this folder.
 
 ## Experiment
 Filippos Bellos's main direction (2026-11-21): on MedQA questions the medical fine-tune answers correctly and the

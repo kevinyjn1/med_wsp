@@ -10,6 +10,7 @@ Usage:
     python -m wsp.viz_export mit8          # the Qwen3.5-0.8B edit of MIT experiment 8
     python -m wsp.viz_export weightdiff    # MediPhi minus Phi-3.5, per head and per neuron
     python -m wsp.viz_export exp06         # the single-unit edit Astra tested and rejected (EXP-06 run1)
+    python -m wsp.viz_export exp05c        # the donor transfer Astra built and withdrew (EXP-05c transfer1)
     python -m wsp.viz_export interventions looping   # EXP-05b patching and swaps, EXP-07 looping scan
 """
 
@@ -17,12 +18,16 @@ from __future__ import annotations
 
 import argparse
 import json
+from functools import partial
 from pathlib import Path
 
 import numpy as np
 
 REPO = Path(__file__).resolve().parents[1]
 DATA = REPO / "viz" / "public" / "data"
+
+
+MISSING = -1.0e30  # stored in float32 panels for cells that were not measured (NaN in the exporter's matrix)
 
 
 def write_panel(
@@ -38,10 +43,16 @@ def write_panel(
 
     Quantized panels store sign(x) * sqrt(|x| / vmax) in one byte: fine steps near zero, where most
     weights live, and no clipping of the largest ones. `colorMax` is where the color scale saturates.
+    NaN marks a cell that was not measured; the viewer draws it hatched and says so.
     """
     matrix = np.asarray(matrix, np.float32)
     rows, cols = matrix.shape
+    missing = np.isnan(matrix)
+    if missing.any():
+        assert not quantize, "cells that were not measured need a float32 panel"
+        matrix = np.where(missing, 0.0, matrix).astype(np.float32)
     vmax = float(np.abs(matrix).max()) or 1.0
+    matrix[missing] = MISSING
     file = f"{panel_id}.bin"
     if quantize:
         root = np.sign(matrix) * np.sqrt(np.abs(matrix) / vmax)
@@ -56,11 +67,49 @@ def write_panel(
     return {
         "file": file, "dtype": "uint8" if quantize else "float32", "encoding": "sqrt" if quantize else "linear",
         "rows": rows, "cols": cols, "signed": signed, "vmax": vmax, "colorMax": float(color_max or vmax),
+        **({"missing": MISSING} if missing.any() else {}),
     }  # fmt: skip
 
 
 def bands(count: int, size: int, prefix: str) -> list[dict]:
     return [{"start": i * size, "size": size, "label": f"{prefix}{i}"} for i in range(count)]
+
+
+def tile(folder: Path, panel_id: str, label: str, values, shape: tuple[int, int], *, signed: bool,
+         color_max: float | None = None, cell: int = 6, **extra) -> dict:  # fmt: skip
+    """A float32 panel from a flat list of values laid out row by row."""
+    spec = write_panel(folder, panel_id, np.asarray(values, np.float32).reshape(shape), signed=signed,
+                       quantize=False, color_max=color_max)  # fmt: skip
+    spec.update({"id": panel_id, "label": label, "cell": cell, **extra})
+    return spec
+
+
+def question_grid(folder: Path, key: str, title: str, rows: list[dict], shape: tuple[int, int]) -> tuple[list[dict], dict]:  # fmt: skip
+    """Three panels with one cell per question, sorted by the unedited model's margin: that margin, whether the
+    edit fixed or broke the question, and the change of the margin. `rows` hold `original` and `edited`, each with
+    `correct` and `margin`. Also returns the paired counts and the sorted arrays."""
+    rows = sorted(rows, key=lambda r: r["original"]["margin"])
+    before = np.array([r["original"]["correct"] for r in rows], bool)
+    after = np.array([r["edited"]["correct"] for r in rows], bool)
+    outcome = (after & ~before).astype(np.float32) - (before & ~after).astype(np.float32)
+    margin_before = np.array([r["original"]["margin"] for r in rows], np.float32)
+    change = np.array([r["edited"]["margin"] for r in rows], np.float32) - margin_before
+    fixed, broken, n = int((outcome > 0).sum()), int((outcome < 0).sum()), len(rows)
+    order = f"{title}, sorted by the unedited model's margin: most wrong first (top left) to most right (bottom right)"
+    panels = [
+        tile(folder, f"{key}_before", "Margin before the edit", margin_before, shape, signed=True,
+             color_max=float(np.percentile(np.abs(margin_before), 98)), cell=14, unit="margin",
+             note=order + ". Margin = log-probability of the correct letter minus the best wrong letter; positive = answered correctly"),
+        tile(folder, f"{key}_outcome", f"Outcome: {fixed} fixed, {broken} broken", outcome, shape, signed=True,
+             color_max=2.0, cell=14, unit="outcome", note=order),
+        tile(folder, f"{key}_change", "Change of the margin", change, shape, signed=True,
+             color_max=float(np.percentile(np.abs(change), 98)), cell=14, unit="margin change", note=order),
+    ]  # fmt: skip
+    return panels, {
+        "n": n, "fixed": fixed, "broken": broken, "before": float(before.mean()), "after": float(after.mean()),
+        "se": float(np.std(after.astype(float) - before.astype(float), ddof=1) / np.sqrt(n)),
+        "margin_before": margin_before, "change": change, "ids": [r["id"] for r in rows],
+    }  # fmt: skip
 
 
 # --------------------------------------------------------------------------------------------- MIT exp 3
@@ -547,11 +596,7 @@ def export_exp06(run: str = "run1") -> None:
     folder = DATA / f"exp06_edit_{run}"
     folder.mkdir(parents=True, exist_ok=True)
 
-    def tile(panel_id, label, vector, shape, *, signed, color_max=None, cell=6, **extra):
-        spec = write_panel(folder, panel_id, np.asarray(vector, np.float32).reshape(shape), signed=signed,
-                           quantize=False, color_max=color_max)  # fmt: skip
-        spec.update({"id": panel_id, "label": label, "cell": cell, **extra})
-        return spec
+    panel = partial(tile, folder)
 
     mask = np.zeros(base.shape[1], np.float32)
     mask[unit] = 1.0
@@ -571,80 +616,53 @@ def export_exp06(run: str = "run1") -> None:
     layers = [
         {"name": f"Layer {layer} MLP output (down_proj): 8,192 units", "stats": {"relative change": relative}, "groups": [
             {"name": "Location", "kind": "mlp", "panels": [
-                tile("mask", f"Edited unit: {unit}", mask, (64, 128), signed=False, unit="weight",
+                panel("mask", f"Edited unit: {unit}", mask, (64, 128), signed=False, unit="weight",
                      note=where + ". Bright = edited"),
-                tile("push", "Each unit's direct push on answer A", push, (64, 128), signed=True, unit="push",
+                panel("push", "Each unit's direct push on answer A", push, (64, 128), signed=True, unit="push",
                      color_max=2 * float(np.abs(push).max()),  # the one strong unit lands on the saturated hue, not on near-white
                      note=where + f". Mean over {len(activation)} discovery questions of the unit's activation times its "
                      f"direct effect on the logit of A minus the mean logit of A to D. Unit {unit}: {push[unit]:+.2f}; "
                      f"the next largest unit: {runner_up:.2f} in size. Descriptive, not a causal effect"),
             ]},
             {"name": f"Unit {unit}", "kind": "attention", "panels": [
-                tile("before", "Output direction before", base[:, unit], (48, 64), signed=True, color_max=saturate, cell=8,
+                panel("before", "Output direction before", base[:, unit], (48, 64), signed=True, color_max=saturate, cell=8,
                      unit="weight", note=direction + f". Norm {norms[unit]:.2f} (median over units {np.median(norms):.2f})"),
-                tile("kept", "Letter-readout part (kept)", kept_part, (48, 64), signed=True,
+                panel("kept", "Letter-readout part (kept)", kept_part, (48, 64), signed=True,
                      color_max=saturate, cell=8, unit="weight",
                      note=direction + f". Norm {np.linalg.norm(kept_part):.2f}; lies in the three directions that separate A, B, C, D at the output"),
-                tile("reversed", f"The rest (multiplied by {scale:g})", reversed_part, (48, 64), signed=True,
+                panel("reversed", f"The rest (multiplied by {scale:g})", reversed_part, (48, 64), signed=True,
                      color_max=saturate, cell=8, unit="weight",
                      note=direction + f". Norm {np.linalg.norm(reversed_part):.2f} before the edit; shown before the multiplication"),
-                tile("after", "Output direction after", edited[:, unit], (48, 64), signed=True, color_max=saturate, cell=8,
+                panel("after", "Output direction after", edited[:, unit], (48, 64), signed=True, color_max=saturate, cell=8,
                      unit="weight", note=direction + f". Norm {np.linalg.norm(edited[:, unit]):.2f} (was {norms[unit]:.2f})"),
             ]},
         ]},
     ]  # fmt: skip
 
     def scored(passes: list[int]) -> list[dict]:
-        rows = []
-        for k in passes:
-            rows += [
-                json.loads(line)
-                for line in (work / f"score_{k}.jsonl").read_text().split("\n")
-                if line.strip()
-            ]
-        return sorted(rows, key=lambda r: r["original"]["margin"])
+        return [json.loads(line) for k in passes
+                for line in (work / f"score_{k}.jsonl").read_text().split("\n") if line.strip()]  # fmt: skip
 
     facts, groups = [], []
     for key, short, title, passes, shape in (
         ("selection", "Selection", "512 questions used to choose the edit", [21, 22], (16, 32)),
         ("reserve", "Reserve", "256 untouched questions (reserve)", [26], (8, 32)),
-        (
-            "confirmation",
-            "Confirmation",
-            "1,024 untouched questions (final confirmation)",
-            [27, 28, 29, 30],
-            (32, 32),
-        ),
-    ):
-        rows = scored(passes)
-        before = np.array([r["original"]["correct"] for r in rows], bool)
-        after = np.array([r["edited"]["correct"] for r in rows], bool)
-        outcome = (after & ~before).astype(np.float32) - (before & ~after).astype(np.float32)
-        margin_before = np.array([r["original"]["margin"] for r in rows], np.float32)
-        change = np.array([r["edited"]["margin"] for r in rows], np.float32) - margin_before
-        fixed, broken, n = int((outcome > 0).sum()), int((outcome < 0).sum()), len(rows)
-        se = 100 * float(np.std(after.astype(float) - before.astype(float), ddof=1) / np.sqrt(n))
-        facts.append(f"{title}: {100 * before.mean():.2f} % to {100 * after.mean():.2f} % "
-                     f"({100 * (after.mean() - before.mean()):+.2f} points, standard error {se:.2f}; {fixed} fixed, {broken} broken).")  # fmt: skip
+        ("confirmation", "Confirmation", "1,024 untouched questions (final confirmation)", [27, 28, 29, 30], (32, 32)),
+    ):  # fmt: skip
+        panels, stats = question_grid(folder, key, title, scored(passes), shape)
+        facts.append(f"{title}: {100 * stats['before']:.2f} % to {100 * stats['after']:.2f} % "
+                     f"({100 * (stats['after'] - stats['before']):+.2f} points, standard error {100 * stats['se']:.2f}; "
+                     f"{stats['fixed']} fixed, {stats['broken']} broken).")  # fmt: skip
         if key == "confirmation":
+            margin_before, change = stats["margin_before"], stats["change"]
             right = margin_before > 0
             facts.append(
-                f"On those {n:,} questions the edit mostly sharpened the answer the model already gave: the margin of the "
+                f"On those {stats['n']:,} questions the edit mostly sharpened the answer the model already gave: the margin of the "
                 f"correct answer moved by {change[right].mean():+.2f} on average where the model was right and by "
                 f"{change[~right].mean():+.2f} where it was wrong (correlation with the margin before: "
                 f"{np.corrcoef(margin_before, change)[0, 1]:.2f})."
             )
-        order = f"{title}, sorted by the unedited model's margin: most wrong first (top left) to most right (bottom right)"
-        margin_max = float(np.percentile(np.abs(margin_before), 98))
-        groups.append({"name": short, "kind": "attention", "panels": [
-            tile(f"{key}_before", "Margin before the edit", margin_before, shape, signed=True,
-                 color_max=margin_max, cell=14, unit="margin",
-                 note=order + ". Margin = log-probability of the correct letter minus the best wrong letter; positive = answered correctly"),
-            tile(f"{key}_outcome", f"Outcome: {fixed} fixed, {broken} broken", outcome, shape, signed=True,
-                 color_max=2.0, cell=14, unit="outcome", note=order),
-            tile(f"{key}_change", "Change of the margin", change, shape, signed=True,
-                 color_max=float(np.percentile(np.abs(change), 98)), cell=14, unit="margin change", note=order),
-        ]})  # fmt: skip
+        groups.append({"name": short, "kind": "attention", "panels": panels})
     layers.append({"name": "What the edit did to each practice question", "groups": groups})
 
     final = json.loads((src / "final_eval.json").read_text())
@@ -674,6 +692,216 @@ def export_exp06(run: str = "run1") -> None:
         print("  -", fact)
 
 
+# ------------------------------------------------------------------- EXP-05c: the donor transfer session
+# Every transfer of donor weights that Astra scored, in the order it first tried them, with the forward passes
+# that scored it. Which tensors a pass touched is in the lab's record; which heads or units inside them is from
+# Astra's notes.
+EXP05C_TRIALS = (
+    ("Layer 11: the whole MLP", (4,)),
+    ("Layer 0: the norm before attention", (5,)),
+    ("Six attention heads in layers 7, 18 and 25", (7,)),
+    ("Layers 0-7: attention", (8,)),
+    ("Four norms in layers 0-2", (9,)),
+    ("12 early layers: MLP output weights", (10,)),
+    ("Layers 0-7: everything", (11, 21)),
+    ("Layers 0-7: MLP input weights", (12,)),
+    ("<b>Candidate</b>: layers 0-7, attention + 256 MLP units", (13, 14, 18, 19, 29, 30)),
+    ("Candidate at half strength", (15,)),
+    ("Layer 0: everything", (16,)),
+    ("Control: same size, in 8 later layers", (17, 24)),
+    ("Control: candidate with random MLP units", (20,)),
+    ("Candidate at 1.5 times strength", (22, 23)),
+)
+EXP05C_SETS = {  # Astra's question sets: short name, what the questions are, grid shape (rows x columns = size)
+    "explore": ("Exploration", "questions used to choose between transfers", (8, 32)),
+    "validation": (
+        "Validation",
+        "other development questions, first used after the candidate was built",
+        (16, 32),
+    ),
+    "confirmation": ("Confirmation", "questions kept untouched until the last two passes", (32, 32)),
+}
+PART_LABELS = {
+    "input_layernorm": "norm before attention", "self_attn.qkv_proj": "attention Q, K, V",
+    "self_attn.o_proj": "attention output", "post_attention_layernorm": "norm before the MLP",
+    "mlp.gate_up_proj": "MLP gate and up", "mlp.down_proj": "MLP down",
+}  # fmt: skip
+
+
+def export_exp05c(run: str = "transfer1", donor: str = "mediphi_instruct") -> None:
+    """The donor session (EXP-05c): every transfer Astra scored, the candidate's weights, and what the candidate
+    did to each practice question. Reads `processed/check_<run>.json` and `check_<run>_questions.jsonl`
+    (written by `experiments/exp_05_medical_circuit/check_session.py`)."""
+    src = REPO / "experiments" / "exp_05_medical_circuit"
+    check = json.loads((src / "processed" / f"check_{run}.json").read_text())
+    records, weights = check["records"], check["weights"]
+    per_pass: dict = {}
+    for row in map(json.loads, (src / "processed" / f"check_{run}_questions.jsonl").read_text().splitlines()):
+        per_pass.setdefault(row["pass"], []).append(row)
+    final = json.loads((src / "raw" / run / "final_eval.json").read_text())["by_prompt"]
+    name = MODEL_NAMES[donor]
+    folder = DATA / f"exp05c_transfer_{run}"
+    folder.mkdir(parents=True, exist_ok=True)
+    panel = partial(tile, folder)
+    scored = {p["pass"]: p for p in records["passes"] if "fixed" in p}
+    parts, n_layers = weights["parts"], len(weights["donor_relative_change"][0])
+    layer_labels = [str(i) for i in range(n_layers)]
+
+    # ---- 1. every transfer Astra scored: where it took donor weights, and what it did
+    columns = [(key, prompt) for key in EXP05C_SETS for prompt in ("bare", "chat")]
+    taken = np.zeros((len(EXP05C_TRIALS), n_layers), np.float32)
+    accuracy = np.full((len(EXP05C_TRIALS), len(columns)), np.nan, np.float32)
+    margin = np.full_like(accuracy, np.nan)
+    for t, (_, passes) in enumerate(EXP05C_TRIALS):
+        for tensor in scored[passes[0]]["edited_tensors"]:
+            taken[t, int(tensor.split(".")[2])] += 1
+        for k in passes:
+            cell = t, columns.index((scored[k]["question_set"], scored[k]["prompt"]))
+            accuracy[cell], margin[cell] = scored[k]["difference_points"], scored[k]["margin_change"]
+    trial_labels = [label for label, _ in EXP05C_TRIALS]
+    size = {key: shape[0] * shape[1] for key, (_, _, shape) in EXP05C_SETS.items()}
+    sets_text = "; ".join(f"{size[key]:,} = {text}" for key, (_, text, _) in EXP05C_SETS.items())
+    measured = {"cell": 30, "cellW": 84, "rowNames": trial_labels,
+                "colLabels": [f"{size[key]:,} {prompt}" for key, prompt in columns]}  # fmt: skip
+    board = [
+        panel("trials_taken", f"Where the weights are {name}'s (columns: layers)", taken, taken.shape, signed=False,
+              color_max=float(len(parts)), cell=30, unit="tensors", rowLabels=trial_labels, colLabels=layer_labels,
+              note="From the lab's record of each pass. A tensor counts when any part of it was changed: the candidate "
+                   "takes all attention weights but only 256 of 8,192 MLP units per layer"),
+        panel("trials_accuracy", "Change of accuracy (points)", accuracy, accuracy.shape, signed=True, unit="points",
+              note=f"Edited model minus unedited model on the same questions. Columns: {sets_text}. Hatched = not measured",
+              **measured),
+        panel("trials_margin", "Change of the correct answer's margin", margin, margin.shape, signed=True,
+              unit="margin change", note=f"Mean over the questions, log-probability units. Columns: {sets_text}", **measured),
+    ]  # fmt: skip
+
+    # ---- 2. the candidate's weights
+    by_name = {t["name"]: t for t in weights["tensors"]}
+    donor_change = np.array(weights["donor_relative_change"], np.float32)
+    applied = np.array([[by_name.get(f"model.layers.{layer}.{part}.weight", {}).get("relative_change", 0.0)
+                         for layer in range(n_layers)] for part in parts], np.float32)  # fmt: skip
+    matrices = [i for i, part in enumerate(parts) if "norm" not in part]
+    scale = float(donor_change[matrices].max())  # the norm vectors of layer 0 change far more than any matrix
+    grid = {"cell": 44, "unit": "relative change", "rowLabels": [PART_LABELS[part] for part in parts],
+            "colLabels": layer_labels, "ownRow": True}  # fmt: skip
+    maps = [
+        panel("donor_change", f"How much {name} differs from Phi-3.5", donor_change, donor_change.shape, signed=False,
+              color_max=scale, note="Norm of the difference divided by the norm of Phi-3.5's tensor; columns are layers. "
+              f"The color saturates at {100 * scale:.1f} %, the largest value of a weight matrix", **grid),
+        panel("candidate_change", "How much of that the candidate takes", applied, applied.shape, signed=False,
+              color_max=scale, note="Same measure and color scale for the candidate: equal to the panel above where a whole "
+              "tensor is taken, smaller where only 256 MLP units are, zero elsewhere", **grid),
+    ]  # fmt: skip
+    units = {int(layer): ids for layer, ids in weights["units"].items()}
+    masks = []
+    for layer, ids in sorted(units.items()):
+        mask = np.zeros(8192, np.float32)
+        mask[ids] = 1.0
+        masks.append(panel(f"units_L{layer}", f"Layer {layer}: {len(ids)} units", mask, (64, 128), signed=False, cell=4,
+                           unit="weight", note="8,192 MLP units drawn as 64 x 128: cell (r, c) is unit 128 r + c. Bright = "
+                           f"the unit's input and output weights are {name}'s"))  # fmt: skip
+
+    # ---- 3. what the candidate did to each practice question
+    candidate = dict(EXP05C_TRIALS)[next(label for label, _ in EXP05C_TRIALS if "Candidate</b>" in label)]
+    facts, groups, stats = [], [], {}
+    for key, (short, text, shape) in EXP05C_SETS.items():
+        for prompt in ("bare", "chat"):
+            k = next(
+                k for k in candidate if (scored[k]["question_set"], scored[k]["prompt"]) == (key, prompt)
+            )
+            assert len(per_pass[k]) == size[key], (k, key)
+            panels, stat = question_grid(
+                folder, f"{key}_{prompt}", f"{size[key]:,} {text}, {prompt} prompt", per_pass[k], shape
+            )
+            stats[key, prompt] = stat
+            if key == "confirmation":  # the donor itself on the same questions, in the same order
+                reference = {r["id"]: r[prompt] for r in per_pass["donor"]}
+                before = np.array(
+                    [
+                        row["original"]["correct"]
+                        for row in sorted(per_pass[k], key=lambda r: r["original"]["margin"])
+                    ]
+                )
+                whole = np.array([reference[i]["correct"] for i in stat["ids"]])
+                outcome = (whole & ~before).astype(np.float32) - (before & ~whole).astype(np.float32)
+                panels.append(panel(
+                    f"{key}_{prompt}_donor", f"With all of {name}: {int((outcome > 0).sum())} fixed, {int((outcome < 0).sum())} broken",
+                    outcome, shape, signed=True, color_max=2.0, cell=14, unit="outcome",
+                    note=f"{name} itself against the unedited Phi-3.5 on the same questions in the same order (EXP-04 results)"))  # fmt: skip
+            groups.append({"name": f"{short}, {prompt} prompt", "kind": "attention", "panels": panels})
+        bare, chat = stats[key, "bare"], stats[key, "chat"]
+        facts.append(
+            f"{short} ({bare['n']:,} questions): bare prompt {100 * bare['before']:.2f} % to {100 * bare['after']:.2f} % "
+            f"({100 * (bare['after'] - bare['before']):+.2f} points, standard error {100 * bare['se']:.2f}; {bare['fixed']} fixed, "
+            f"{bare['broken']} broken); chat prompt {100 * (chat['after'] - chat['before']):+.2f} points "
+            f"(standard error {100 * chat['se']:.2f}; {chat['fixed']} fixed, {chat['broken']} broken)."
+        )
+    # the bare-prompt outcome, with the questions ordered by how the unedited model does under the chat prompt
+    k_bare, k_chat = (next(k for k in candidate if (scored[k]["question_set"], scored[k]["prompt"]) == ("confirmation", prompt))
+                      for prompt in ("bare", "chat"))  # fmt: skip
+    chat_margin = {r["id"]: r["original"]["margin"] for r in per_pass[k_chat]}
+    ordered = sorted(per_pass[k_bare], key=lambda r: chat_margin[r["id"]])
+    outcome = np.array(
+        [float(r["edited"]["correct"]) - float(r["original"]["correct"]) for r in ordered], np.float32
+    )
+    keys = np.array([chat_margin[r["id"]] for r in ordered], np.float32)
+    order = ("the 1,024 confirmation questions, sorted by the unedited model's margin under the chat prompt: most wrong "
+             "first (top left) to most right (bottom right)")  # fmt: skip
+    groups.append({"name": "Confirmation: bare outcome by chat result", "kind": "attention", "panels": [
+        panel("cross_chat_margin", "Unedited model's margin, chat prompt", keys, (32, 32), signed=True,
+              color_max=float(np.percentile(np.abs(keys), 98)), cell=14, unit="margin", note=order),
+        panel("cross_bare_outcome", "Candidate's outcome, bare prompt", outcome, (32, 32), signed=True, color_max=2.0,
+              cell=14, unit="outcome", note=order),
+    ]})  # fmt: skip
+
+    split = records["bare_outcome_by_unedited_chat_result"]
+    reference = records["donor_on_confirmation"]
+    confirmation = stats["confirmation", "bare"]
+    manifest = {
+        "id": f"exp05c_transfer_{run}",
+        "title": f"Moving {name}'s MedQA advantage into Phi-3.5: the weight transfer Astra built and withdrew",
+        "subtitle": (f"EXP-05c {run}: {name}'s attention weights and 256 MLP units per layer in layers 0 to 7. On untouched "
+                     "questions the gain under the bare prompt was within noise, so Astra submitted no edit"),
+        "family": "Phi-3.5 vs MediPhi",
+        "maxRowWidth": 2400,
+        "facts": [
+            (f"Astra submitted no edit. MedQA test accuracy is {100 * final['bare']['original_accuracy']:.2f} % (bare prompt) and "
+             f"{100 * final['chat']['original_accuracy']:.2f} % (chat prompt) before and after ({final['bare']['n']:,} questions)."),
+            (f"The candidate takes {name}'s weights in layers {min(units)} to {max(units)}: all attention weights and norms, and "
+             f"256 of 8,192 MLP units per layer. That is {100 * weights['share_of_model_in_support']:.2f} % of the model's weights; "
+             f"{100 * weights['share_of_model_changed']:.2f} % actually differ from Phi-3.5's."),
+            *facts,
+            (f"For scale: {name} itself answers {100 * reference['bare']['correct'] / reference['bare']['n']:.2f} % of the "
+             f"confirmation questions under the bare prompt, so the candidate covers "
+             f"{100 * (confirmation['after'] - confirmation['before']) / (reference['bare']['correct'] / reference['bare']['n'] - confirmation['before']):.0f} % "
+             "of the distance, with a standard error about as large as the gain."),
+            (f"Where the gain sits: on the {split['True']['n']} confirmation questions the unedited model gets right under the "
+             f"chat prompt, the candidate's bare-prompt accuracy changes by {split['True']['difference_points']:+.2f} points "
+             f"({split['True']['fixed']} fixed, {split['True']['broken']} broken); on the other {split['False']['n']} by "
+             f"{split['False']['difference_points']:+.2f} points ({split['False']['fixed']} fixed, {split['False']['broken']} broken)."),
+            ("Astra's rule, written before the confirmation passes: keep the edit only if the bare-prompt gain exceeds 2 "
+             "standard errors and chat-prompt accuracy does not fall. Neither held, so it removed the edit."),
+        ],
+        "colorNote": ("Red = positive, blue = negative, hatched = not measured. Outcome panels: red = fixed by the edit, "
+                      "blue = broken, gray = same result. Margins are in log-probability units and saturate at the 98th "
+                      "percentile. Weight panels: brighter = larger share or larger change."),
+        "layers": [
+            {"name": "Every transfer Astra scored (rows, in the order it tried them)",
+             "groups": [{"name": "Transfers", "kind": "attention", "panels": board}]},
+            {"name": f"The candidate's weights: layers {min(units)} to {max(units)} of {n_layers}",
+             "stats": {"of the model in the transfer": weights["share_of_model_in_support"],
+                       "actually different": weights["share_of_model_changed"]},
+             "groups": [{"name": "All 32 layers (columns)", "kind": "attention", "panels": maps},
+                        {"name": "MLP units taken", "kind": "attention", "panels": masks}]},
+            {"name": "What the candidate did to each practice question", "groups": groups},
+        ],
+    }  # fmt: skip
+    (folder / "manifest.json").write_text(json.dumps(manifest))
+    print("wrote", folder, f"{sum(f.stat().st_size for f in folder.iterdir()) / 1e6:.2f} MB")
+    for fact in manifest["facts"]:
+        print("  -", fact)
+
+
 def write_index() -> None:
     entries = []
     for manifest_path in sorted(DATA.glob("*/manifest.json")):
@@ -684,19 +912,19 @@ def write_index() -> None:
 
 def main() -> None:
     parser = argparse.ArgumentParser()
-    parser.add_argument(
-        "what", nargs="+", choices=["mit3", "mit8", "weightdiff", "interventions", "looping", "exp06"]
-    )
+    exporters = {
+        "mit3": export_mit3,
+        "mit8": export_mit8,
+        "weightdiff": export_weightdiff,
+        "interventions": export_interventions,
+        "looping": export_looping,
+        "exp06": export_exp06,
+        "exp05c": export_exp05c,
+    }
+    parser.add_argument("what", nargs="+", choices=list(exporters))
     args = parser.parse_args()
     for what in args.what:
-        {
-            "mit3": export_mit3,
-            "mit8": export_mit8,
-            "weightdiff": export_weightdiff,
-            "interventions": export_interventions,
-            "looping": export_looping,
-            "exp06": export_exp06,
-        }[what]()
+        exporters[what]()
     write_index()
 
 

@@ -1,0 +1,128 @@
+OUTPUT of Python run 1 of at most 300:
+```
+Questions: 4272 development: 3248 sealed confirmation: 1024
+Prompt definitions:
+ The two evaluation prompts for one question. In both, the answer letter is read from the next-token
+logits at the end of the prompt.
+
+===== BARE prompt (primary measure; plain text, no chat template) =====
+Question: A 21-year-old sexually active male complains of fever, pain during urination, and inflammation and pain in the right knee. A culture of the joint fluid shows a bacteria that does not ferment maltose and has no polysaccharide capsule. The physician orders antibiotic therapy for the patient. The mechanism of action of action of the medication given blocks cell wall synthesis, which of the following was given?
+A. Gentamicin
+B. Ciprofloxacin
+C. Ceftriaxone
+D. Trimethoprim
+Answer:
+
+===== CHAT prompt (must not get worse) =====
+<|user|>
+The following is a multiple choice question about medical knowledge. Answer with the letter of the correct option only.
+
+A 21-year-old sexually active male complains of fever, pain during urination, and inflammation and pain in the right knee. A culture of the joint fluid shows a bacteria that does not ferment maltose and has no polysaccharide capsule. The physician orders antibiotic therapy for the patient. The mechanism of action of action of the medication given blocks cell wall synthesis, which of the following was given?
+
+A. Gentamicin
+B. Ciprofloxacin
+C. Ceftriaxone
+D. Trimethoprim
+
+Answer:<|end|>
+<|assistant|>
+
+
+Development summaries: {
+  "base_bare": {
+    "accuracy_pct": 47.66,
+    "predicted_ABCD_pct": [
+      39.19,
+      15.27,
+      25.28,
+      20.26
+    ],
+    "letter_mass_mean": 0.040254,
+    "letter_mass_quantiles": [
+      0.000274,
+      0.003393,
+      0.09865
+    ]
+  },
+  "donor_bare": {
+    "accuracy_pct": 54.033,
+    "predicted_ABCD_pct": [
+      31.68,
+      18.23,
+      22.29,
+      27.8
+    ],
+    "letter_mass_mean": 0.410643,
+    "letter_mass_quantiles": [
+      0.069441,
+      0.370375,
+      0.82687
+    ]
+  },
+  "base_chat": {
+    "accuracy_pct": 59.39,
+    "predicted_ABCD_pct": [
+      17.24,
+      27.96,
+      26.79,
+      28.02
+    ],
+    "letter_mass_mean": 0.999503,
+    "letter_mass_quantiles": [
+      1.0,
+      1.0,
+      1.0
+    ]
+  },
+  "donor_chat": {
+    "accuracy_pct": 57.143,
+    "predicted_ABCD_pct": [
+      20.07,
+      28.88,
+      27.03,
+      24.01
+    ],
+    "letter_mass_mean": 0.999753,
+    "letter_mass_quantiles": [
+      0.999931,
+      0.999995,
+      1.0
+    ]
+  }
+}
+Correct-answer ABCD percentages: [24.91, 25.4, 25.68, 24.01]
+Error overlap and descriptive format-offset diagnostic: {
+  "bare": {
+    "donor_only_correct": 475,
+    "base_only_correct": 268,
+    "both_correct": 1280,
+    "neither_correct": 1225,
+    "mean_relative_logprob_shift_ABCD": [
+      -0.6154,
+      0.5757,
+      -0.4152,
+      0.4548
+    ],
+    "base_plus_label_free_mean_shift_acc_pct": 49.507,
+    "donor_minus_mean_shift_acc_pct": 50.0,
+    "constant_shift_fraction_of_squared_relative_delta": 0.1373
+  },
+  "chat": {
+    "donor_only_correct": 152,
+    "base_only_correct": 225,
+    "both_correct": 1704,
+    "neither_correct": 1167,
+    "mean_relative_logprob_shift_ABCD": [
+      1.5231,
+      -0.351,
+      -0.96,
+      -0.2121
+    ],
+    "base_plus_label_free_mean_shift_acc_pct": 59.113,
+    "donor_minus_mean_shift_acc_pct": 55.603,
+    "constant_shift_fraction_of_squared_relative_delta": 0.0199
+  }
+}
+Existing edits: []
+
+```
