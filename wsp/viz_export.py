@@ -9,6 +9,8 @@ Usage:
     python -m wsp.viz_export mit3          # the three character-level networks of MIT experiment 3
     python -m wsp.viz_export mit8          # the Qwen3.5-0.8B edit of MIT experiment 8
     python -m wsp.viz_export weightdiff    # MediPhi minus Phi-3.5, per head and per neuron
+    python -m wsp.viz_export exp06         # the single-unit edit Astra tested and rejected (EXP-06 run1)
+    python -m wsp.viz_export interventions looping   # EXP-05b patching and swaps, EXP-07 looping scan
 """
 
 from __future__ import annotations
@@ -324,11 +326,12 @@ def export_weightdiff() -> None:
 
 
 # ------------------------------------------------------------------------------- interventions and looping
-def export_interventions(donor: str = "mediphi") -> None:
+def export_interventions(donor: str = "mediphi_instruct", style: str = "bare") -> None:
     """Activation patching and weight swapping (EXP-05b): mean change of the gold-answer margin, per layer."""
-    src = REPO / "experiments" / "exp_05_medical_circuit" / "processed" / f"patch_{donor}"
+    suffix = "_bare" if style == "bare" else ""
+    src = REPO / "experiments" / "exp_05_medical_circuit" / "processed" / f"patch_{donor}{suffix}"
     sets, components = ("gain", "loss", "both"), ("attn", "mlp", "resid")
-    folder = DATA / f"interventions_{donor}_phi"
+    folder = DATA / f"interventions_{donor}{suffix}_phi"
     folder.mkdir(parents=True, exist_ok=True)
     panels, facts = [], []
     rows = (
@@ -388,8 +391,8 @@ def export_interventions(donor: str = "mediphi") -> None:
         print("no intervention results yet")
         return
     manifest = {
-        "id": f"interventions_{donor}_phi", "title": f"Which layers carry the difference between Phi-3.5 and {donor}?",
-        "subtitle": "MedQA: change of the gold-answer margin under activation patching and weight swapping, by layer",
+        "id": f"interventions_{donor}{suffix}_phi", "title": f"Which layers carry the difference between Phi-3.5 and {donor}?",
+        "subtitle": f"MedQA, {style} prompt: change of the gold-answer margin under activation patching and weight swapping, by layer",
         "family": "Phi-3.5 vs MediPhi", "maxRowWidth": 2600,
         "facts": [*facts, "gain = donor right, base wrong; loss = base right, donor wrong; both = both right (60 questions each from the discovery pool)."],
         "colorNote": "Signed change of the margin in log-probability units: red raises the gold answer, blue lowers it. Each panel has its own scale.",
@@ -450,6 +453,156 @@ def export_looping(tag: str = "phi_dev_600") -> None:
     print("wrote", folder)
 
 
+# ------------------------------------------------------------------- EXP-06: failure-guided editing
+def export_exp06(run: str = "run1") -> None:
+    """The one-unit edit Astra locked and then rejected: where it sits, what it does to the unit's output
+    direction, and what it did to each practice question (the questions used to choose it vs untouched ones)."""
+    from wsp.checkpoints import Checkpoint
+
+    src = REPO / "experiments" / "exp_06_failure_guided_editing" / "raw" / run
+    work = src / "work"
+    lock = json.loads((work / "candidate_lock.json").read_text())
+    name, unit = lock["tensor"], int(lock["column"])
+    layer = int(name.split("layers.")[1].split(".")[0])
+    base = Checkpoint("phi").f32(name)
+    edited = np.load(work / f"locked_l{layer}_orth_minus{-int(lock['orthogonal_scale'])}" / f"{name}.npy")
+    changed = np.flatnonzero(np.abs(edited - base).max(axis=0) > 0)
+    assert changed.tolist() == [unit], changed
+    scale = float(lock["orthogonal_scale"])
+    # edited = kept + scale * reversed, base = kept + reversed
+    reversed_part = (base[:, unit] - edited[:, unit]) / (1.0 - scale)
+    kept_part = base[:, unit] - reversed_part
+    relative = float(np.linalg.norm(edited - base) / np.linalg.norm(base))
+    folder = DATA / f"exp06_edit_{run}"
+    folder.mkdir(parents=True, exist_ok=True)
+
+    def tile(panel_id, label, vector, shape, *, signed, color_max=None, cell=6, **extra):
+        spec = write_panel(folder, panel_id, np.asarray(vector, np.float32).reshape(shape), signed=signed,
+                           quantize=False, color_max=color_max)  # fmt: skip
+        spec.update({"id": panel_id, "label": label, "cell": cell, **extra})
+        return spec
+
+    mask = np.zeros(base.shape[1], np.float32)
+    mask[unit] = 1.0
+    norms = np.linalg.norm(base, axis=0)
+    # Astra's reason for picking the unit: each unit's mean direct contribution to (logit of A minus the mean
+    # logit of A-D) at the answer position, on the 128 discovery questions of forward pass 1. The readout is the
+    # output layer's rows for the tokens "_A".."_D" (319, 350, 315, 360) times the final norm's weight.
+    checkpoint = Checkpoint("phi")
+    readout = checkpoint.f32("lm_head.weight")[[319, 350, 315, 360]] * checkpoint.f32("model.norm.weight")
+    toward_a = (readout[0] - readout.mean(axis=0)) @ base
+    activation = np.load(work / "fwd_1" / f"mlp_act_{layer}.npy").astype(np.float32)
+    push = activation.mean(axis=0) * toward_a
+    runner_up = float(np.sort(np.abs(push))[-2])
+    where = f"8,192 units drawn as 64 x 128: cell (r, c) is unit 128 r + c. Unit {unit} is row {unit // 128}, column {unit % 128}"
+    saturate = float(np.percentile(np.abs(edited[:, unit]), 99.5))
+    direction = "3,072 residual-stream dimensions drawn as 48 x 64: cell (r, c) is dimension 64 r + c"
+    layers = [
+        {"name": f"Layer {layer} MLP output (down_proj): 8,192 units", "stats": {"relative change": relative}, "groups": [
+            {"name": "Location", "kind": "mlp", "panels": [
+                tile("mask", f"Edited unit: {unit}", mask, (64, 128), signed=False, unit="weight",
+                     note=where + ". Bright = edited"),
+                tile("push", "Each unit's direct push on answer A", push, (64, 128), signed=True, unit="push",
+                     color_max=2 * float(np.abs(push).max()),  # the one strong unit lands on the saturated hue, not on near-white
+                     note=where + f". Mean over {len(activation)} discovery questions of the unit's activation times its "
+                     f"direct effect on the logit of A minus the mean logit of A to D. Unit {unit}: {push[unit]:+.2f}; "
+                     f"the next largest unit: {runner_up:.2f} in size. Descriptive, not a causal effect"),
+            ]},
+            {"name": f"Unit {unit}", "kind": "attention", "panels": [
+                tile("before", "Output direction before", base[:, unit], (48, 64), signed=True, color_max=saturate, cell=8,
+                     unit="weight", note=direction + f". Norm {norms[unit]:.2f} (median over units {np.median(norms):.2f})"),
+                tile("kept", "Letter-readout part (kept)", kept_part, (48, 64), signed=True,
+                     color_max=saturate, cell=8, unit="weight",
+                     note=direction + f". Norm {np.linalg.norm(kept_part):.2f}; lies in the three directions that separate A, B, C, D at the output"),
+                tile("reversed", f"The rest (multiplied by {scale:g})", reversed_part, (48, 64), signed=True,
+                     color_max=saturate, cell=8, unit="weight",
+                     note=direction + f". Norm {np.linalg.norm(reversed_part):.2f} before the edit; shown before the multiplication"),
+                tile("after", "Output direction after", edited[:, unit], (48, 64), signed=True, color_max=saturate, cell=8,
+                     unit="weight", note=direction + f". Norm {np.linalg.norm(edited[:, unit]):.2f} (was {norms[unit]:.2f})"),
+            ]},
+        ]},
+    ]  # fmt: skip
+
+    def scored(passes: list[int]) -> list[dict]:
+        rows = []
+        for k in passes:
+            rows += [
+                json.loads(line)
+                for line in (work / f"score_{k}.jsonl").read_text().split("\n")
+                if line.strip()
+            ]
+        return sorted(rows, key=lambda r: r["original"]["margin"])
+
+    facts, groups = [], []
+    for key, short, title, passes, shape in (
+        ("selection", "Selection", "512 questions used to choose the edit", [21, 22], (16, 32)),
+        ("reserve", "Reserve", "256 untouched questions (reserve)", [26], (8, 32)),
+        (
+            "confirmation",
+            "Confirmation",
+            "1,024 untouched questions (final confirmation)",
+            [27, 28, 29, 30],
+            (32, 32),
+        ),
+    ):
+        rows = scored(passes)
+        before = np.array([r["original"]["correct"] for r in rows], bool)
+        after = np.array([r["edited"]["correct"] for r in rows], bool)
+        outcome = (after & ~before).astype(np.float32) - (before & ~after).astype(np.float32)
+        margin_before = np.array([r["original"]["margin"] for r in rows], np.float32)
+        change = np.array([r["edited"]["margin"] for r in rows], np.float32) - margin_before
+        fixed, broken, n = int((outcome > 0).sum()), int((outcome < 0).sum()), len(rows)
+        se = 100 * float(np.std(after.astype(float) - before.astype(float), ddof=1) / np.sqrt(n))
+        facts.append(f"{title}: {100 * before.mean():.2f} % to {100 * after.mean():.2f} % "
+                     f"({100 * (after.mean() - before.mean()):+.2f} points, standard error {se:.2f}; {fixed} fixed, {broken} broken).")  # fmt: skip
+        if key == "confirmation":
+            right = margin_before > 0
+            facts.append(
+                f"On those {n:,} questions the edit mostly sharpened the answer the model already gave: the margin of the "
+                f"correct answer moved by {change[right].mean():+.2f} on average where the model was right and by "
+                f"{change[~right].mean():+.2f} where it was wrong (correlation with the margin before: "
+                f"{np.corrcoef(margin_before, change)[0, 1]:.2f})."
+            )
+        order = f"{title}, sorted by the unedited model's margin: most wrong first (top left) to most right (bottom right)"
+        margin_max = float(np.percentile(np.abs(margin_before), 98))
+        groups.append({"name": short, "kind": "attention", "panels": [
+            tile(f"{key}_before", "Margin before the edit", margin_before, shape, signed=True,
+                 color_max=margin_max, cell=14, unit="margin",
+                 note=order + ". Margin = log-probability of the correct letter minus the best wrong letter; positive = answered correctly"),
+            tile(f"{key}_outcome", f"Outcome: {fixed} fixed, {broken} broken", outcome, shape, signed=True,
+                 color_max=2.0, cell=14, unit="outcome", note=order),
+            tile(f"{key}_change", "Change of the margin", change, shape, signed=True,
+                 color_max=float(np.percentile(np.abs(change), 98)), cell=14, unit="margin change", note=order),
+        ]})  # fmt: skip
+    layers.append({"name": "What the edit did to each practice question", "groups": groups})
+
+    final = json.loads((src / "final_eval.json").read_text())
+    manifest = {
+        "id": f"exp06_edit_{run}",
+        "title": "Failure-guided editing of Phi-3.5: the one unit Astra tried to change",
+        "subtitle": f"EXP-06 {run}: layer {layer}, MLP unit {unit}. It helped on the questions used to choose it and did not hold on untouched ones",
+        "family": "Failure-guided weight editing",
+        "maxRowWidth": 2400,
+        "facts": [
+            f"Astra submitted no edit. MedQA test accuracy is {100 * final['original_accuracy']:.2f} % before and after ({final['n']:,} questions).",
+            (f"The candidate changes one of 8,192 output directions in one matrix ({100 * relative:.2f} % of that matrix's norm): "
+             f"the part outside the answer-letter readout is multiplied by {scale:g}."),
+            (f"Why this unit: the unedited model answers A too rarely, and on {len(activation)} questions this unit's direct push on "
+             f"A was {push[unit]:+.1f}, against at most {runner_up:.1f} in size for any other unit of the layer."),
+            *facts,
+            ("Astra's rule, written before it looked at the confirmation questions: keep the edit only if the gain there "
+             "is more than 2 standard errors and the sign test gives p < 0.05. Not met, so it restored the original weights."),
+        ],
+        "colorNote": "Red = positive, blue = negative. Weights of the unit share one scale. Outcome: red = fixed by the edit, "
+        "blue = broken, gray = same result. Margins are in log-probability units and saturate at the 98th percentile.",
+        "layers": layers,
+    }  # fmt: skip
+    (folder / "manifest.json").write_text(json.dumps(manifest))
+    print("wrote", folder, f"{sum(f.stat().st_size for f in folder.iterdir()) / 1e6:.2f} MB")
+    for fact in manifest["facts"]:
+        print("  -", fact)
+
+
 def write_index() -> None:
     entries = []
     for manifest_path in sorted(DATA.glob("*/manifest.json")):
@@ -460,7 +613,9 @@ def write_index() -> None:
 
 def main() -> None:
     parser = argparse.ArgumentParser()
-    parser.add_argument("what", nargs="+", choices=["mit3", "mit8", "weightdiff", "interventions", "looping"])
+    parser.add_argument(
+        "what", nargs="+", choices=["mit3", "mit8", "weightdiff", "interventions", "looping", "exp06"]
+    )
     args = parser.parse_args()
     for what in args.what:
         {
@@ -469,6 +624,7 @@ def main() -> None:
             "weightdiff": export_weightdiff,
             "interventions": export_interventions,
             "looping": export_looping,
+            "exp06": export_exp06,
         }[what]()
     write_index()
 

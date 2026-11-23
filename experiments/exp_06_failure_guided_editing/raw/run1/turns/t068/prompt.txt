@@ -1,0 +1,13 @@
+OUTPUT of Python run 35 of at most 300:
+```
+Traceback (most recent call last):
+  File "<string>", line 10, in <module>
+  File "<home>/.local/share/uv/python/cpython-3.12-macos-aarch64-none/lib/python3.12/ast.py", line 52, in parse
+    return compile(source, filename, mode, flags,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<block>", line 48
+    "Letter-shift diagnostic: "+json.dumps(bias_diagnostic)+"\"+
+                                                            ^
+SyntaxError: unterminated string literal (detected at line 48)
+
+```

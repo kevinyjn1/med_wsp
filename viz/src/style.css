@@ -92,4 +92,5 @@ input[type="range"] { width: 100%; accent-color: #3987e5; margin: 0; }
 #tooltip dd { margin: 0; text-align: right; font-variant-numeric: tabular-nums; }
 #tooltip .t-note { margin-top: 6px; color: var(--muted); font-size: 12px; }
 #loading { position: absolute; inset: 0; display: grid; place-items: center; color: var(--muted); background: var(--plane); }
-#loading[hidden] { display: none; }
+/* The hidden attribute must win over any display rule (the dim-marks checkbox is a flex label). */
+[hidden] { display: none !important; }

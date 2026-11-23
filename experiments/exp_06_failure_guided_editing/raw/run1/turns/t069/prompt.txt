@@ -1,0 +1,36 @@
+OUTPUT of Python run 36 of at most 300:
+```
+FINAL CONFIRMATION: {
+  "n": 1024,
+  "original": 0.5751953125,
+  "edited": 0.58203125,
+  "delta_pp": 0.68359375,
+  "se_pp": 0.5435726594977272,
+  "wr": 19,
+  "rw": 12,
+  "margin": 0.3216705331578851,
+  "margin_se": 0.16198768042904538,
+  "sign_test_p": 0.28104151505976915,
+  "approx_95ci_pp": [
+    -0.38180866261554525,
+    1.7489961626155452
+  ]
+}
+All independent questions: {'n': 1280, 'original': 0.58203125, 'edited': 0.5859375, 'delta_pp': 0.390625, 'se_pp': 0.4622453546254952, 'wr': 20, 'rw': 15, 'margin': 0.3568359392462298, 'margin_se': 0.1429108247728473}
+LETTER-SHIFT DIAGNOSTIC: {
+  "development_fixed_shift_ABCD": [
+    1.974060595703126,
+    -0.8054511230468746,
+    -0.7773452636718755,
+    -0.39126420898437525
+  ],
+  "observed_final_delta_pp": 0.68359375,
+  "constant_shift_only_delta_pp": 0.29296875,
+  "edited_minus_constant_shift_delta_pp": 0.0,
+  "caution": "Descriptive score decomposition, not additive causal attribution or a new model evaluation."
+}
+By true answer: [('A', {'n': 282, 'original': 0.4787234042553192, 'edited': 0.5106382978723404, 'delta_pp': 3.1914893617021276, 'se_pp': 1.0485769577792585, 'wr': 9, 'rw': 0, 'margin': 0.6900487600277502, 'margin_se': 0.23409227266106059}), ('B', {'n': 248, 'original': 0.6411290322580645, 'edited': 0.657258064516129, 'delta_pp': 1.6129032258064515, 'se_pp': 0.9843595238976764, 'wr': 5, 'rw': 1, 'margin': 0.8233996975806451, 'margin_se': 0.3512215421886798}), ('C', {'n': 270, 'original': 0.5925925925925926, 'edited': 0.5592592592592592, 'delta_pp': -3.3333333333333335, 'se_pp': 1.2137629226204922, 'wr': 1, 'rw': 10, 'margin': -0.6998842573828168, 'margin_se': 0.31540630581068957}), ('D', {'n': 224, 'original': 0.6026785714285714, 'edited': 0.6160714285714286, 'delta_pp': 1.3392857142857142, 'se_pp': 0.9964524506976369, 'wr': 4, 'rw': 1, 'margin': 0.53376116124647, 'margin_se': 0.39947094123389354})]
+SUBMITTED EDITS: []
+FILES IN SUBMISSION DIRECTORY: []
+
+```

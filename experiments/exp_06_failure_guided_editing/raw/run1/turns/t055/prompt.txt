@@ -1,0 +1,11 @@
+OUTPUT of Python run 29 of at most 300:
+```
+Opposite-direction control: {'n': 128, 'original': 0.578125, 'edited': 0.5859375, 'delta_pp': 0.78125, 'se_pp': 1.356711658065162, 'wr': 2, 'rw': 1, 'margin': -1.0527343763969839, 'margin_se': 0.3393632604698666}
+Restored locked scale=-3: 0.046667203307151794
+Letter token IDs: {'A': {'bare': [319], 'space': [29871, 319]}, 'B': {'bare': [350], 'space': [29871, 350]}, 'C': {'bare': [315], 'space': [29871, 315]}, 'D': {'bare': [360], 'space': [29871, 360]}}
+Traceback (most recent call last):
+  File "<string>", line 12, in <module>
+  File "<block>", line 19, in <module>
+AssertionError
+
+```

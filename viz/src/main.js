@@ -495,9 +495,19 @@ function bandLabel(bands, index) {
   return band ? band.label : null;
 }
 
+const UNIT_LABEL = {
+  "relative change": "Relative change",
+  "margin change": "Margin change",
+  margin: "Margin",
+  push: "Push on A (logits)",
+  points: "Accuracy change",
+  outcome: "Outcome",
+};
+
 function formatValue(value, unit) {
   if (unit === "relative change") return `${(100 * value).toFixed(2)} %`;
-  if (unit === "margin change") return `${value >= 0 ? "+" : ""}${value.toFixed(3)}`;
+  if (unit === "margin change" || unit === "margin" || unit === "push") return `${value >= 0 ? "+" : ""}${value.toFixed(3)}`;
+  if (unit === "outcome") return value > 0 ? "fixed (wrong to right)" : value < 0 ? "broken (right to wrong)" : "same result as before";
   if (unit === "points") return `${value >= 0 ? "+" : ""}${value.toFixed(2)} points`;
   const abs = Math.abs(value);
   return abs !== 0 && abs < 0.001 ? value.toExponential(2) : value.toFixed(4);
@@ -541,8 +551,7 @@ function onMove(event) {
   const lines = [
     ["Row", `${row}${rowBand ? ` (${rowBand})` : ""}`],
     ["Column", `${col}${colBand ? ` (${colBand})` : ""}`],
-    [{ "relative change": "Relative change", "margin change": "Margin change", points: "Accuracy change" }[panel.unit] ?? "Value",
-      formatValue(value, panel.unit)],
+    [UNIT_LABEL[panel.unit] ?? "Value", formatValue(value, panel.unit)],
   ];
   if (!panel.unit || panel.unit === "weight") {
     lines.push(["Largest in matrix", `±${panel.vmax.toFixed(4)}`]);

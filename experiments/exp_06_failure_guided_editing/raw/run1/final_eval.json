@@ -1,0 +1,25 @@
+{
+ "n": 1273,
+ "original_accuracy": 0.5718774548311076,
+ "edited_accuracy": 0.5718774548311076,
+ "accuracy_difference": 0.0,
+ "wrong_to_right": 0,
+ "right_to_wrong": 0,
+ "sign_test_p": 1.0,
+ "margin_difference": 0.0,
+ "margin_difference_se": 0.0,
+ "predicted_original": {
+  "A": 252,
+  "B": 324,
+  "C": 364,
+  "D": 333
+ },
+ "predicted_edited": {
+  "A": 252,
+  "B": 324,
+  "C": 364,
+  "D": 333
+ },
+ "edited_tensors": [],
+ "edited_dir_exists": true
+}

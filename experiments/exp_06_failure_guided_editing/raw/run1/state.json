@@ -1,17 +1,17 @@
 {
  "thread_id": "01a20581-41f7-7881-a1bf-840acbd65d6b",
- "turn": 48,
+ "turn": 69,
  "runs": {
-  "python": 26,
-  "forward": 21
+  "python": 36,
+  "forward": 31
  },
  "nudges": 0,
- "done": false,
- "next_message": "The forward pass failed and was not counted: WorkerError: the model process ended without a result (  warnings.warn('resource_tracker: There appear to be %d ')",
+ "done": true,
+ "next_message": null,
  "failures": 1,
- "wall_s": 1880.3,
+ "wall_s": 2482.9,
  "handoffs": 1,
- "turns_in_thread": 8,
+ "turns_in_thread": 29,
  "unexplained": 0,
  "notices_delivered": [
   "001_tool_corrections.txt"

@@ -31,7 +31,8 @@ package = false
 
 [tool.ruff]
 line-length = 110
-extend-exclude = ["external", ".claude", "paper/vendor"]
+# experiments/*/raw holds run logs (Astra's replies contain Python blocks); they are records and must never be reformatted.
+extend-exclude = ["external", ".claude", "paper/vendor", "experiments/*/raw"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

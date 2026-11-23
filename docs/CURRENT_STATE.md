@@ -1,6 +1,6 @@
 # Current State
 
-Checkpoint written 2026-11-22 21:55 (session 01, still in progress). Detailed log: `vault/sessions/2026-11-21 Session 01.md`.
+Checkpoint written 2026-11-22 23:45 (session 01, still in progress). Detailed log: `vault/sessions/2026-11-21 Session 01.md`.
 
 ## Objective
 
@@ -23,6 +23,11 @@ Checkpoint written 2026-11-22 21:55 (session 01, still in progress). Detailed lo
   directly instead of reasoning). No protocol shows a MedQA advantage for the medical models.
 - EXP-04c: the paper's MedQA numbers reproduce in the bare lm-evaluation-harness format (0.4855 / 0.4808 / 0.5460
   vs 0.486 / 0.491 / 0.548); the MediPhi-Instruct gain exists only there.
+- EXP-04c, practice pool (dev + first 3,000 training questions, bare prompt): Phi-3.5 0.4846, MediPhi-Instruct
+  0.5421 (+5.76 points, SE 0.74; 632 questions only the donor gets, 386 only Phi-3.5 gets).
+- EXP-06 `run1` (failure-guided editing, no donor, 30 passes): Astra kept no edit; test accuracy unchanged at
+  0.5719. Best candidate (layer 26 MLP unit 4131): +1.95 points on its 512 selection questions, +0.68 (SE 0.54) on
+  1,024 untouched ones (`experiments/exp_06_failure_guided_editing/RESULTS.md`).
 - EXP-05a: MediPhi - Phi-3.5 is a small (1.57 % relative norm), dense, high-rank change spread over every
   attention and MLP matrix; MediPhi is a `breadcrumbs_ties` merge of five experts.
 
@@ -45,9 +50,9 @@ None of the above has been reviewed by the researcher; nothing is in `research/0
 
 ## Verification
 
-- `ruff check wsp experiments tests` clean; `pytest tests` 16 passed.
+- `ruff check wsp experiments tests` clean; `pytest tests` 23 passed.
 - `python tests/integration_lab.py <scratch>` passes on the real Phi-3.5 weights.
-- Viewer builds (`npm run build --prefix viz`) and was checked in the browser for all five datasets.
+- Viewer builds (`npm run build --prefix viz`) and was checked in the browser for all six datasets.
 
 ## Open Issues
 
@@ -59,11 +64,11 @@ None of the above has been reviewed by the researcher; nothing is in `research/0
 
 ## Next
 
-1. Collect: bare baselines (`logs/exp04_bare.log`), EXP-06 `run1`, EXP-05c `transfer1`
-   (`experiments/exp_05_medical_circuit/raw/transfer1/`), weight swaps and patching
-   (`processed/patch_mediphi_instruct_bare/`), looping scan, Qwen behaviour check.
-2. Write `RESULTS.md` for EXP-05, 06, 07 and EXP-03b; export interventions and looping to the viewer
-   (`python -m wsp.viz_export interventions looping`; the interventions export still points at `patch_mediphi`).
+1. Collect: EXP-05c `transfer1` (`experiments/exp_05_medical_circuit/raw/transfer1/`, started 23:31), and the
+   sweep queue `bash scripts/queue_sweeps.sh` (started 23:36): weight swaps and patching
+   (`processed/patch_mediphi_instruct_bare/`), looping scan, chat-template control, Qwen behaviour check.
+2. Write `RESULTS.md` for EXP-05, 07 and EXP-03b; export interventions and looping to the viewer
+   (`python -m wsp.viz_export interventions looping`).
 3. Restart EXP-03c with the smaller passes when the GPU is free; EXP-02 once Gemma access exists.
 
 ## Resume

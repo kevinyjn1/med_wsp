@@ -88,6 +88,18 @@ as plain text with no chat template and no BOS token, answer = the most likely o
   with 0.170 of the probability on the letters. The two medical models in that variant are queued.
 - `run.py --style bare` (our own scorer with the same prompt) gives Phi-3.5 0.487 on test; it batches differently
   from `run_lmeval_style.py`, and two near-tie questions flip.
+- Bare prompt on the other splits (`run.py --style bare`, files `processed/bare_<model>_<split>.jsonl`, finished
+  2026-11-22 23:31):
+
+  | bare prompt, `run.py` | Phi-3.5 | MediPhi-Instruct | Instruct right, Phi wrong | Phi right, Instruct wrong |
+  |---|---|---|---|---|
+  | test, 1,273 | 0.4870 | 0.5460 | 189 | 114 |
+  | dev, 1,272 | 0.4733 | 0.5369 | 192 | 111 |
+  | first 3,000 training questions | 0.4893 | 0.5443 | 440 | 275 |
+  | practice pool (dev + training), 4,272 | 0.4846 | 0.5421 | 632 | 386 |
+
+  Practice pool difference: +5.76 points (standard error 0.74). MediPhi was not scored in this format on dev or
+  training questions.
 - One example (test question 359, polymyositis, gold C), next token after the prompt: harness format: Phi-3.5
   "The" 0.71, letters 0.16 in total, picks D; MediPhi "The" 0.53, letters 0.23, picks C; MediPhi-Instruct "C" 0.41,
   letters 0.73, picks C. Chat prompt with instruction: all three put 0.99-1.00 on "C". (`logs/example_formats.json`,

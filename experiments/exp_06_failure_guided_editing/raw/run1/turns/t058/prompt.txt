@@ -1,0 +1,87 @@
+Forward pass 25 of 30 done (teacher_forced); results in fwd_25/. Summary:
+```
+{
+ "ok": true,
+ "type": "teacher_forced",
+ "model": "edited",
+ "texts": 128,
+ "positions": "last",
+ "longest": 595,
+ "files": {
+  "input_ids.npy": [
+   128,
+   595
+  ],
+  "token_logprobs.npy": [
+   128,
+   594
+  ],
+  "topk_logprobs.npy": [
+   128,
+   8
+  ],
+  "topk_ids.npy": [
+   128,
+   8
+  ],
+  "hidden_26.npy": [
+   128,
+   3072
+  ],
+  "hidden_27.npy": [
+   128,
+   3072
+  ],
+  "hidden_28.npy": [
+   128,
+   3072
+  ],
+  "hidden_29.npy": [
+   128,
+   3072
+  ],
+  "hidden_30.npy": [
+   128,
+   3072
+  ],
+  "hidden_31.npy": [
+   128,
+   3072
+  ],
+  "hidden_32.npy": [
+   128,
+   3072
+  ],
+  "mlp_act_26.npy": [
+   128,
+   8192
+  ],
+  "mlp_act_27.npy": [
+   128,
+   8192
+  ],
+  "mlp_act_28.npy": [
+   128,
+   8192
+  ],
+  "mlp_act_29.npy": [
+   128,
+   8192
+  ],
+  "mlp_act_30.npy": [
+   128,
+   8192
+  ],
+  "mlp_act_31.npy": [
+   128,
+   8192
+  ]
+ },
+ "edited_tensors": [
+  "model.layers.26.mlp.down_proj.weight"
+ ],
+ "mean_token_logprob": -1.3172,
+ "s": 121
+}
+```
+Forward passes left: 5.

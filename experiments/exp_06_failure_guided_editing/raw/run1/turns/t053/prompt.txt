@@ -1,0 +1,9 @@
+OUTPUT of Python run 28 of at most 300:
+```
+Strong-dose pooled development: {'n': 512, 'original': 0.56640625, 'edited': 0.5859375, 'delta_pp': 1.953125, 'se_pp': 0.7263866592501173, 'wr': 12, 'rw': 2, 'margin': 0.08898925903486088, 'margin_se': 0.22793512854478257, 'sign_test_p': 0.012939453125}
+Baseline reproducibility: {'pred_changes': 2, 'mean_margin_diff': -0.012573241721838713, 'max_abs_margin_diff': 0.625}
+Strong-dose letter shift mean / SD: [1.974, -0.805, -0.777, -0.391] [2.073, 3.454, 3.122, 3.623]
+Descriptive accuracy changes, percentage points: {'observed': np.float64(1.953125), 'mean_letter_shift_only': np.float64(0.5859375), 'edited_minus_mean_shift': np.float64(1.7578125)}
+Installed opposite-direction control, scale +5: 0.046667203307151794
+
+```
