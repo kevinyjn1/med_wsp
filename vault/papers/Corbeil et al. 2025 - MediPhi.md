@@ -242,6 +242,31 @@ Notes for checking our own evaluation:
 - [UNVERIFIED-BACKGROUND] The commonly used MedQA-USMLE 4-option test split has 1,273 questions. If that split was used, 0.486 and 0.491 correspond to about 619 and 625 correct, a net difference of about 6 questions. The three-decimal values are compatible with n = 1,273 but do not identify it.
 - Training-data overlap: the stated training corpora do not include the MedQA training set (the paper criticizes other medical models for training on benchmark training sets), but the paper does not explicitly state a no-overlap check. MediFlow includes multiple-choice QA as one of its 14 task types, and the merge was tuned on synthetic multiple-choice validation sets.
 
+### Is the MedQA prompt released anywhere? (checked 2026-11-23)
+All sources are public and were fetched without logging in.
+
+| Where | What is there | MedQA prompt or evaluation code? |
+|---|---|---|
+| arXiv:2505.10717v2 (the latest version), full text with appendices | Table 13 with its caption only. System prompts are printed for MEDIQA-RRS QA, ACI-Bench, MedicationQA, MEDEC and SDoH. For the six CLUE datasets: "the same configuration (i.e. prompts, metrics, and few shots) as Dada et al. (2024)" | no |
+| ACL 2025 camera-ready (`2025.acl-long.950`, 23 pages) | The same content. The only attachment on the Anthology page is a video | no |
+| Hugging Face `microsoft/MediPhi` (last modified 2025-12-15) | Weights, tokenizer, config, `mergekit_config.yml`, README. The card reports CLUE+ only. No discussion threads | no |
+| Hugging Face `microsoft/MediPhi-Instruct` (last modified 2025-12-15) | Weights, tokenizer, config, README. The card reports CLUE+ only. Five discussion threads, none about evaluation | no |
+| Hugging Face dataset `microsoft/mediflow` | Training data files and a figure | no |
+| GitHub `TIO-IKIM/CLUE` (the CLUE benchmark code; 43 files) | The six clinical CLUE tasks. No MedQA, no MultiMedQA, no lm-evaluation-harness | no |
+| CLUE paper, arXiv:2404.04067 | Uses multiple-choice numbers "reported" by other work, averaged over MedMCQA, MedQA and PubMedQA | no |
+| GitHub repository search for "MediPhi" | No repository from the authors | no |
+
+- So the MedQA prompt behind Table 13 is not released in any of these places. Only the authors can confirm it
+  (the model card gives a contact address).
+- (inference, ours) Table 13 was produced with the `multimedqa` task group of lm-evaluation-harness: its four
+  columns match that group, and our re-implementation of the group's `medqa_4options` task reproduces the three
+  public models' MedQA values to within 1 to 13 questions of 1,273 (EXP-04 Protocol C). The other three columns
+  were not replicated.
+- The model card's "Input Format" puts the instruction in the system role and the document in the user role
+  (`<|system|> ... <|end|> <|user|> ... <|end|> <|assistant|>`). Our chat prompt puts the instruction and the
+  question in one user turn with no system message. A system-role variant has not been scored. (inference) If
+  MediPhi-Instruct depends on that format, our chat-prompt comparison could understate it.
+
 ### CLUE+ protocol
 - CLUE subset (MedNLI, MeQSum, Problem List Summarization, LongHealth, MeDiSumQA, MeDiSumCode): same prompts, metrics and few shots as Dada et al. 2024 (details not reproduced in this paper).
 - New CLUE+ subset (Table 9), decoding = greedy:

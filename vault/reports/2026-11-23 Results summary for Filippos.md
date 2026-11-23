@@ -111,6 +111,10 @@ early layers costs 3.8 to 7.0 points. The follow-up sweep around layers 10 to 13
 - The transfer's test-split gain is a single comparison near the usual threshold, with the chat guardrail
   slightly negative, and no control transfer was scored on untouched questions.
 - Patching used question sets selected by outcome (60 per set).
+- The MediPhi paper does not state its MedQA prompt. We found it neither in the paper (arXiv and ACL versions),
+  nor in the model cards, nor in any released code; the bare format is our inference from the match in numbers.
+- The model card recommends the instruction in the system role. Our chat prompt has it in the user turn, and a
+  system-role variant has not been scored.
 
 ## Questions for you
 1. Is the bare-prompt gap still the right target, given that it disappears with the chat template? Or should we

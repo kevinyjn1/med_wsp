@@ -89,6 +89,10 @@ None of the above has been reviewed by the researcher; nothing is in `research/0
   sleeps when it is empty. Jobs now hold a no-sleep assertion on AC power (`wsp/keep_awake.py`), which does not
   help once the battery is empty. A closed lid always sleeps.
 - EXP-05b has no control swap and no score on unselected questions; EXP-07's best window is unconfirmed.
+- EXP-04: the MediPhi paper's MedQA prompt is not released anywhere we could find (paper, ACL version, model
+  cards, CLUE code; checked 2026-11-23), so the bare format remains an inference from matching numbers. The
+  model card recommends the instruction in the system role; our chat prompt has it in the user turn, and that
+  variant has not been scored for any of the three models.
 - EXP-05c: the candidate's controls were scored neither on the confirmation questions nor on the test split, so
   its test-split gain is not shown to be specific to these weights. The saved candidate is local only
   (`raw/transfer1/work/candidate_sparse_full/`, 3.5 GB).
