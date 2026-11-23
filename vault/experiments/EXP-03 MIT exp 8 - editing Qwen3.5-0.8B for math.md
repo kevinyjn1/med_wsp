@@ -1,7 +1,7 @@
 ---
 type: experiment
 id: EXP-03
-status: paused
+status: parts A and B done (awaiting review), part C paused
 tags: [experiment, mit-replication, astra, weight-edit]
 ---
 
@@ -31,15 +31,28 @@ weights and checks every hash. Result (`experiments/exp_03_mit8_math/processed/e
 - The two layers use different directions: cosine 0.849.
 - So the edited checkpoint MIT evaluated is reproduced bit for bit from public weights.
 
-## Part B - behaviour of the edited model on this Mac (queued)
+## Part B - behaviour of the edited model on this Mac (done 2026-11-23)
 MIT evaluated with vLLM on a rented GPU, up to 32,768 new tokens per answer; the unedited model runs to the limit
 on 93 % of MATH-500 answers, and the median correct edited answer is 9,172 tokens long.
 - Speed measured here (other jobs running at the same time): PyTorch on MPS 8 tokens/s single and 43 at batch 16
   (the linear-attention layers fall back to reference code); MLX (`mlx-lm` 0.32.2) 53 single, 393 at batch 16,
   600 at batch 64.
 - Scaled-down check with MLX (`eval_mlx.py`): 48 GSM8K test problems, one sample each, same prompt and sampling,
-  16,384-token cap, base vs MIT's p50c edit. Queued 2026-11-22 behind the MedQA jobs; results in
-  `processed/eval_*_gsm8k_n48_t16384.summary.json`.
+  16,384-token cap, base vs MIT's p50c edit. Ran 2026-11-23 09:59 to 13:19; results in
+  `processed/eval_*_gsm8k_n48_t16384.summary.json`, handoff in `experiments/exp_03_mit8_math/RESULTS.md`.
+
+| 48 GSM8K problems, limit 16,384 tokens | Unedited | MIT's p50c edit |
+|---|---|---|
+| Correct | 12 (25.0 %) | 25 (52.1 %) |
+| Hit the token limit | 36 (75.0 %) | 15 (31.3 %) |
+| Closed the thinking block | 11 | 34 |
+| Mean tokens per answer | 14,143 | 10,181 |
+| Repetition measure | 0.867 | 0.534 |
+
+- `[OBSERVATION]` Paired: 14 problems fixed, 1 broken, 11 right in both (+27.1 points, SE 7.1, p = 0.001).
+- `[OBSERVATION]` Every effect goes the way MIT reports (GSM8K 13.8 % to 67.1 %, limit hits 87.5 % to 7.2 % on
+  1,319 problems with a 32,768-token limit). The sizes are not comparable: 48 problems, half the token limit, MLX.
+- Not established: MIT's numbers themselves, any other benchmark, or that Astra can find such an edit here.
 - MIT's full evaluation volume (about 61.7M tokens for unedited MATH-500 alone) stays out of reach locally.
 
 ## Part C - our own Astra session (paused)

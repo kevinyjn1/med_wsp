@@ -1,0 +1,12 @@
+{
+ "model": "p50c",
+ "set": "gsm8k",
+ "n": 48,
+ "max_tokens": 16384,
+ "acc": 0.5208333333333334,
+ "cut_share": 0.3125,
+ "mean_tokens": 10181.458333333334,
+ "closed_thinking": 0.7083333333333334,
+ "mean_repetition": 0.53356875,
+ "seconds": 2079
+}

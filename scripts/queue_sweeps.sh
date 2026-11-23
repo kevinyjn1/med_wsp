@@ -1,9 +1,12 @@
 #!/bin/bash
 # Queue of GPU sweeps that do not need Astra, in priority order. Run from anywhere:  bash scripts/queue_sweeps.sh
 #
-# Every step waits for the "batch" GPU lock, so the queue can run next to an Astra lab session (whose passes take
-# the "gpu" lock). Activation patching loads two models and takes both locks, batch first (see wsp/lab.py LOCK_ORDER).
+# GPU locks (wsp/gpu_lock.py): the patching and looping scripts take the locks themselves, once per question or
+# configuration, so an Astra lab pass can run in between. Do not wrap those in the lock command: a wrapper holds the
+# lock for the whole run (on 2026-11-23 that kept a lab session waiting for 6.5 hours). The shorter scoring and
+# generation steps still run under the "batch" lock as a whole.
 # Each step writes logs/<name>.log and ends it with "exit <code>". A failed step does not stop the queue.
+# Every job keeps the Mac awake while on AC power (wsp/keep_awake.py); a closed lid or an empty battery still stops it.
 #
 # This is bash on purpose: the command prefix is an array. In zsh an unquoted "$L cmd" is NOT split into words.
 set -u
@@ -12,7 +15,6 @@ mkdir -p logs
 
 PY=.venv/bin/python
 BATCH=("$PY" -m wsp.gpu_lock --name batch --)
-BOTH=("${BATCH[@]}" "$PY" -m wsp.gpu_lock --)
 
 step() { # step <log name> <command...>
   local log="logs/$1.log"
@@ -25,13 +27,13 @@ step() { # step <log name> <command...>
 }
 
 # EXP-05b: copy one layer's weights from MediPhi-Instruct into Phi-3.5 (bare prompt), then activation patching.
-step exp05_patch_bare_weights "${BATCH[@]}" "$PY" experiments/exp_05_medical_circuit/patch.py \
+step exp05_patch_bare_weights "$PY" experiments/exp_05_medical_circuit/patch.py \
   --donor mediphi_instruct --style bare --per-set 60 --mode weights
-step exp05_patch_bare_activation "${BOTH[@]}" "$PY" experiments/exp_05_medical_circuit/patch.py \
+step exp05_patch_bare_activation "$PY" experiments/exp_05_medical_circuit/patch.py \
   --donor mediphi_instruct --style bare --per-set 60 --mode activation
 
 # EXP-07: layer-looping scan on Phi-3.5, 600 dev questions.
-step exp07_scan "${BATCH[@]}" "$PY" experiments/exp_07_layer_looping/run.py \
+step exp07_scan "$PY" experiments/exp_07_layer_looping/run.py \
   --model phi --split dev --limit 600 --sweep defaults position
 
 # EXP-04c control: the bare question inside the chat template, for the two medical models.

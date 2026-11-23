@@ -1,0 +1,12 @@
+{
+ "model": "base",
+ "set": "gsm8k",
+ "n": 48,
+ "max_tokens": 16384,
+ "acc": 0.25,
+ "cut_share": 0.75,
+ "mean_tokens": 14143.125,
+ "closed_thinking": 0.22916666666666666,
+ "mean_repetition": 0.8670249999999999,
+ "seconds": 9943
+}

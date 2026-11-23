@@ -1,6 +1,6 @@
 # Current State
 
-Checkpoint written 2026-11-23 12:00 (session 01, still in progress). Detailed log: `vault/sessions/2026-11-21 Session 01.md`.
+Checkpoint written 2026-11-23 13:40 (session 01, still in progress). Detailed log: `vault/sessions/2026-11-21 Session 01.md`.
 
 ## Objective
 
@@ -16,6 +16,9 @@ Checkpoint written 2026-11-23 12:00 (session 01, still in progress). Detailed lo
   head over-called twice (`experiments/exp_01_mit3_language/RESULTS.md`).
 - EXP-03a: MIT's published Qwen3.5-0.8B edit (p50c) rebuilt bit for bit from public weights; it is
   `W' = W - 6 u (u^T W)` on 64 columns of `down_proj` in layers 15 and 19.
+- EXP-03b: MIT's edit changes behaviour here in the reported direction. 48 GSM8K problems, 16,384-token limit,
+  MLX: correct 12 to 25 of 48 (14 fixed, 1 broken, p = 0.001), answers at the token limit 36 to 15
+  (`experiments/exp_03_mit8_math/RESULTS.md`).
 - EXP-04 (letter scoring, MedQA): test 1,273 questions: Phi-3.5 0.5719, MediPhi 0.5632, MediPhi-Instruct 0.5648;
   dev 1,272: 0.5841 / 0.5951 / 0.5802; first 3,000 training questions: 0.6037 / 0.5923 / 0.5780. No medical model
   is better than the base under this scoring.
@@ -78,12 +81,10 @@ None of the above has been reviewed by the researcher; nothing is in `research/0
 
 ## Next
 
-1. Collect when they end: EXP-05c `transfer1` (`experiments/exp_05_medical_circuit/raw/transfer1/`, 14 of 30
-   passes at 12:00 on 11-23; final scores in `final_eval.json`) and the Qwen behaviour check (EXP-03b,
-   `experiments/exp_03_mit8_math/processed/eval_<model>_gsm8k_n48_t16384.jsonl`, last two steps of the queue).
-2. Then: add EXP-05c to `experiments/exp_05_medical_circuit/RESULTS.md`, write the EXP-03b handoff, export the
-   donor edit to the viewer, redact and commit `raw/transfer1`, and change `scripts/queue_sweeps.sh` to call the
-   looping and patching scripts without the lock wrapper (they take the lock per unit themselves now).
+1. Collect when it ends: EXP-05c `transfer1` (`experiments/exp_05_medical_circuit/raw/transfer1/`, 23 of 30
+   passes at 13:20 on 11-23; final scores under both prompts in `final_eval.json`). The sweep queue is finished.
+2. Then: add EXP-05c to `experiments/exp_05_medical_circuit/RESULTS.md`, export the donor edit to the viewer,
+   redact and commit `raw/transfer1`.
 3. Researcher decisions pending: control and unselected-question scoring for EXP-05b; `around` sweep for EXP-07;
    whether the bare prompt stays the primary measure; a second no-donor session (EXP-06).
 4. Restart EXP-03c with the smaller passes when the GPU is free; EXP-02 once Gemma access exists.
