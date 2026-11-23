@@ -13,6 +13,9 @@ For every question and intervention we store the gold-answer margin (log-prob of
 best other letter). Recovery = (patched - base) / (donor - base), computed per set afterwards.
 
 Usage:  python experiments/exp_05_medical_circuit/patch.py --donor mediphi --per-set 60 --mode activation weights
+
+The script takes the GPU locks itself, once per question (activation: both locks, two models are loaded) or once
+per weight configuration ("batch"), so a lab pass can run in between; do not wrap it in the lock command.
 """
 
 from __future__ import annotations
@@ -31,6 +34,7 @@ sys.path.insert(0, str(REPO))
 
 from wsp import medqa, models
 from wsp.checkpoints import Checkpoint
+from wsp.gpu_lock import gpu_lock, gpu_locks
 from wsp.patching import COMPONENTS, Patch, capture, layer_tensor_names, run_patched, swapped_weights
 
 EXP = Path(__file__).resolve().parent
@@ -104,26 +108,27 @@ def main() -> None:
                 for item in items:
                     if item["id"] in done:
                         continue
-                    enc = tokenizer(
-                        [medqa.build_prompt(tokenizer, item, args.style)],
-                        return_tensors="pt",
-                        add_special_tokens=False,
-                    )
-                    enc = {k: v.to(base.device) for k, v in enc.items()}
-                    donor_cache = capture(donor, enc, layers=list(range(n_layers)))
-                    base_margin = margin_of(
-                        base(**enc, use_cache=False).logits[:, -1, :], letter_ids, item["answer"]
-                    )[0]
-                    donor_margin = margin_of(donor_cache["logits"], letter_ids, item["answer"])[0]
-                    margins = []
-                    for begin in range(0, len(patches), args.rows):
-                        logits = run_patched(base, enc, donor_cache, patches[begin : begin + args.rows])
-                        margins += margin_of(logits, letter_ids, item["answer"])
+                    with gpu_locks(f"exp05 patching {item['id']}", ("batch", "gpu")):
+                        enc = tokenizer(
+                            [medqa.build_prompt(tokenizer, item, args.style)],
+                            return_tensors="pt",
+                            add_special_tokens=False,
+                        )
+                        enc = {k: v.to(base.device) for k, v in enc.items()}
+                        donor_cache = capture(donor, enc, layers=list(range(n_layers)))
+                        base_margin = margin_of(
+                            base(**enc, use_cache=False).logits[:, -1, :], letter_ids, item["answer"]
+                        )[0]
+                        donor_margin = margin_of(donor_cache["logits"], letter_ids, item["answer"])[0]
+                        margins = []
+                        for begin in range(0, len(patches), args.rows):
+                            logits = run_patched(base, enc, donor_cache, patches[begin : begin + args.rows])
+                            margins += margin_of(logits, letter_ids, item["answer"])
+                        del donor_cache, enc
+                        models.release_gpu_cache()
                     f.write(json.dumps({"id": item["id"], "set": set_name, "base": base_margin, "donor": donor_margin,
                                         "patched": dict(zip([p.label() for p in patches], margins, strict=True))}) + "\n")  # fmt: skip
                     f.flush()
-                    del donor_cache, enc
-                    models.release_gpu_cache()
             print(f"activation patching done in {time.time() - start:.0f}s", flush=True)
         del donor
         torch.mps.empty_cache()
@@ -140,9 +145,10 @@ def main() -> None:
         def evaluate(label: str) -> None:
             if label in done:
                 return
-            records = medqa.evaluate(
-                base, tokenizer, everything, batch_size=16, progress=False, style=args.style
-            )
+            with gpu_lock(f"exp05 weight swap {label}", name="batch"):
+                records = medqa.evaluate(
+                    base, tokenizer, everything, batch_size=16, progress=False, style=args.style
+                )
             row = {"config": label, "margins": {r["id"]: round(r["margin"], 4) for r in records},
                    "acc": {name: sum(r["correct"] for r in records if set_of[r["id"]] == name) / len(items)
                            for name, items in sets.items()}}  # fmt: skip

@@ -22,6 +22,7 @@ from pathlib import Path
 
 from wsp.harness import codex_client
 from wsp.harness.redact import redact
+from wsp.keep_awake import ensure_awake
 
 BLOCK_RE = re.compile(r"```([A-Za-z_]+)[ \t]*\n(.*?)```", re.DOTALL)
 TOOL_REMINDER = (
@@ -127,6 +128,7 @@ class Loop:
         return None
 
     def run(self) -> State:
+        ensure_awake()  # a session also has to stay awake while it waits for the model's reply
         self.run_dir.mkdir(parents=True, exist_ok=True)
         (self.run_dir / "message.txt").write_text(self.first_message)
         state = self._load()

@@ -6,7 +6,7 @@ tags: [visualization]
 # Visualization index
 
 All interactive views live in the viewer under `viz/` (see `viz/README.md`): run
-`python -m wsp.viz_export mit3 mit8 weightdiff exp06`, then `npm run dev --prefix viz`, and open http://localhost:5173.
+`python -m wsp.viz_export mit3 mit8 weightdiff exp06 interventions looping`, then `npm run dev --prefix viz`, and open http://localhost:5173.
 
 ## MIT experiment 3: the blocks Astra read
 Datasets `mit3_python`, `mit3_romaji`, `mit3_english`. Each of the four blocks shows LayerNorm gains, W_q,
@@ -53,8 +53,32 @@ answers further down (blue, top) and right answers further up (red, bottom).
 
 Source: [[EXP-06 Failure-guided weight editing]].
 
+## EXP-05b: which layers carry the difference between Phi-3.5 and MediPhi-Instruct
+Dataset `interventions_mediphi_instruct_bare_phi`. Columns are the 32 layers. Rows are the three question sets
+(gain = only MediPhi-Instruct right, loss = only Phi-3.5 right, both = both right) times the component that was
+taken from MediPhi-Instruct. Each group has two panels: the mean change of the correct answer's margin (red = up,
+blue = down) and the share of the set's 60 questions answered correctly afterwards.
+
+![[viz_exp05b_patching_activations.jpg]]
+Activations. Top rows of each set: the residual stream. With MediPhi-Instruct's stream after layer 10 or later,
+Phi-3.5's remaining layers give MediPhi-Instruct's answers (gain set up, loss set down by the full difference).
+
+![[viz_exp05b_patching_weights.jpg]]
+Weights. Copying one layer's weights moves the margin by at most 0.24 (attention weights of layer 1) against 2.92
+for all weights; the effect sits in the attention weights of the first layers.
+
+Source: [[EXP-05 Medical circuit discovery and transfer]].
+
+## EXP-07: which 4-layer window to repeat
+Dataset `looping_phi_dev_600`. Columns are the repeated layers (2-5 to 26-29), rows are the damped rule and plain
+repetition. Three panels: change of accuracy, change of the correct answer's margin, number of questions whose
+result changed.
+
+![[viz_exp07_looping_scan.jpg]]
+Plain repetition of early layers costs up to 7 points. The damped rule on layers 10-13 is the only cell with a
+clear margin gain (+0.63, SE 0.19); its accuracy gain of +1.83 points has p = 0.19.
+
+Source: [[EXP-07 Training-free layer looping]].
+
 ## Planned
-- Activation patching and weight-swap maps (layer x component), MediPhi-Instruct into Phi-3.5, bare prompt
-  (`python -m wsp.viz_export interventions` once `processed/patch_mediphi_instruct_bare/` exists).
-- Astra's donor edit on Phi-3.5 (EXP-05c), before and after.
-- Layer-looping sweep (`python -m wsp.viz_export looping`).
+- Astra's donor edit on Phi-3.5 (EXP-05c), before and after, once `transfer1` ends.

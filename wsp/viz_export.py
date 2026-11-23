@@ -326,77 +326,120 @@ def export_weightdiff() -> None:
 
 
 # ------------------------------------------------------------------------------- interventions and looping
+MODEL_NAMES = {"phi": "Phi-3.5", "mediphi": "MediPhi", "mediphi_instruct": "MediPhi-Instruct"}
+
+
 def export_interventions(donor: str = "mediphi_instruct", style: str = "bare") -> None:
-    """Activation patching and weight swapping (EXP-05b): mean change of the gold-answer margin, per layer."""
+    """Activation patching and weight swapping (EXP-05b), per layer: the mean change of the correct answer's
+    margin and the share of questions answered correctly afterwards, for each of the three question sets."""
     suffix = "_bare" if style == "bare" else ""
     src = REPO / "experiments" / "exp_05_medical_circuit" / "processed" / f"patch_{donor}{suffix}"
-    sets, components = ("gain", "loss", "both"), ("attn", "mlp", "resid")
+    name = MODEL_NAMES.get(donor, donor)
+    sets, n_layers = ("gain", "loss", "both"), 32
     folder = DATA / f"interventions_{donor}{suffix}_phi"
     folder.mkdir(parents=True, exist_ok=True)
-    panels, facts = [], []
+    layer_labels = [str(i) for i in range(n_layers)]
+    groups, facts = [], []
+
+    def pair(prefix: str, change: np.ndarray, right: np.ndarray, labels: list[str], what: str) -> list[dict]:
+        """Two stacked panels over the same rows: margin change (signed) and share answered correctly."""
+        common = {"cell": 44, "rowLabels": labels, "colLabels": layer_labels, "ownRow": True}
+        margin = write_panel(folder, f"{prefix}_margin", change, signed=True, quantize=False)
+        margin.update({"id": f"{prefix}_margin", "label": "Change of the correct answer's margin", "unit": "margin change",
+                       "note": f"mean over the set's questions, log-prob units, when {what}; columns are layers", **common})  # fmt: skip
+        share = write_panel(folder, f"{prefix}_right", right, signed=False, quantize=False, color_max=1.0)
+        share.update({"id": f"{prefix}_right", "label": "Share of questions answered correctly", "unit": "share",
+                      "note": f"when {what}. Unchanged Phi-3.5 answers none of the gain questions and all of the loss "
+                              "and both questions correctly.", **common})  # fmt: skip
+        return [margin, share]
+
     rows = (
         [json.loads(line) for line in (src / "activation.jsonl").read_text().splitlines()]
         if (src / "activation.jsonl").exists()
         else []
     )
-    n_layers = 32
     if rows:
-        grid = np.zeros((len(sets) * len(components), n_layers), np.float32)
-        labels = []
-        for si, name in enumerate(sets):
-            members = [r for r in rows if r["set"] == name]
-            gap = np.mean([r["donor"] - r["base"] for r in members])
-            for ci, component in enumerate(components):
-                labels.append(f"{name}: {component}")
-                for layer in range(n_layers):
-                    grid[si * len(components) + ci, layer] = np.mean(
-                        [r["patched"][f"L{layer}.{component}"] - r["base"] for r in members]
-                    )
-            facts.append(
-                f"Activation patching, {name} set ({len(members)} questions): donor margin minus base margin is {gap:+.2f} on average."
-            )
-        spec = write_panel(folder, "activation", grid, signed=True, quantize=False)
-        spec.update({"id": "activation", "label": "Activation patching: donor activation placed into the base", "unit": "margin change",
-                     "cell": 44, "rowLabels": labels, "colLabels": [str(i) for i in range(n_layers)], "ownRow": True,
-                     "note": "mean change of the gold-answer margin (log-prob units) when one layer's attention output, MLP output or residual stream comes from the donor; columns are layers"})  # fmt: skip
-        panels.append(spec)
+        components = {"resid": "residual stream", "attn": "attention output", "mlp": "MLP output"}
+        change = np.zeros((len(sets) * len(components), n_layers), np.float32)
+        right = np.zeros_like(change)
+        labels, gaps = [], {}
+        for si, set_name in enumerate(sets):
+            members = [r for r in rows if r["set"] == set_name]
+            base = np.array([r["base"] for r in members])
+            gaps[set_name] = float(np.mean([r["donor"] for r in members]) - base.mean())
+            for ci, (component, text) in enumerate(components.items()):
+                labels.append(f"{set_name}: {text}")
+                patched = np.array([[r["patched"][f"L{layer}.{component}"] for layer in range(n_layers)] for r in members])  # fmt: skip
+                change[si * len(components) + ci] = (patched - base[:, None]).mean(axis=0)
+                right[si * len(components) + ci] = (patched > 0).mean(axis=0)
+            facts.append(f"{set_name.capitalize()} set ({len(members)} questions): Phi-3.5's mean margin is {base.mean():+.2f}, "
+                         f"{name}'s is {base.mean() + gaps[set_name]:+.2f} (difference {gaps[set_name]:+.2f}).")  # fmt: skip
+        closed = change[0] / gaps["gain"]  # gain set, residual stream
+        half, most = int(np.argmax(closed >= 0.5)), int(np.argmax(closed >= 0.95))
+        single = {text: (int(np.argmax(np.abs(change[ci]))), float(change[ci][np.argmax(np.abs(change[ci]))]))
+                  for ci, text in enumerate(components.values()) if text != "residual stream"}  # fmt: skip
+        facts.append(f"Residual stream, gain set: taking {name}'s stream after layer {half} closes half of the difference, "
+                     f"after layer {most} at least 95 % of it; every later layer stays between "
+                     f"{100 * closed[most:].min():.0f} % and {100 * closed[most:].max():.0f} %.")  # fmt: skip
+        facts.append("Single components, gain set: the largest effects are "
+                     + " and ".join(f"{text} of layer {layer} ({value:+.2f}, {100 * value / gaps['gain']:.0f} % of the difference)"
+                                    for text, (layer, value) in single.items()) + ".")  # fmt: skip
+        groups.append({"name": f"Activations taken from {name}", "kind": "attention",
+                       "panels": pair("activation", change, right, labels,
+                                      f"one layer's activation (all token positions) comes from {name}")})  # fmt: skip
+
     swaps = (
-        [json.loads(line) for line in (src / "weights.jsonl").read_text().splitlines()]
+        {
+            row["config"]: row["margins"]
+            for row in map(json.loads, (src / "weights.jsonl").read_text().splitlines())
+        }
         if (src / "weights.jsonl").exists()
-        else []
+        else {}
     )
     if swaps:
         question_sets = json.loads((src / "question_sets.json").read_text())
-        by = {row["config"]: row["margins"] for row in swaps}
-        grid = np.zeros((len(sets) * 2, n_layers), np.float32)
+        parts = {"attn": "attention weights", "mlp": "MLP weights"}
+        change = np.zeros((len(sets) * len(parts), n_layers), np.float32)
+        right = np.zeros_like(change)
         labels = []
-        for si, name in enumerate(sets):
-            ids = question_sets[name]
-            for pi, part in enumerate(("attn", "mlp")):
-                labels.append(f"{name}: {part} weights")
+        for si, set_name in enumerate(sets):
+            ids = question_sets[set_name]
+            base = np.array([swaps["base"][i] for i in ids])
+            for pi, (part, text) in enumerate(parts.items()):
+                labels.append(f"{set_name}: {text}")
                 for layer in range(n_layers):
-                    if f"L{layer}.{part}" in by:
-                        grid[si * 2 + pi, layer] = np.mean(
-                            [by[f"L{layer}.{part}"][i] - by["base"][i] for i in ids]
-                        )
-            if "all" in by:
-                facts.append(f"Weight swap, {name} set: copying every donor weight changes the margin by "
-                             f"{np.mean([by['all'][i] - by['base'][i] for i in ids]):+.2f} on average.")  # fmt: skip
-        spec = write_panel(folder, "weights", grid, signed=True, quantize=False)
-        spec.update({"id": "weights", "label": "Weight swap: one layer's weights copied from the donor", "unit": "margin change",
-                     "cell": 44, "rowLabels": labels, "colLabels": [str(i) for i in range(n_layers)], "ownRow": True,
-                     "note": "mean change of the gold-answer margin when one layer's attention weights or MLP weights are the donor's; columns are layers"})  # fmt: skip
-        panels.append(spec)
-    if not panels:
+                    if f"L{layer}.{part}" in swaps:
+                        swapped = np.array([swaps[f"L{layer}.{part}"][i] for i in ids])
+                        change[si * len(parts) + pi, layer] = (swapped - base).mean()
+                        right[si * len(parts) + pi, layer] = (swapped > 0).mean()
+        gain_ids = question_sets["gain"]
+        everything = (
+            float(np.mean([swaps["all"][i] - swaps["base"][i] for i in gain_ids])) if "all" in swaps else None
+        )
+        row, layer = np.unravel_index(np.argmax(np.abs(change[: len(parts)])), change[: len(parts)].shape)
+        fact = (f"Weight swaps, gain set: the largest single-layer effect is {change[row, layer]:+.2f} "
+                f"({list(parts.values())[row]} of layer {layer})")  # fmt: skip
+        if everything is not None:
+            fact += (f", {100 * change[row, layer] / everything:.0f} % of the {everything:+.2f} that copying every weight gives. "
+                     f"The 32 single-layer attention swaps add up to {change[0].sum():+.2f}, the MLP swaps to {change[1].sum():+.2f}")  # fmt: skip
+        facts.append(fact + ".")
+        groups.append({"name": f"Weights copied from {name}", "kind": "mlp",
+                       "panels": pair("weights", change, right, labels,
+                                      f"one layer's attention weights or MLP weights are {name}'s")})  # fmt: skip
+    if not groups:
         print("no intervention results yet")
         return
     manifest = {
-        "id": f"interventions_{donor}{suffix}_phi", "title": f"Which layers carry the difference between Phi-3.5 and {donor}?",
-        "subtitle": f"MedQA, {style} prompt: change of the gold-answer margin under activation patching and weight swapping, by layer",
+        "id": f"interventions_{donor}{suffix}_phi", "title": f"Which layers carry the difference between Phi-3.5 and {name}?",
+        "subtitle": f"MedQA, {style} prompt: what happens to Phi-3.5's answers when one layer's activations or weights come from {name}",
         "family": "Phi-3.5 vs MediPhi", "maxRowWidth": 2600,
-        "facts": [*facts, "gain = donor right, base wrong; loss = base right, donor wrong; both = both right (60 questions each from the discovery pool)."],
-        "colorNote": "Signed change of the margin in log-probability units: red raises the gold answer, blue lowers it. Each panel has its own scale.",
-        "layers": [{"name": "All 32 layers (columns)", "groups": [{"name": "Interventions", "kind": "attention", "panels": panels}]}],
+        "facts": [(f"Question sets (60 each, from the practice pool): gain = only {name} answers correctly; "
+                   "loss = only Phi-3.5 answers correctly; both = both answer correctly."),
+                  "Margin = log-probability of the correct letter minus the best wrong letter; above zero means answered correctly.",
+                  *facts],
+        "colorNote": ("Margin panels: red raises the correct answer, blue lowers it; each panel has its own scale. "
+                      "Share panels: from 0 % (dark) to 100 % of the set's questions answered correctly."),
+        "layers": [{"name": "All 32 layers (columns)", "groups": groups}],
     }  # fmt: skip
     (folder / "manifest.json").write_text(json.dumps(manifest))
     print("wrote", folder)
@@ -405,7 +448,8 @@ def export_interventions(donor: str = "mediphi_instruct", style: str = "bare") -
 def export_looping(tag: str = "phi_dev_600") -> None:
     """Layer-looping scan (EXP-07): change of accuracy and margin against the unmodified model, by window start."""
     src = REPO / "experiments" / "exp_07_layer_looping" / "processed" / f"scan_{tag}.jsonl"
-    rows = [json.loads(line) for line in src.read_text().splitlines()]
+    # the "defaults" and "position" sweeps share two configurations; keep one row per configuration
+    rows = list({r["config"]: r for r in map(json.loads, src.read_text().splitlines())}.values())
     baseline = next(r for r in rows if r["config"] == "baseline")
     scan = [
         r
@@ -421,33 +465,60 @@ def export_looping(tag: str = "phi_dev_600") -> None:
     folder.mkdir(parents=True, exist_ok=True)
     margin = np.zeros((len(rules), len(starts)), np.float32)
     accuracy = np.zeros((len(rules), len(starts)), np.float32)
+    changed = np.zeros((len(rules), len(starts)), np.float32)
     for r in scan:
-        margin[rules.index(r["rule"]), starts.index(r["start"])] = r["margin_delta"]
-        accuracy[rules.index(r["rule"]), starts.index(r["start"])] = 100 * r["acc_delta"]
-    common = {"cell": 70, "rowLabels": ["damped (Chen), 2 sub-steps", "naive, applied twice"], "ownRow": True,
+        cell = rules.index(r["rule"]), starts.index(r["start"])
+        margin[cell], accuracy[cell], changed[cell] = (
+            r["margin_delta"],
+            100 * r["acc_delta"],
+            r["fixed"] + r["broken"],
+        )
+    common = {"cell": 70, "rowLabels": ["damped (Chen), 2 sub-steps", "plain repetition, twice"], "ownRow": True,
               "colLabels": [f"{s}-{s + 3}" for s in starts]}  # fmt: skip
     panels = []
-    for panel_id, label, grid, unit, note in (
-        ("margin", "Change of the gold-answer margin", margin, "margin change", "mean over questions, log-prob units; columns are the looped 4-layer window"),
-        ("accuracy", "Change of accuracy (percentage points)", accuracy, "points", "accuracy of the looped model minus the unmodified model on the same questions"),
+    for panel_id, label, grid, unit, signed, note in (
+        ("accuracy", "Change of accuracy (percentage points)", accuracy, "points", True,
+         "accuracy with the window repeated minus the unmodified model, same questions; columns are the repeated layers"),
+        ("margin", "Change of the correct answer's margin", margin, "margin change", True,
+         "mean over questions, log-prob units; columns are the repeated layers"),
+        ("changed", "Questions whose result changed (fixed + broken)", changed, "count", False,
+         f"of {baseline['n']} questions: how many went from wrong to right or from right to wrong"),
     ):  # fmt: skip
-        spec = write_panel(folder, panel_id, grid, signed=True, quantize=False)
+        spec = write_panel(folder, panel_id, grid, signed=signed, quantize=False)
         spec.update({"id": panel_id, "label": label, "unit": unit, "note": note, **common})
         panels.append(spec)
-    best = max((r for r in rows if r["config"] != "baseline"), key=lambda r: r["margin_delta"])
+
+    def plain(r: dict) -> str:
+        rule = {"chen": "damped rule (Chen)", "naive": "plain repetition", "lys": "averaged loop (Lys)"}[
+            r["rule"]
+        ]
+        return f"{rule} on layers {r['start']}-{r['start'] + r['length'] - 1}, {r['steps']} steps"
+
+    def outcome(r: dict) -> str:
+        p = "p < 0.001" if r["mcnemar_p"] < 0.001 else f"p = {r['mcnemar_p']:.3f}"
+        return (f"accuracy {100 * r['acc_delta']:+.2f} points ({r['fixed']} fixed, {r['broken']} broken, "
+                f"sign test {p}), margin {r['margin_delta']:+.2f}")  # fmt: skip
+
+    tested = [r for r in rows if r["config"] != "baseline"]
+    best, worst = max(tested, key=lambda r: r["acc_delta"]), min(tested, key=lambda r: r["acc_delta"])
+    higher = [r for r in tested if r["acc_delta"] > 0]
     manifest = {
         "id": f"looping_{tag}", "title": "Layer looping on Phi-3.5: which 4-layer window to repeat?",
-        "subtitle": f"MedQA {tag.split('_')[1]} split, {baseline['n']} questions, single-pass letter scoring",
+        "subtitle": f"MedQA {tag.split('_')[1]} split, {baseline['n']} questions, chat prompt, single-pass letter scoring",
         "family": "Training-free layer looping", "maxRowWidth": 2600,
         "facts": [
             f"Unmodified model: accuracy {100 * baseline['acc']:.1f} %, mean margin {baseline['mean_margin']:+.2f}.",
-            (f"Best configuration by margin: {best['config']} ({best['margin_delta']:+.3f} +/- {best['margin_delta_se']:.3f}; accuracy {100 * best['acc_delta']:+.1f} points, "
-            f"{best['fixed']} questions fixed, {best['broken']} broken, McNemar p = {best['mcnemar_p']:.2f})."),
-            (f"{sum(r.get('acc_delta', 0) > 0 for r in rows)} of {len(rows) - 1} configurations have higher accuracy than the unmodified model; "
-            f"{sum(r.get('mcnemar_p', 1) < 0.05 and r.get('acc_delta', 0) > 0 for r in rows)} of those are significant at 0.05 (uncorrected)."),
+            f"Largest gain: {plain(best)}: {outcome(best)}.",
+            f"Largest loss: {plain(worst)}: {outcome(worst)}.",
+            (f"{len(higher)} of {len(tested)} configurations have higher accuracy than the unmodified model; "
+             f"{sum(r['mcnemar_p'] < 0.05 for r in higher)} of those reach p < 0.05 (not corrected for {len(tested)} comparisons)."),
+            "The papers' default recipes on layers 14-17: " + "; ".join(
+                f"{plain(r).split(' on ')[0]}, {r['steps']} steps: {100 * r['acc_delta']:+.2f} points"
+                for r in tested if r["start"] == 14 and r["length"] == 4) + ".",
         ],
-        "colorNote": "Red = better than the unmodified model, blue = worse. Each panel has its own scale.",
-        "layers": [{"name": "Window start (columns)", "groups": [{"name": "4-layer window, 2 steps", "kind": "attention", "panels": panels}]}],
+        "colorNote": ("Accuracy and margin: red = better than the unmodified model, blue = worse; each panel has its own scale. "
+                      "Changed questions: brighter = more questions changed."),
+        "layers": [{"name": "Repeated layers (columns)", "groups": [{"name": "4-layer window, 2 steps", "kind": "attention", "panels": panels}]}],
     }  # fmt: skip
     (folder / "manifest.json").write_text(json.dumps(manifest))
     print("wrote", folder)

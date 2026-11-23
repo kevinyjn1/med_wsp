@@ -15,7 +15,6 @@ float32 `.npy` files under <work>/edited/ and are re-validated on the host befor
 
 from __future__ import annotations
 
-import contextlib
 import gc
 import json
 import subprocess
@@ -28,7 +27,7 @@ import torch
 from scipy.stats import binomtest
 
 from wsp import medqa, models
-from wsp.gpu_lock import gpu_lock
+from wsp.gpu_lock import gpu_locks
 from wsp.harness.kernel import Kernel
 from wsp.looping import decoder_layers
 from wsp.patching import COMPONENTS, Patch, capture, run_patched, swapped_weights
@@ -160,9 +159,6 @@ class PassError(Exception):
         self.label = label
 
 
-LOCK_ORDER = ("batch", "gpu")  # every holder of both takes them in this order, so two holders cannot deadlock
-
-
 class BudgetedLab:
     """Kernel, forward-pass budget and logging shared by the labs. A subclass implements `_dispatch`."""
 
@@ -209,12 +205,7 @@ class BudgetedLab:
             if self.passes_left() <= 0:
                 raise RuntimeError("the forward-pass budget is used up")
             start = time.time()
-            with contextlib.ExitStack() as stack, torch.no_grad():
-                for name in sorted(
-                    self._locks(request),
-                    key=lambda n: LOCK_ORDER.index(n) if n in LOCK_ORDER else len(LOCK_ORDER),
-                ):
-                    stack.enter_context(gpu_lock(f"lab {self.run_dir.name} pass {index}", name=name))
+            with gpu_locks(f"lab {self.run_dir.name} pass {index}", self._locks(request)), torch.no_grad():
                 summary, where = self._dispatch(request, index)
             summary["s"] = round(time.time() - start)
         except Exception as error:  # noqa: BLE001 - every failure is reported to the model, uncounted

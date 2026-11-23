@@ -225,6 +225,7 @@ function disposeCurrent() {
     p.texture.dispose();
   }
   scene.clear();
+  redraw = true;
   dom.labels.replaceChildren();
   current = null;
   hovered = null;
@@ -235,7 +236,7 @@ function addLabel(labels, className, html, position, opts = {}) {
   el.className = `label ${className}`;
   el.innerHTML = html;
   dom.labels.appendChild(el);
-  labels.push({ el, position, anchor: opts.anchor || "left-bottom", minPixels: opts.minPixels || 0, span: opts.span || 0, clip: !!opts.clip, room: opts.room || 0 });
+  labels.push({ el, position, anchor: opts.anchor || "left-bottom", minPixels: opts.minPixels || 0, span: opts.span || 0, clip: !!opts.clip, room: opts.room || 0, roomPixels: opts.roomPixels || 17 });
 }
 
 function layoutGroup(group, maxRowWidth) {
@@ -286,10 +287,13 @@ async function loadDataset(id) {
     let layerMaxX = 0;
     layer.groups.forEach((group) => {
       const z = GROUP_Z[group.kind] ?? 0;
-      addLabel(labels, "group", group.name, new THREE.Vector3(-24, y - 2, z), { anchor: "right-top" });
+      addLabel(labels, "group", group.name, new THREE.Vector3(-24, y + 8, z), { anchor: "right-bottom" });
       const groupTop = y;
-      for (const row of layoutGroup(group, maxRowWidth)) {
+      const groupRows = layoutGroup(group, maxRowWidth);
+      for (const [rowIndex, row] of groupRows.entries()) {
         const rowHeight = Math.max(...row.map((r) => r.h));
+        // Free space under this row. Column labels share it with the title of the panel below.
+        const below = { room: rowIndex < groupRows.length - 1 ? GAP.row : GAP.group, roomPixels: 46 };
         for (const { panel, x, w, h } of row) {
           const data = buffers.get(panel.id);
           const texture = new THREE.DataTexture(
@@ -322,7 +326,7 @@ async function loadDataset(id) {
           if (panel.colBands && panel.colBands.length <= 8) {
             for (const band of panel.colBands) {
               addLabel(labels, "band", band.label, new THREE.Vector3(x + (band.start + band.size / 2) * cellW, y - h - 6, z),
-                { anchor: "center-top", minPixels: 260, span: w });
+                { anchor: "center-top", minPixels: 260, span: w, ...below });
             }
           }
           if (panel.colLabels) {
@@ -330,7 +334,7 @@ async function loadDataset(id) {
             panel.colLabels.forEach((text, c) => {
               if (c % stride) return;
               addLabel(labels, "band", text, new THREE.Vector3(x + (c + 0.5) * cellW, y - h - 6, z),
-                { anchor: "center-top", minPixels: 200, span: w });
+                { anchor: "center-top", minPixels: 200, span: w, ...below });
             });
           }
           if (panel.rowLabels) {
@@ -476,8 +480,9 @@ function frameLayer(index, animate) {
 }
 
 function framePanel(record) {
-  const target = new THREE.Vector3(record.x + record.w / 2, record.y - record.h / 2, record.z);
-  flyTo(target, fitDistance(record.w * 1.15, Math.max(record.h, record.w * 0.2) * 1.25), true, false);
+  const labelRoom = record.panel.rowLabels || record.panel.rowBands ? record.w * 0.3 : 0;
+  const target = new THREE.Vector3(record.x + (record.w - labelRoom) / 2, record.y - record.h / 2, record.z);
+  flyTo(target, fitDistance(record.w * 1.15 + labelRoom, Math.max(record.h, record.w * 0.2) * 1.25), true, false);
   markCurrentLayer(record.layerIndex);
 }
 
@@ -502,12 +507,16 @@ const UNIT_LABEL = {
   push: "Push on A (logits)",
   points: "Accuracy change",
   outcome: "Outcome",
+  share: "Answered correctly",
+  count: "Changed",
 };
 
 function formatValue(value, unit) {
   if (unit === "relative change") return `${(100 * value).toFixed(2)} %`;
   if (unit === "margin change" || unit === "margin" || unit === "push") return `${value >= 0 ? "+" : ""}${value.toFixed(3)}`;
   if (unit === "outcome") return value > 0 ? "fixed (wrong to right)" : value < 0 ? "broken (right to wrong)" : "same result as before";
+  if (unit === "share") return `${(100 * value).toFixed(1)} % of the set`;
+  if (unit === "count") return `${value.toFixed(0)} questions`;
   if (unit === "points") return `${value >= 0 ? "+" : ""}${value.toFixed(2)} points`;
   const abs = Math.abs(value);
   return abs !== 0 && abs < 0.001 ? value.toExponential(2) : value.toFixed(4);
@@ -527,7 +536,10 @@ function pick(event) {
 }
 
 function clearHover() {
-  if (hovered) hovered.record.material.uniforms.uHover.value.set(-1, -1);
+  if (hovered) {
+    hovered.record.material.uniforms.uHover.value.set(-1, -1);
+    redraw = true;
+  }
   hovered = null;
   dom.tooltip.hidden = true;
 }
@@ -541,6 +553,7 @@ function onMove(event) {
   const { record, row, col } = hit;
   const { panel } = record;
   record.material.uniforms.uHover.value.set(col, row);
+  redraw = true;
   const value = decode(record, row, col);
   const rowBand = bandLabel(panel.rowBands, row) ?? panel.rowLabels?.[row];
   const colBand = bandLabel(panel.colBands, col) ?? panel.colLabels?.[col];
@@ -603,11 +616,13 @@ window.addEventListener("keydown", (e) => {
 function applyFocus() {
   if (!current) return;
   for (const p of current.panels) p.material.uniforms.uDim.value = dom.focus.checked ? 1 : 0;
+  redraw = true;
 }
 dom.focus.addEventListener("change", applyFocus);
 dom.gamma.addEventListener("input", () => {
   dom.gammaOut.textContent = Number(dom.gamma.value).toFixed(2);
   if (current) for (const p of current.panels) p.material.uniforms.uGamma.value = Number(dom.gamma.value);
+  redraw = true;
 });
 dom.gammaOut.textContent = Number(dom.gamma.value).toFixed(2);
 
@@ -619,6 +634,7 @@ const ANCHOR = {
   "left-middle": "translate(0, -50%)",
   "right-middle": "translate(-100%, -50%)",
   "right-top": "translate(-100%, 0)",
+  "right-bottom": "translate(-100%, -100%)",
   "center-top": "translate(-50%, 0)",
   "center-bottom": "translate(-50%, -100%)",
 };
@@ -632,7 +648,7 @@ function updateLabels(width, height) {
     const pixelsPerUnit = unitsToPixels / Math.max(depth, 1);
     const visible = depth > 0 && Math.abs(projected.x) < 1.15 && Math.abs(projected.y) < 1.15
       && (label.span ? label.span * pixelsPerUnit >= label.minPixels : true)
-      && label.room * pixelsPerUnit >= (label.room ? 17 : 0); // matrix labels need a text line of free space above
+      && label.room * pixelsPerUnit >= (label.room ? label.roomPixels : 0); // labels in a gap need free pixels there
     label.el.style.display = visible ? "" : "none";
     if (!visible) continue;
     if (label.clip) label.el.style.maxWidth = `${Math.floor(label.span * pixelsPerUnit)}px`;
@@ -648,9 +664,15 @@ function resize() {
     renderer.setSize(width, height, false);
     camera.aspect = width / height;
     camera.updateProjectionMatrix();
+    redraw = true;
   }
   return { width, height };
 }
+
+// A frame is drawn only when the camera moved, a flight is running, the canvas was resized or `redraw` was set,
+// so a still view leaves the GPU idle.
+let redraw = true;
+const drawnCamera = new THREE.Matrix4();
 
 function tick(now) {
   const { width, height } = resize();
@@ -662,8 +684,13 @@ function tick(now) {
     if (t >= 1) flight = null;
   }
   controls.update();
-  renderer.render(scene, camera);
-  if (current) updateLabels(width, height);
+  camera.updateMatrixWorld();
+  if (redraw || flight || !drawnCamera.equals(camera.matrixWorld)) {
+    redraw = false;
+    drawnCamera.copy(camera.matrixWorld);
+    renderer.render(scene, camera);
+    if (current) updateLabels(width, height);
+  }
   requestAnimationFrame(tick);
 }
 

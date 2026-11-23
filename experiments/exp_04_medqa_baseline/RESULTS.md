@@ -84,8 +84,19 @@ as plain text with no chat template and no BOS token, answer = the most likely o
 
 - In the harness format MediPhi-Instruct answers 191 questions correctly that Phi-3.5 misses and misses 114 that
   Phi-3.5 gets (+6.05 points, sign test p < 0.0001).
-- The harness text wrapped in the chat template, still without an instruction line (variant `chat`): Phi-3.5 0.553
-  with 0.170 of the probability on the letters. The two medical models in that variant are queued.
+- The harness text wrapped in the chat template, still without an instruction line (variant `chat`; the two
+  medical models were added on 2026-11-23, files `processed/lmeval_chat_<model>_test.jsonl`):
+
+  | Test split, 1,273 questions, harness text inside the chat template | Phi-3.5 | MediPhi | MediPhi-Instruct |
+  |---|---|---|---|
+  | Accuracy (questions right) | 0.5530 (704) | 0.5522 (703) | 0.5562 (708) |
+  | Mean next-token probability on the four letters | 0.170 | 0.241 | 0.778 |
+  | Letters picked (A / B / C / D; gold is 353 / 309 / 346 / 265) | 246 / 290 / 346 / 391 | 220 / 300 / 367 / 386 | 245 / 313 / 363 / 352 |
+  | Paired with Phi-3.5: only Phi-3.5 right / only this model right | - | 56 / 55 (p = 1.000) | 75 / 79 (p = 0.809) |
+
+  `[OBSERVATION]` With the chat template around the same text, MediPhi-Instruct's lead over Phi-3.5 is +0.31
+  points (79 vs 75 questions), against +6.05 points (191 vs 114) without the template. Phi-3.5 gains 6.76 points
+  from the template (0.4855 to 0.5530), MediPhi 7.15 points, MediPhi-Instruct 1.02 points.
 - `run.py --style bare` (our own scorer with the same prompt) gives Phi-3.5 0.487 on test; it batches differently
   from `run_lmeval_style.py`, and two near-tie questions flip.
 - Bare prompt on the other splits (`run.py --style bare`, files `processed/bare_<model>_<split>.jsonl`, finished

@@ -42,6 +42,7 @@ the paper's Table 13:
 |---|---|---|---|
 | Paper | 0.486 | 0.491 | 0.548 |
 | Ours, bare harness prompt | 0.4855 | 0.4808 | 0.5460 |
+| Ours, bare harness text inside the chat template (control, 2026-11-23) | 0.5530 | 0.5522 | 0.5562 |
 | Ours, chat prompt with instruction | 0.572 | 0.563 | 0.565 |
 | Probability on the four letters, bare prompt | 4 % | 10 % | 41 % |
 
@@ -49,6 +50,11 @@ With the bare prompt Phi-3.5 would rather start a sentence ("The ...") than give
 scored on is a low-probability afterthought, skewed toward "A". MediPhi-Instruct goes straight to a letter. So the
 paper's +6 points for MediPhi-Instruct is real in that format (191 questions gained, 114 lost) and vanishes when
 the prompt asks for a letter.
+
+Control (2026-11-23): the same text wrapped in the chat template, with no instruction line added.
+`[OBSERVATION]` The three models tie: 704 / 703 / 708 questions right. MediPhi-Instruct vs Phi-3.5 is 79 vs 75
+questions (+0.31 points, p = 0.81). The template alone gives Phi-3.5 +6.76 points and MediPhi-Instruct +1.02. The
+probability on the four letters is 17 % / 24 % / 78 %.
 
 ## What this does and does not show
 Shows that, with these two protocols, MedQA has no MediPhi advantage to explain. Does not show that MediPhi is

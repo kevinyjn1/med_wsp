@@ -9,6 +9,8 @@ Sweeps (`--sweep`):
   around     around `--center`: lengths 2/3/4/6, Chen K 2/3/4 with beta 0 and 0.5, Lys uniform/moving
 
 Usage:  python experiments/exp_07_layer_looping/run.py --model phi --split dev --limit 600 --sweep defaults position
+
+The script takes the "batch" GPU lock once per configuration (wsp/gpu_lock.py); do not wrap it in the lock command.
 """
 
 from __future__ import annotations
@@ -26,6 +28,7 @@ REPO = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(REPO))
 
 from wsp import medqa, models
+from wsp.gpu_lock import gpu_lock
 from wsp.looping import LoopSpec, looped
 
 OUT = Path(__file__).resolve().parent / "processed"
@@ -99,12 +102,16 @@ def main() -> None:
         path = per_question / f"{label}.jsonl"
         if label in done and path.exists():
             return medqa.load_jsonl(path)
-        start = time.time()
-        if spec is None:
-            records = medqa.evaluate(model, tokenizer, items, batch_size=args.batch_size, progress=False)
-        else:
-            with looped(model, spec):
+        # One lock per configuration, not per sweep, so a lab pass can run between two configurations.
+        with gpu_lock(f"exp07 {label}", name="batch"):
+            start = time.time()
+            if spec is None:
                 records = medqa.evaluate(model, tokenizer, items, batch_size=args.batch_size, progress=False)
+            else:
+                with looped(model, spec):
+                    records = medqa.evaluate(
+                        model, tokenizer, items, batch_size=args.batch_size, progress=False
+                    )
         medqa.save_jsonl(records, path)
         row = summarize(label, records, baseline, time.time() - start)
         if spec is not None:
