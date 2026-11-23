@@ -14,7 +14,11 @@ with the per-question result of every score pass (the session's work folder is n
            by question, with what the lab recorded when Astra's passes ran. The lab records the names of the
            edited tensors of a pass, not their content, so this is what ties the saved files to those passes.
 
-Usage:  python experiments/exp_05_medical_circuit/check_session.py --name transfer1 [--rescore]
+`--test` is not a check: it scores the withdrawn candidate against the unedited model on the MedQA test split
+under both prompts (GPU), which the researcher asked for on 2026-11-23 after the session had ended. It writes the
+`test` block of the same file and `check_<name>_test_questions.jsonl`.
+
+Usage:  python experiments/exp_05_medical_circuit/check_session.py --name transfer1 [--rescore] [--test]
 """
 
 from __future__ import annotations
@@ -79,13 +83,13 @@ def scored(work: Path, index: int, answers: dict[str, str]) -> dict:
     return out
 
 
-def donor_reference(donor: str, ids: list[str]) -> dict:
+def donor_reference(donor: str, ids: list[str], splits: tuple[str, ...] = ("dev", "train")) -> dict:
     """The donor's own EXP-04 results on the given questions, per prompt: what a complete transfer would give."""
     out = {}
     for prompt, prefix in (("bare", "bare_"), ("chat", "")):
         rows = {
             r["id"]: r
-            for split in ("dev", "train")
+            for split in splits
             for r in medqa.load_jsonl(BASELINE / f"{prefix}{donor}_{split}.jsonl")
         }
         picked = [rows[i] for i in ids]
@@ -263,8 +267,7 @@ def rescore(run: Path, records: dict) -> dict:
     out = {}
     with gpu_lock(f"exp05 rescore {run.name}"):
         net = models.load_model("phi")
-        edits = {path.name[: -len(".npy")]: torch.from_numpy(np.load(path)).to(torch.float32).to(torch.bfloat16)
-                 for path in sorted((work / CANDIDATE).glob("*.npy"))}  # fmt: skip
+        edits = load_candidate(work)
         for entry in records["passes"]:
             if entry["question_set"] != "confirmation" or "fixed" not in entry:
                 continue
@@ -287,11 +290,87 @@ def rescore(run: Path, records: dict) -> dict:
     return out
 
 
+def load_candidate(work: Path) -> dict[str, torch.Tensor]:
+    """The saved candidate as the lab loads an edit: float32 files rounded to bfloat16."""
+    return {path.name[: -len(".npy")]: torch.from_numpy(np.load(path)).to(torch.float32).to(torch.bfloat16)
+            for path in sorted((work / CANDIDATE).glob("*.npy"))}  # fmt: skip
+
+
+def score_test(run: Path, donor: str) -> dict:
+    """The withdrawn candidate against the unedited model on the MedQA test split, under both prompts.
+
+    Everything reported is fixed here, before the run: the paired statistics of the lab's score passes, Astra's
+    retention rule applied to them, the split of the bare-prompt result by the unedited model's chat result, and
+    the donor's own EXP-04 results on the same questions.
+    """
+    items = medqa.load_medqa("test")
+    tokenizer = models.load_tokenizer("phi")
+    scores: dict = {}
+    with gpu_lock(f"exp05 test split {run.name}"):
+        net = models.load_model("phi")
+        edits = load_candidate(run / "work")
+        for prompt in ("bare", "chat"):
+            original = medqa.evaluate(net, tokenizer, items, 16, progress=False, style=prompt)
+            with swapped_weights(net, edits):
+                edited = medqa.evaluate(net, tokenizer, items, 16, progress=False, style=prompt)
+            scores[prompt] = {"original": original, "edited": edited}
+        del net
+
+    def stats(prompt: str, keep: np.ndarray | None = None) -> dict:
+        original, edited = scores[prompt]["original"], scores[prompt]["edited"]
+        keep = np.ones(len(items), bool) if keep is None else keep
+        o = np.array([r["correct"] for r in original])[keep]
+        e = np.array([r["correct"] for r in edited])[keep]
+        change = np.array([b["margin"] - a["margin"] for a, b in zip(original, edited, strict=True)])[keep]
+        return paired(o, e, change)
+
+    reference = donor_reference(donor, [item["id"] for item in items], splits=("test",))
+    harness = {row["id"]: row for row in load_lines(run / "final_eval_per_question.jsonl")}
+    out: dict = {"tensors": len(edits)}
+    for prompt in ("bare", "chat"):
+        original, edited = scores[prompt]["original"], scores[prompt]["edited"]
+        block = stats(prompt)
+        block["letter_mass"] = [
+            float(np.mean([r["letter_mass"] for r in rows])) for rows in (original, edited)
+        ]
+        block["predicted"] = {who: [sum(r["pred"] == letter for r in rows) for letter in medqa.LETTERS]
+                              for who, rows in (("original", original), ("edited", edited))}  # fmt: skip
+        block["donor"] = {k: v for k, v in reference[prompt].items() if k != "by_id"}
+        # the unedited model was scored on the same questions by the harness's final evaluation
+        block["unedited_differs_from_final_eval"] = int(sum(
+            r["letter_logprobs"] != harness[r["id"]][prompt]["original"]["letter_logprobs"] for r in original))  # fmt: skip
+        out[prompt] = block
+    # Astra's retention rule, applied to the test split
+    out["rule"] = {
+        "bare_gain_in_standard_errors": out["bare"]["difference_points"] / out["bare"]["standard_error_points"],
+        "bare_gain_above_2_standard_errors": bool(out["bare"]["difference_points"] > 2 * out["bare"]["standard_error_points"]),
+        "chat_difference_not_negative": bool(out["chat"]["difference_points"] >= 0),
+    }  # fmt: skip
+    right_under_chat = np.array([r["correct"] for r in scores["chat"]["original"]])
+    out["bare_outcome_by_unedited_chat_result"] = {
+        str(flag): stats("bare", keep)
+        for flag, keep in ((True, right_under_chat), (False, ~right_under_chat))
+    }
+    keys = ("pred", "correct", "margin", "letter_logprobs")
+    medqa.save_jsonl(
+        [{"id": item["id"], "answer": item["answer"],
+          **{prompt: {who: {k: scores[prompt][who][i][k] for k in keys} for who in ("original", "edited")}
+             for prompt in ("bare", "chat")},
+          "donor": {prompt: reference[prompt]["by_id"][item["id"]] for prompt in ("bare", "chat")}}
+         for i, item in enumerate(items)],
+        HERE / "processed" / f"check_{run.name}_test_questions.jsonl",
+    )  # fmt: skip
+    return out
+
+
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--name", default="transfer1")
     parser.add_argument("--donor", default="mediphi_instruct")
     parser.add_argument("--rescore", action="store_true", help="also score the saved candidate again (GPU)")
+    parser.add_argument(
+        "--test", action="store_true", help="score the saved candidate on the test split (GPU)"
+    )
     args = parser.parse_args()
     run = HERE / "raw" / args.name
     target = HERE / "processed" / f"check_{args.name}.json"
@@ -300,6 +379,8 @@ def main() -> None:
     result["weights"] = check_weights(run, args.donor)
     if args.rescore:
         result["rescore"] = rescore(run, result["records"])
+    if args.test:
+        result["test"] = score_test(run, args.donor)
     target.write_text(json.dumps(result, indent=1))
     records, weights = result["records"], result["weights"]
     print({k: v for k, v in records.items() if k not in ("passes", "bare_outcome_by_unedited_chat_result")})
@@ -312,6 +393,7 @@ def main() -> None:
     print(records["bare_outcome_by_unedited_chat_result"])
     print({k: v for k, v in weights.items() if k not in ("tensors", "units", "donor_relative_change")})
     print(result.get("rescore", "not rescored"))
+    print(json.dumps(result.get("test", "not scored on the test split"), indent=1))
     print("wrote", target)
 
 

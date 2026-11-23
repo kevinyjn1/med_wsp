@@ -77,10 +77,17 @@ def bands(count: int, size: int, prefix: str) -> list[dict]:
 
 def tile(folder: Path, panel_id: str, label: str, values, shape: tuple[int, int], *, signed: bool,
          color_max: float | None = None, cell: int = 6, **extra) -> dict:  # fmt: skip
-    """A float32 panel from a flat list of values laid out row by row."""
-    spec = write_panel(folder, panel_id, np.asarray(values, np.float32).reshape(shape), signed=signed,
-                       quantize=False, color_max=color_max)  # fmt: skip
+    """A float32 panel from a flat list of values laid out row by row. A list shorter than the grid leaves the
+    last cells empty (drawn hatched; the viewer says there is no value there)."""
+    values = np.asarray(values, np.float32).ravel()
+    grid = np.full(shape[0] * shape[1], np.nan, np.float32)
+    grid[: len(values)] = values
+    spec = write_panel(
+        folder, panel_id, grid.reshape(shape), signed=signed, quantize=False, color_max=color_max
+    )
     spec.update({"id": panel_id, "label": label, "cell": cell, **extra})
+    if len(values) < len(grid):
+        spec["missingText"] = "no value here (the grid is larger than the list)"
     return spec
 
 
@@ -730,8 +737,9 @@ PART_LABELS = {
 
 def export_exp05c(run: str = "transfer1", donor: str = "mediphi_instruct") -> None:
     """The donor session (EXP-05c): every transfer Astra scored, the candidate's weights, and what the candidate
-    did to each practice question. Reads `processed/check_<run>.json` and `check_<run>_questions.jsonl`
-    (written by `experiments/exp_05_medical_circuit/check_session.py`)."""
+    did to each question. Reads `processed/check_<run>.json`, `check_<run>_questions.jsonl` and, when the
+    candidate was scored on the test split, `check_<run>_test_questions.jsonl` (all written by
+    `experiments/exp_05_medical_circuit/check_session.py`)."""
     src = REPO / "experiments" / "exp_05_medical_circuit"
     check = json.loads((src / "processed" / f"check_{run}.json").read_text())
     records, weights = check["records"], check["weights"]
@@ -739,6 +747,16 @@ def export_exp05c(run: str = "transfer1", donor: str = "mediphi_instruct") -> No
     for row in map(json.loads, (src / "processed" / f"check_{run}_questions.jsonl").read_text().splitlines()):
         per_pass.setdefault(row["pass"], []).append(row)
     final = json.loads((src / "raw" / run / "final_eval.json").read_text())["by_prompt"]
+    # The candidate on the test split: not one of Astra's passes, scored afterwards at the researcher's request.
+    test, test_file = check.get("test"), src / "processed" / f"check_{run}_test_questions.jsonl"
+    test_rows = [json.loads(line) for line in test_file.read_text().splitlines()] if test else []
+    sets = dict(EXP05C_SETS)
+    if test:
+        sets["test"] = (
+            "Test",
+            "MedQA test questions, scored once after the session at the researcher's request",
+            (36, 36),  # 1,273 questions: the last 23 cells of the grid stay empty
+        )
     name = MODEL_NAMES[donor]
     folder = DATA / f"exp05c_transfer_{run}"
     folder.mkdir(parents=True, exist_ok=True)
@@ -748,7 +766,7 @@ def export_exp05c(run: str = "transfer1", donor: str = "mediphi_instruct") -> No
     layer_labels = [str(i) for i in range(n_layers)]
 
     # ---- 1. every transfer Astra scored: where it took donor weights, and what it did
-    columns = [(key, prompt) for key in EXP05C_SETS for prompt in ("bare", "chat")]
+    columns = [(key, prompt) for key in sets for prompt in ("bare", "chat")]
     taken = np.zeros((len(EXP05C_TRIALS), n_layers), np.float32)
     accuracy = np.full((len(EXP05C_TRIALS), len(columns)), np.nan, np.float32)
     margin = np.full_like(accuracy, np.nan)
@@ -759,13 +777,20 @@ def export_exp05c(run: str = "transfer1", donor: str = "mediphi_instruct") -> No
             cell = t, columns.index((scored[k]["question_set"], scored[k]["prompt"]))
             accuracy[cell], margin[cell] = scored[k]["difference_points"], scored[k]["margin_change"]
     trial_labels = [label for label, _ in EXP05C_TRIALS]
-    size = {key: shape[0] * shape[1] for key, (_, _, shape) in EXP05C_SETS.items()}
-    sets_text = "; ".join(f"{size[key]:,} = {text}" for key, (_, text, _) in EXP05C_SETS.items())
-    measured = {"cell": 30, "cellW": 84, "rowNames": trial_labels,
+    is_candidate = ["Candidate</b>" in label for label in trial_labels].index(True)
+    for prompt in ("bare", "chat") if test else ():
+        cell = is_candidate, columns.index(("test", prompt))
+        accuracy[cell], margin[cell] = test[prompt]["difference_points"], test[prompt]["margin_change"]
+    size = {key: shape[0] * shape[1] for key, (_, _, shape) in sets.items()} | (
+        {"test": len(test_rows)} if test else {}
+    )
+    sets_text = "; ".join(f"{size[key]:,} = {text}" for key, (_, text, _) in sets.items())
+    # cell widths chosen so that the whole row, framed with its row labels, still shows every column label
+    measured = {"cell": 30, "cellW": 96, "rowNames": trial_labels,
                 "colLabels": [f"{size[key]:,} {prompt}" for key, prompt in columns]}  # fmt: skip
     board = [
         panel("trials_taken", f"Where the weights are {name}'s (columns: layers)", taken, taken.shape, signed=False,
-              color_max=float(len(parts)), cell=30, unit="tensors", rowLabels=trial_labels, colLabels=layer_labels,
+              color_max=float(len(parts)), cell=30, cellW=22, unit="tensors", rowLabels=trial_labels, colLabels=layer_labels,
               note="From the lab's record of each pass. A tensor counts when any part of it was changed: the candidate "
                    "takes all attention weights but only 256 of 8,192 MLP units per layer"),
         panel("trials_accuracy", "Change of accuracy (points)", accuracy, accuracy.shape, signed=True, unit="points",
@@ -801,28 +826,34 @@ def export_exp05c(run: str = "transfer1", donor: str = "mediphi_instruct") -> No
                            unit="weight", note="8,192 MLP units drawn as 64 x 128: cell (r, c) is unit 128 r + c. Bright = "
                            f"the unit's input and output weights are {name}'s"))  # fmt: skip
 
-    # ---- 3. what the candidate did to each practice question
-    candidate = dict(EXP05C_TRIALS)[next(label for label, _ in EXP05C_TRIALS if "Candidate</b>" in label)]
+    # ---- 3. what the candidate did to each question
+    candidate = EXP05C_TRIALS[is_candidate][1]
+
+    def rows_of(key: str, prompt: str) -> list[dict]:
+        """The candidate's per-question records on one question set under one prompt."""
+        if key == "test":
+            return [{"id": r["id"], **r[prompt]} for r in test_rows]
+        k = next(k for k in candidate if (scored[k]["question_set"], scored[k]["prompt"]) == (key, prompt))
+        return per_pass[k]
+
+    # the donor itself on the questions where it was looked up (EXP-04 results), by question id and prompt
+    whole_donor = {
+        "confirmation": {r["id"]: r for r in per_pass["donor"]},
+        "test": {r["id"]: r["donor"] for r in test_rows},
+    }
     facts, groups, stats = [], [], {}
-    for key, (short, text, shape) in EXP05C_SETS.items():
+    for key, (short, text, shape) in sets.items():
         for prompt in ("bare", "chat"):
-            k = next(
-                k for k in candidate if (scored[k]["question_set"], scored[k]["prompt"]) == (key, prompt)
-            )
-            assert len(per_pass[k]) == size[key], (k, key)
+            rows = rows_of(key, prompt)
+            assert len(rows) == size[key], (key, prompt, len(rows))
             panels, stat = question_grid(
-                folder, f"{key}_{prompt}", f"{size[key]:,} {text}, {prompt} prompt", per_pass[k], shape
+                folder, f"{key}_{prompt}", f"{size[key]:,} {text}, {prompt} prompt", rows, shape
             )
             stats[key, prompt] = stat
-            if key == "confirmation":  # the donor itself on the same questions, in the same order
-                reference = {r["id"]: r[prompt] for r in per_pass["donor"]}
-                before = np.array(
-                    [
-                        row["original"]["correct"]
-                        for row in sorted(per_pass[k], key=lambda r: r["original"]["margin"])
-                    ]
-                )
-                whole = np.array([reference[i]["correct"] for i in stat["ids"]])
+            if key in whole_donor:  # the donor itself on the same questions, in the same order
+                correct = {r["id"]: r["original"]["correct"] for r in rows}
+                before = np.array([correct[i] for i in stat["ids"]])
+                whole = np.array([whole_donor[key][i][prompt]["correct"] for i in stat["ids"]])
                 outcome = (whole & ~before).astype(np.float32) - (before & ~whole).astype(np.float32)
                 panels.append(panel(
                     f"{key}_{prompt}_donor", f"With all of {name}: {int((outcome > 0).sum())} fixed, {int((outcome < 0).sum())} broken",
@@ -831,56 +862,61 @@ def export_exp05c(run: str = "transfer1", donor: str = "mediphi_instruct") -> No
             groups.append({"name": f"{short}, {prompt} prompt", "kind": "attention", "panels": panels})
         bare, chat = stats[key, "bare"], stats[key, "chat"]
         facts.append(
-            f"{short} ({bare['n']:,} questions): bare prompt {100 * bare['before']:.2f} % to {100 * bare['after']:.2f} % "
+            f"{short} ({bare['n']:,} {text}): bare prompt {100 * bare['before']:.2f} % to {100 * bare['after']:.2f} % "
             f"({100 * (bare['after'] - bare['before']):+.2f} points, standard error {100 * bare['se']:.2f}; {bare['fixed']} fixed, "
             f"{bare['broken']} broken); chat prompt {100 * (chat['after'] - chat['before']):+.2f} points "
             f"(standard error {100 * chat['se']:.2f}; {chat['fixed']} fixed, {chat['broken']} broken)."
         )
     # the bare-prompt outcome, with the questions ordered by how the unedited model does under the chat prompt
-    k_bare, k_chat = (next(k for k in candidate if (scored[k]["question_set"], scored[k]["prompt"]) == ("confirmation", prompt))
-                      for prompt in ("bare", "chat"))  # fmt: skip
-    chat_margin = {r["id"]: r["original"]["margin"] for r in per_pass[k_chat]}
-    ordered = sorted(per_pass[k_bare], key=lambda r: chat_margin[r["id"]])
-    outcome = np.array(
-        [float(r["edited"]["correct"]) - float(r["original"]["correct"]) for r in ordered], np.float32
-    )
-    keys = np.array([chat_margin[r["id"]] for r in ordered], np.float32)
-    order = ("the 1,024 confirmation questions, sorted by the unedited model's margin under the chat prompt: most wrong "
-             "first (top left) to most right (bottom right)")  # fmt: skip
-    groups.append({"name": "Confirmation: bare outcome by chat result", "kind": "attention", "panels": [
-        panel("cross_chat_margin", "Unedited model's margin, chat prompt", keys, (32, 32), signed=True,
-              color_max=float(np.percentile(np.abs(keys), 98)), cell=14, unit="margin", note=order),
-        panel("cross_bare_outcome", "Candidate's outcome, bare prompt", outcome, (32, 32), signed=True, color_max=2.0,
-              cell=14, unit="outcome", note=order),
-    ]})  # fmt: skip
+    for key in whole_donor if test else ("confirmation",):
+        short, _, shape = sets[key]
+        chat_margin = {r["id"]: r["original"]["margin"] for r in rows_of(key, "chat")}
+        ordered = sorted(rows_of(key, "bare"), key=lambda r: chat_margin[r["id"]])
+        outcome = np.array(
+            [float(r["edited"]["correct"]) - float(r["original"]["correct"]) for r in ordered], np.float32
+        )
+        keys = np.array([chat_margin[r["id"]] for r in ordered], np.float32)
+        order = (f"the {size[key]:,} {short.lower()} questions, sorted by the unedited model's margin under the chat prompt: "
+                 "most wrong first (top left) to most right (bottom right)")  # fmt: skip
+        groups.append({"name": f"{short}: bare outcome by chat result", "kind": "attention", "panels": [
+            panel(f"cross_{key}_chat_margin", "Unedited model's margin, chat prompt", keys, shape, signed=True,
+                  color_max=float(np.percentile(np.abs(keys), 98)), cell=14, unit="margin", note=order),
+            panel(f"cross_{key}_bare_outcome", "Candidate's outcome, bare prompt", outcome, shape, signed=True,
+                  color_max=2.0, cell=14, unit="outcome", note=order),
+        ]})  # fmt: skip
 
-    split = records["bare_outcome_by_unedited_chat_result"]
-    reference = records["donor_on_confirmation"]
-    confirmation = stats["confirmation", "bare"]
+    def by_chat(split: dict, what: str) -> str:
+        return (f"on the {split['True']['n']} {what} questions the unedited model gets right under the chat prompt, the "
+                f"candidate's bare-prompt accuracy changes by {split['True']['difference_points']:+.2f} points "
+                f"({split['True']['fixed']} fixed, {split['True']['broken']} broken); on the other {split['False']['n']} by "
+                f"{split['False']['difference_points']:+.2f} points ({split['False']['fixed']} fixed, {split['False']['broken']} broken)")  # fmt: skip
+
+    reference = records["donor_on_confirmation"]["bare"]
+    scale = (f"For scale, {name} itself under the bare prompt: {100 * reference['correct'] / reference['n']:.2f} % of the "
+             f"confirmation questions (unedited Phi-3.5: {100 * stats['confirmation', 'bare']['before']:.2f} %)")  # fmt: skip
+    where = "Where the gain sits: " + by_chat(records["bare_outcome_by_unedited_chat_result"], "confirmation")
+    rule = ("Astra's rule, written before the confirmation passes: keep the edit only if the bare-prompt gain exceeds 2 "
+            "standard errors and chat-prompt accuracy does not fall. Neither held, so it removed the edit.")  # fmt: skip
+    if test:
+        scale += (f", and {100 * test['bare']['donor']['correct'] / test['bare']['donor']['n']:.2f} % of the test questions "
+                  f"({100 * stats['test', 'bare']['before']:.2f} %)")  # fmt: skip
+        where += ". Test split: " + by_chat(test["bare_outcome_by_unedited_chat_result"], "test")
+        rule += (f" On the test split the bare-prompt difference is {test['rule']['bare_gain_in_standard_errors']:+.1f} standard "
+                 f"errors and the chat-prompt difference is {test['chat']['difference_points']:+.2f} points.")  # fmt: skip
     manifest = {
         "id": f"exp05c_transfer_{run}",
         "title": f"Moving {name}'s MedQA advantage into Phi-3.5: the weight transfer Astra built and withdrew",
-        "subtitle": (f"EXP-05c {run}: {name}'s attention weights and 256 MLP units per layer in layers 0 to 7. On untouched "
-                     "questions the gain under the bare prompt was within noise, so Astra submitted no edit"),
+        "subtitle": (f"EXP-05c {run}: {name}'s attention weights and 256 MLP units per layer in layers 0 to 7. Astra withdrew "
+                     "it after its confirmation passes and submitted no edit"),
         "family": "Phi-3.5 vs MediPhi",
         "maxRowWidth": 2400,
         "facts": [
-            (f"Astra submitted no edit. MedQA test accuracy is {100 * final['bare']['original_accuracy']:.2f} % (bare prompt) and "
-             f"{100 * final['chat']['original_accuracy']:.2f} % (chat prompt) before and after ({final['bare']['n']:,} questions)."),
+            (f"Astra submitted no edit, so MedQA test accuracy is {100 * final['bare']['original_accuracy']:.2f} % (bare prompt) "
+             f"and {100 * final['chat']['original_accuracy']:.2f} % (chat prompt) before and after ({final['bare']['n']:,} questions)."),
             (f"The candidate takes {name}'s weights in layers {min(units)} to {max(units)}: all attention weights and norms, and "
              f"256 of 8,192 MLP units per layer. That is {100 * weights['share_of_model_in_support']:.2f} % of the model's weights; "
              f"{100 * weights['share_of_model_changed']:.2f} % actually differ from Phi-3.5's."),
-            *facts,
-            (f"For scale: {name} itself answers {100 * reference['bare']['correct'] / reference['bare']['n']:.2f} % of the "
-             f"confirmation questions under the bare prompt, so the candidate covers "
-             f"{100 * (confirmation['after'] - confirmation['before']) / (reference['bare']['correct'] / reference['bare']['n'] - confirmation['before']):.0f} % "
-             "of the distance, with a standard error about as large as the gain."),
-            (f"Where the gain sits: on the {split['True']['n']} confirmation questions the unedited model gets right under the "
-             f"chat prompt, the candidate's bare-prompt accuracy changes by {split['True']['difference_points']:+.2f} points "
-             f"({split['True']['fixed']} fixed, {split['True']['broken']} broken); on the other {split['False']['n']} by "
-             f"{split['False']['difference_points']:+.2f} points ({split['False']['fixed']} fixed, {split['False']['broken']} broken)."),
-            ("Astra's rule, written before the confirmation passes: keep the edit only if the bare-prompt gain exceeds 2 "
-             "standard errors and chat-prompt accuracy does not fall. Neither held, so it removed the edit."),
+            *facts, scale + ".", where + ".", rule,
         ],
         "colorNote": ("Red = positive, blue = negative, hatched = not measured. Outcome panels: red = fixed by the edit, "
                       "blue = broken, gray = same result. Margins are in log-probability units and saturate at the 98th "
@@ -893,7 +929,7 @@ def export_exp05c(run: str = "transfer1", donor: str = "mediphi_instruct") -> No
                        "actually different": weights["share_of_model_changed"]},
              "groups": [{"name": "All 32 layers (columns)", "kind": "attention", "panels": maps},
                         {"name": "MLP units taken", "kind": "attention", "panels": masks}]},
-            {"name": "What the candidate did to each practice question", "groups": groups},
+            {"name": "What the candidate did to each question", "groups": groups},
         ],
     }  # fmt: skip
     (folder / "manifest.json").write_text(json.dumps(manifest))

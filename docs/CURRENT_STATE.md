@@ -1,6 +1,6 @@
 # Current State
 
-Checkpoint written 2026-11-23 14:50 (session 01, still in progress). Detailed log: `vault/sessions/2026-11-21 Session 01.md`.
+Checkpoint written 2026-11-23 17:10 (session 01, still in progress). Detailed log: `vault/sessions/2026-11-21 Session 01.md`.
 
 ## Objective
 
@@ -44,6 +44,10 @@ Checkpoint written 2026-11-23 14:50 (session 01, still in progress). Detailed lo
   whole donor; the gain sits on questions the unedited model already answers correctly under the chat prompt
   (+6.07 points there, -5.03 elsewhere). All of Astra's figures were recounted and the saved candidate re-scored
   with identical results (`experiments/exp_05_medical_circuit/RESULTS_05c.md`).
+- EXP-05c, withdrawn candidate on the test split (scored once after the session, at the researcher's request):
+  bare 48.70 % to 50.98 % (+2.28 points, SE 1.10; 113 fixed, 84 broken, p = 0.046), chat 57.19 % to 56.32 %
+  (-0.86 points, SE 0.75). MediPhi-Instruct itself: 54.60 % and 56.48 %. Astra's rule still fails on the chat
+  condition. Confirmation and test pooled afterwards: bare +2.05 (SE 0.85), chat -0.61 (SE 0.55).
 - EXP-07 first scan (Phi-3.5, 600 dev questions, 28 looping configurations): none raises accuracy with p < 0.05;
   best is the damped rule on layers 10-13, +1.83 points (p = 0.19), margin +0.63 (SE 0.19); plain repetition of
   early layers costs 3.8 to 7.0 points (`experiments/exp_07_layer_looping/RESULTS.md`).
@@ -69,7 +73,7 @@ None of the above has been reviewed by the researcher; nothing is in `research/0
 
 ## Verification
 
-- `ruff check wsp experiments tests` clean; `pytest tests` 27 passed (2026-11-23 14:50).
+- `ruff check wsp experiments tests` clean; `pytest tests` 27 passed (2026-11-23 17:10).
 - `python tests/integration_lab.py <scratch>` passes on the real Phi-3.5 weights.
 - Viewer builds (`npm run build --prefix viz`) and was checked in the browser for all nine datasets.
 
@@ -85,8 +89,9 @@ None of the above has been reviewed by the researcher; nothing is in `research/0
   sleeps when it is empty. Jobs now hold a no-sleep assertion on AC power (`wsp/keep_awake.py`), which does not
   help once the battery is empty. A closed lid always sleeps.
 - EXP-05b has no control swap and no score on unselected questions; EXP-07's best window is unconfirmed.
-- EXP-05c: the withdrawn candidate was never scored on the test split, and its controls were not scored on the
-  confirmation questions. The saved candidate is local only (`raw/transfer1/work/candidate_sparse_full/`, 3.5 GB).
+- EXP-05c: the candidate's controls were scored neither on the confirmation questions nor on the test split, so
+  its test-split gain is not shown to be specific to these weights. The saved candidate is local only
+  (`raw/transfer1/work/candidate_sparse_full/`, 3.5 GB).
 - Harness gap: a lab pass records the names of the edited tensors, not their content, so a withdrawn edit can be
   tied to a pass only by scoring a saved copy again (done for `transfer1`). A digest of the edits in each pass
   record would close it; not implemented.
@@ -94,11 +99,15 @@ None of the above has been reviewed by the researcher; nothing is in `research/0
 ## Next
 
 1. Nothing is running. All queued runs and both Astra sessions on Phi-3.5 are finished and written up.
-2. Researcher decisions pending: whether to score the withdrawn EXP-05c candidate (and the EXP-06 one) on the
-   test split; control and unselected-question scoring for EXP-05b; `around` sweep for EXP-07; whether the bare
-   prompt stays the primary measure, given that both the chat-template control and the EXP-05c split point at
-   prompt handling; a second donor or no-donor session.
-3. Restart EXP-03c with the smaller passes (the GPU is free now); EXP-02 once Gemma access exists; EXP-05d
+2. Where to run next: the researcher has a SLURM cluster account (login node reachable only with a password,
+   so not from this session). Its GPUs, limits and storage are not known yet; the Mac's sleep and power problems
+   are the reason to move plain GPU jobs there. Astra itself must stay on the Mac (Codex build in ChatGPT.app).
+3. Researcher decisions pending: how to read the EXP-05c test-split result (bare up, chat slightly down) and
+   whether to score the two controls on the test split; whether to score the EXP-06 candidate there too; control
+   and unselected-question scoring for EXP-05b; `around` sweep for EXP-07; whether the bare prompt stays the
+   primary measure, given that both the chat-template control and the EXP-05c split point at prompt handling; a
+   second donor or no-donor session.
+4. Restart EXP-03c with the smaller passes (the GPU is free now); EXP-02 once Gemma access exists; EXP-05d
    (crosscoder) not started.
 
 ## Resume

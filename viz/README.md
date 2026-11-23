@@ -23,7 +23,7 @@ networks) and from `experiments/*/processed/`.
 | `mit8_qwen_p50c` | MIT experiment 8: the two edited MLP output matrices of Qwen3.5-0.8B (before, change, the 64 edited columns, the loop direction). Needs `python experiments/exp_03_mit8_math/apply_edit.py` first. |
 | `exp06_edit_run1` | EXP-06: the one MLP unit of Phi-3.5 that Astra edited and then rejected (location, each unit's push on answer A, the unit's output direction before and after), and one cell per practice question: margin before, fixed / broken, change of the margin. Needs the run's `work` folder (local only). |
 | `interventions_mediphi_instruct_bare_phi` | EXP-05b: for each of the 32 layers, what happens to Phi-3.5's MedQA answers (bare prompt) when that layer's residual stream, attention output, MLP output, attention weights or MLP weights come from MediPhi-Instruct. Per question set (gain, loss, both): change of the correct answer's margin and share answered correctly. Needs `experiments/exp_05_medical_circuit/processed/patch_mediphi_instruct_bare/`. |
-| `exp05c_transfer_transfer1` | EXP-05c: the transfer of MediPhi-Instruct weights that Astra built and then withdrew. Every transfer it scored (where it took donor weights, change of accuracy and margin per question set and prompt), the candidate's weights against the full donor difference with the 256 MLP units taken per layer, and one cell per practice question (margin before, fixed / broken, change of the margin, and the donor itself for comparison). Needs `experiments/exp_05_medical_circuit/processed/check_transfer1.json` and `check_transfer1_questions.jsonl` (in git). |
+| `exp05c_transfer_transfer1` | EXP-05c: the transfer of MediPhi-Instruct weights that Astra built and then withdrew. Every transfer it scored (where it took donor weights, change of accuracy and margin per question set and prompt), the candidate's weights against the full donor difference with the 256 MLP units taken per layer, and one cell per question for Astra's three practice sets and the test split (margin before, fixed / broken, change of the margin, and the donor itself for comparison). Needs `experiments/exp_05_medical_circuit/processed/check_transfer1.json`, `check_transfer1_questions.jsonl` and `check_transfer1_test_questions.jsonl` (in git). |
 | `looping_phi_dev_600` | EXP-07: change of accuracy, change of the margin and number of changed answers when a 4-layer window of Phi-3.5 is run twice (damped rule and plain repetition), by window position. |
 | `weightdiff_mediphi_phi` | Relative size of MediPhi minus Phi-3.5, per attention head (Q, K, V, O) and per MLP neuron (gate, up, down), for all 32 layers. |
 
@@ -39,6 +39,8 @@ the color scale.
 `<panel>.bin`, either `float32` or one byte per cell holding `sign(x) * sqrt(|x| / vmax)` (fine steps near
 zero, no clipping). `colorMax` is where the color scale saturates. Signed values use a blue / gray / red
 diverging scale; magnitudes use a one-hue blue scale. A `float32` panel may declare `missing`: cells holding that
-value were not measured and are drawn hatched. `rowNames` names a panel's rows in the hover readout when the row
+value were not measured and are drawn hatched (`missingText` replaces the hover text "not measured", for example
+for the empty tail of a grid that is larger than its list). Column labels thin out like axis ticks when the
+camera is far away, so they never overlap. `rowNames` names a panel's rows in the hover readout when the row
 labels are drawn once, next to the first panel of the row; clicking such a panel frames the whole row. Marks carry a status (`good`, `warning`, `serious`)
 that is always shown with an icon and a text label, never by color alone.

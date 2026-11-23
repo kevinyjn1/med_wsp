@@ -86,8 +86,9 @@ Dataset `exp05c_transfer_transfer1`. Three levels.
 ![[viz_exp05c_transfers.jpg]]
 Every transfer Astra scored, one per row in the order it tried them. Left: in which layers it took
 MediPhi-Instruct's weights (brighter = more of the layer's six weight tensors). Middle and right: the change of
-accuracy and of the correct answer's margin on Astra's three question sets under both prompts (hatched = not
-measured). The candidate is the row with all six cells filled.
+accuracy and of the correct answer's margin on Astra's three question sets and on the test split, under both
+prompts (hatched = not measured). The candidate is the row with all eight cells filled; the last two columns
+(1,273) are the test split, scored after the session.
 
 ![[viz_exp05c_candidate_weights.jpg]]
 The candidate's weights. Top: how much MediPhi-Instruct differs from Phi-3.5 in each layer and tensor. Below: how
@@ -95,10 +96,10 @@ much of that the candidate takes (attention and norms of layers 0 to 7 in full, 
 layer, shown as the eight dotted tiles).
 
 ![[viz_exp05c_per_question.jpg]]
-One cell per practice question, sorted by the unedited model's margin. On the 1,024 confirmation questions the
-candidate fixes 100 and breaks 82 under the bare prompt, and fixes 33 and breaks 36 under the chat prompt; the
-last column shows MediPhi-Instruct itself on the same questions. Bottom row: the bare-prompt outcome with the
-questions ordered by the unedited model's chat margin (broken answers sit mostly where the chat answer is wrong,
-fixed ones where it is right).
+One cell per question, sorted by the unedited model's margin. On the 1,024 confirmation questions the candidate
+fixes 100 and breaks 82 under the bare prompt, and fixes 33 and breaks 36 under the chat prompt; on the 1,273
+test questions 113 and 84, and 40 and 51. The last column of those rows shows MediPhi-Instruct itself on the same
+questions. Bottom two rows: the bare-prompt outcome with the questions ordered by the unedited model's chat
+margin (fixed answers sit mostly where the chat answer is right).
 
 Source: [[EXP-05 Medical circuit discovery and transfer]].

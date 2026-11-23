@@ -249,10 +249,18 @@ function addLabel(labels, className, html, position, opts = {}) {
   labels.push({
     el, position, anchor: opts.anchor || "left-bottom", minPixels: opts.minPixels || 0, span: opts.span || 0, clip: !!opts.clip,
     room: opts.room || 0, roomPixels: opts.roomPixels || 17,
-    // `fit`: the width (in scene units) this label may take, e.g. its column; it is hidden while its text is wider
-    fit: opts.fit || 0, width: opts.fit ? el.offsetWidth : 0,
+    // `tick`: this label is one of an axis of column labels, { axis, index, units }; see tickStride
+    tick: opts.tick || null,
   });
   return el;
+}
+
+// Column labels thin out like the ticks of a chart axis: with the camera far away only every 2nd, 4th, ... is
+// shown, so that the widest label of the axis always fits into the columns it stands for.
+const STRIDES = [1, 2, 4, 5, 8, 10, 16, 20, 32, 40, 50, 64, 100];
+function tickStride(axis, units, pixelsPerUnit) {
+  const need = (axis.maxWidth + 4) / (units * pixelsPerUnit);
+  return STRIDES.find((stride) => stride >= need) ?? Infinity;
 }
 
 function layoutGroup(group, maxRowWidth) {
@@ -302,15 +310,18 @@ async function loadDataset(id) {
     const top = y;
     let layerMaxX = 0;
     let labelPixels = 0; // widest row label left of the layer's first column of panels
-    layer.groups.forEach((group) => {
+    layer.groups.forEach((group, groupIndex) => {
       const z = GROUP_Z[group.kind] ?? 0;
       addLabel(labels, "group", group.name, new THREE.Vector3(-24, y + 8, z), { anchor: "right-bottom" });
       const groupTop = y;
       const groupRows = layoutGroup(group, maxRowWidth);
       for (const [rowIndex, row] of groupRows.entries()) {
         const rowHeight = Math.max(...row.map((r) => r.h));
-        // Free space under this row. Column labels share it with the title of the panel below.
-        const below = { room: rowIndex < groupRows.length - 1 ? GAP.row : GAP.group, roomPixels: 46 };
+        // Free space under this row. Column labels share it with the title of the panel below. Under the last
+        // row of a layer it reaches down to the next layer's name.
+        const lastRow = rowIndex === groupRows.length - 1;
+        const lastGroup = groupIndex === layer.groups.length - 1;
+        const below = { room: !lastRow ? GAP.row : lastGroup ? GAP.layer - 110 : GAP.group, roomPixels: 46 };
         for (const { panel, x, w, h } of row) {
           const data = buffers.get(panel.id);
           const texture = new THREE.DataTexture(
@@ -347,12 +358,12 @@ async function loadDataset(id) {
             }
           }
           if (panel.colLabels) {
-            const stride = Math.ceil(panel.colLabels.length / 16);
+            const axis = { maxWidth: 0, frame: -1, stride: 1 };
             panel.colLabels.forEach((text, c) => {
-              if (c % stride) return;
               // one word per line, so a label of several words still fits under a narrow column
-              addLabel(labels, "band column", text.replaceAll(" ", "<br>"), new THREE.Vector3(x + (c + 0.5) * cellW, y - h - 6, z),
-                { anchor: "center-top", minPixels: 200, span: w, fit: stride * cellW, ...below });
+              const el = addLabel(labels, "band column", text.replaceAll(" ", "<br>"), new THREE.Vector3(x + (c + 0.5) * cellW, y - h - 6, z),
+                { anchor: "center-top", minPixels: 200, span: w, tick: { axis, index: c, units: cellW }, ...below });
+              axis.maxWidth = Math.max(axis.maxWidth, el.offsetWidth);
             });
           }
           if (panel.rowLabels) {
@@ -611,7 +622,7 @@ function onMove(event) {
   const lines = [
     ["Row", `${row}${rowBand ? ` (${rowBand})` : ""}`],
     ["Column", `${col}${colBand ? ` (${colBand})` : ""}`],
-    [UNIT_LABEL[panel.unit] ?? "Value", formatValue(value, panel.unit)],
+    [UNIT_LABEL[panel.unit] ?? "Value", value === null && panel.missingText ? panel.missingText : formatValue(value, panel.unit)],
   ];
   if (!panel.unit || panel.unit === "weight") {
     lines.push(["Largest in matrix", `±${panel.vmax.toFixed(4)}`]);
@@ -686,16 +697,24 @@ const ANCHOR = {
   "center-bottom": "translate(-50%, -100%)",
 };
 
+let labelFrame = 0;
+
 function updateLabels(width, height) {
   camera.getWorldDirection(forward);
   const unitsToPixels = height / (2 * Math.tan(THREE.MathUtils.degToRad(camera.fov) / 2));
+  labelFrame += 1;
   for (const label of current.labels) {
     const depth = projected.copy(label.position).sub(camera.position).dot(forward);
     projected.copy(label.position).project(camera);
     const pixelsPerUnit = unitsToPixels / Math.max(depth, 1);
+    if (label.tick && label.tick.axis.frame !== labelFrame) {
+      // one stride per axis and frame (taken at its first label), so a tilted view does not thin it unevenly
+      label.tick.axis.frame = labelFrame;
+      label.tick.axis.stride = tickStride(label.tick.axis, label.tick.units, pixelsPerUnit);
+    }
     const visible = depth > 0 && Math.abs(projected.x) < 1.15 && Math.abs(projected.y) < 1.15
       && (label.span ? label.span * pixelsPerUnit >= label.minPixels : true)
-      && label.fit * pixelsPerUnit >= (label.fit ? label.width + 4 : 0)
+      && (!label.tick || label.tick.index % label.tick.axis.stride === 0)
       && label.room * pixelsPerUnit >= (label.room ? label.roomPixels : 0); // labels in a gap need free pixels there
     label.el.style.display = visible ? "" : "none";
     if (!visible) continue;

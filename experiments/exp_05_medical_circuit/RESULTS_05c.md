@@ -13,7 +13,9 @@ must not fall, and the test of success is the MedQA test split under both prompt
 passes), the effort level and the edit restrictions are Claude's provisional choices.
 
 ## Run status
-COMPLETE. Astra used all 30 forward passes, withdrew its candidate edit and submitted the unedited model.
+COMPLETE. Astra used all 30 forward passes, withdrew its candidate edit and submitted the unedited model. The
+withdrawn candidate was scored on the test split afterwards, at the researcher's request (section "The withdrawn
+candidate on the test split").
 
 ## What actually ran
 - Model edited: `microsoft/Phi-3.5-mini-instruct`. Donor: `microsoft/MediPhi-Instruct`. Both float16 on Apple
@@ -45,11 +47,18 @@ COMPLETE. Astra used all 30 forward passes, withdrew its candidate edit and subm
 - Checks by Claude afterwards (`check_session.py`, 14:28 to 14:39): recount of every score pass, comparison of
   the saved candidate with both checkpoints, and a second scoring of the saved candidate on the confirmation
   questions.
+- After the session, asked for by the researcher on 2026-11-23: the saved candidate against the unedited model on
+  the MedQA test split under both prompts (`check_session.py --test`), same scoring code, batches of 16. What to
+  report (paired statistics, Astra's rule, the split by chat result, the donor's own results) was written into
+  the script before the run started. 15:05 to 16:58.
 
 ## Deviations from contract
 - No contract exists.
-- The researcher's test of success (test split, both prompts) was applied to the submitted weights only, which
-  are the unedited weights. The withdrawn candidate was never scored on the test split.
+- The researcher's test of success (test split, both prompts) was applied by the harness to the submitted
+  weights only, which are the unedited weights. The withdrawn candidate was scored on the test split afterwards.
+  That run was not part of the session: Astra never saw it and its decision did not depend on it.
+- The test-split run took 1 h 53 min for about 13 minutes of computing: the Mac was asleep with the lid closed
+  for most of the time between 15:07 and 16:35.
 - Waiting. The session shared the GPU with the EXP-05b and EXP-07 sweeps and the EXP-03 Qwen run. Pass 6 (a
   patching pass, which needs both GPU locks) waited from 02:33 to 09:07 because the EXP-07 scan held one lock for
   its whole run; passes 3 and 4 (23:36 to 01:11 and 01:13 to 02:25) overlapped the EXP-05b runs, which held GPU
@@ -70,7 +79,8 @@ COMPLETE. Astra used all 30 forward passes, withdrew its candidate edit and subm
   `final_eval_per_question.jsonl` - the harness's test-split measurement.
 - `check_session.py` - Claude's checks. `processed/check_transfer1.json` - their result (per-pass recount, weight
   comparison per tensor, the second scoring). `processed/check_transfer1_questions.jsonl` - the per-question
-  result of all 22 score passes, and the donor's EXP-04 result on the confirmation questions.
+  result of all 22 score passes, and the donor's EXP-04 result on the confirmation questions. The `test` block of
+  `check_transfer1.json` and `processed/check_transfer1_test_questions.jsonl` hold the test-split run.
 - Viewer dataset `exp05c_transfer_transfer1` (`python -m wsp.viz_export exp05c`; data under `viz/public/data/`,
   not in git); screenshots `vault/attachments/viz_exp05c_transfers.jpg`, `viz_exp05c_candidate_weights.jpg`,
   `viz_exp05c_per_question.jpg`.
@@ -146,6 +156,38 @@ Paired results, candidate against the unedited model, same questions (accuracy d
 
   On the 512 validation questions (pass 18, Astra's figures): right n = 310, +4.19 points (30 / 17); wrong
   n = 202, -1.49 points (12 / 15).
+
+### The withdrawn candidate on the test split (after the session)
+Candidate against the unedited model, MedQA test split, n = 1,273, paired. One run; the candidate was fixed and
+saved before it.
+
+| Prompt | Unedited | Candidate | Difference | SE | Wrong to right | Right to wrong | Sign test p | Margin change (SE) | MediPhi-Instruct itself |
+|---|---|---|---|---|---|---|---|---|---|
+| bare | 48.70 % (620) | 50.98 % (649) | +2.28 | 1.10 | 113 | 84 | 0.046 | +0.244 (0.046) | 54.60 % (695) |
+| chat | 57.19 % (728) | 56.32 % (717) | -0.86 | 0.75 | 40 | 51 | 0.294 | -0.164 (0.105) | 56.48 % (719) |
+
+- Approximate 95 % intervals: bare +0.12 to +4.44 points, chat -2.33 to +0.60 points.
+- Astra's retention rule applied to these numbers: the bare-prompt gain is 2.07 standard errors (above 2); the
+  chat-prompt difference is negative. The rule is not met.
+- The researcher's test of success (bare accuracy up, chat accuracy not down): bare is up by 2.28 points; chat
+  is down by 0.86 points (11 answers net), which is 1.15 standard errors.
+- The bare-prompt gain is 39 % of the distance from the unedited model to MediPhi-Instruct on these questions.
+- Probability on the four answer letters, bare prompt: unedited 0.041, candidate 0.124, donor 0.408.
+- Predicted letters A / B / C / D, bare prompt: unedited 486 / 164 / 359 / 264, candidate 475 / 208 / 306 / 284,
+  donor 413 / 210 / 315 / 335; correct answers 353 / 309 / 346 / 265.
+- Bare-prompt result split by whether the unedited model answers the question correctly under the chat prompt:
+
+  | Unedited model under the chat prompt | n | Unedited, bare | Candidate, bare | Difference | SE | Wrong to right | Right to wrong | Sign test p |
+  |---|---|---|---|---|---|---|---|---|
+  | right | 728 | 505 | 539 | +4.67 | 1.50 | 77 | 43 | 0.002 |
+  | wrong | 545 | 115 | 110 | -0.92 | 1.61 | 36 | 41 | 0.649 |
+
+- The unedited model's letter log-probabilities in this run are identical, on all 1,273 questions and both
+  prompts, to those of the harness's final evaluation earlier the same day.
+- Confirmation and test questions together (computed by Claude after seeing both; not planned before the run.
+  The two sets are disjoint and the candidate was fixed before either was scored), n = 2,297: bare prompt 213
+  wrong to right and 166 right to wrong, +2.05 points (SE 0.85, sign test p = 0.018); chat prompt 73 and 87,
+  -0.61 points (SE 0.55, sign test p = 0.304).
 
 ### Claude's checks of the above
 - Recount. All 22 score passes were recounted from the lab's per-question files with the answer keys of this
@@ -251,6 +293,13 @@ Direct comparisons between two edited models on the same questions (recomputed b
 - `[OBSERVATION]` On the confirmation questions the candidate's bare-prompt gain is confined to questions the
   unedited model already answers correctly under the chat prompt: +6.07 points (SE 1.73) on those 626 and -5.03
   points (SE 1.96) on the other 398. The validation questions show the same signs (+4.19 and -1.49).
+- `[OBSERVATION]` On the test split, scored after the session, the candidate gains +2.28 points (SE 1.10; 113
+  fixed, 84 broken, sign test p = 0.046) under the bare prompt and loses 0.86 points (SE 0.75; 40 fixed, 51
+  broken) under the chat prompt. Both estimates have the same sign as on the confirmation questions (+1.76 and
+  -0.29).
+- `[OBSERVATION]` On the test split the bare-prompt gain again sits on the questions the unedited model answers
+  correctly under the chat prompt (+4.67 points, SE 1.50, on those 728); on the other 545 the difference is
+  -0.92 points (SE 1.61), against -5.03 (SE 1.96) on the confirmation questions.
 - `[OBSERVATION]` With the candidate installed, the effect of patching the donor's activity is smaller for all
   14 pieces that were patched into both models (for example head 9 of layer 25: +0.348 to +0.021). Nine of them
   are in the table above.
@@ -263,6 +312,8 @@ Direct comparisons between two edited models on the same questions (recomputed b
   submitted.
 - No transfer tested in 30 passes met Astra's rule on untouched questions (bare-prompt gain above 2 standard
   errors and no fall under the chat prompt).
+- The candidate does not meet that rule on the test split either: the bare-prompt gain is above 2 standard
+  errors there, and chat-prompt accuracy falls by 0.86 points.
 - Copying the weights of the components with the largest activation-patching effects (layer 11 MLP, six heads)
   changed at most 4 of 256 answers.
 - The control transfer in later layers changed 6 answers of 256 and 14 of 512.
@@ -278,6 +329,8 @@ Direct comparisons between two edited models on the same questions (recomputed b
   first use are not independent of Astra's choices.
 - 45 entries of the saved candidate differ from the donor's by at most 1.2e-10 (Astra rebuilt them as base plus
   difference in float32).
+- The exploration set has an unedited bare-prompt accuracy of 46.09 %, the confirmation set 51.17 % and the test
+  split 48.70 %; the sets differ in difficulty, so only paired differences are comparable across them.
 - The lab does not record the content of the edited tensors of a pass. For passes 29 and 30 the second scoring
   closes this; for the earlier passes the description of what was copied inside each tensor rests on Astra's
   notes.
@@ -286,13 +339,16 @@ Direct comparisons between two edited models on the same questions (recomputed b
 One session (`transfer1`), one editor model at effort `xhigh`, one base model and one donor, 30 forward passes,
 MedQA USMLE 4-option, single-pass letter scoring under two prompts. Edits were restricted to weights other than
 the embeddings, the output layer and the final norm, with no gradients and no simulation of the network in the
-kernel. All of Astra's measurements are on practice questions (MedQA dev and training); the candidate was never
-scored on the test split.
+kernel. All of Astra's measurements are on practice questions (MedQA dev and training). The candidate was scored
+on the test split once, after the session; no control and no other transfer was scored there.
 
 ## What this experiment does NOT establish
-- That the candidate has no effect on accuracy. Its confirmation estimate is +1.76 points with an approximate
-  95 % interval of -0.82 to +4.34; the experiment cannot distinguish a gain of a few points from none. The
-  candidate does change the model's outputs (margin, letter probability).
+- That the candidate's bare-prompt gain is settled, in either direction. The two untouched estimates are +1.76
+  points (SE 1.32, confirmation) and +2.28 points (SE 1.10, test). The test-split sign test (p = 0.046) is a
+  single comparison close to the usual threshold, and the pooled figure was computed after both results were
+  known. The candidate does change the model's outputs (margin, letter probability).
+- That the chat prompt is unharmed, or harmed. The chat-prompt difference is -0.29 (SE 0.81) and -0.86 (SE 0.75)
+  points on the two untouched sets; the experiment cannot distinguish a loss of about one point from none.
 - That weights cannot carry the donor's advantage into the base model. Copying every weight gives the donor by
   construction; one session with 30 passes did not find a smaller set that met its own rule.
 - That the candidate, or the early layers, hold medical knowledge. The split by chat result and the rise in
@@ -301,9 +357,9 @@ scored on the test split.
   the chat template.
 - That the candidate is better than a control of the same size. Against random MLP units it differs by 4 of 256
   answers, on the questions that were used to choose the candidate; against the later-layer control the
-  difference is 1.4 standard errors. Neither control was scored on the confirmation questions.
-- Anything about the test split for the candidate, about other donors (`microsoft/MediPhi`), other prompts, or
-  generated answers.
+  difference is 1.4 standard errors. Neither control was scored on the confirmation questions or the test split,
+  so the test-split gain is not shown to be specific to these weights.
+- Anything about other donors (`microsoft/MediPhi`), other prompts, or generated answers.
 - That the split by chat result is causal. It conditions on an outcome of the same model on the same questions.
 
 ## Reproducibility
@@ -317,7 +373,10 @@ scored on the test split.
   `python experiments/exp_05_medical_circuit/run_astra.py --name transfer1 --donor mediphi_instruct --budget 30`
   (rerunning resumes from `raw/transfer1/state.json`; a new `--name` starts a new session);
   `python experiments/exp_05_medical_circuit/check_session.py --name transfer1 --rescore`;
+  `python experiments/exp_05_medical_circuit/check_session.py --name transfer1 --test`;
   `python -m wsp.viz_export exp05c`.
+- The test-split scoring (`score_test` in `check_session.py`) was written and smoke-tested on the first 32 test
+  questions before the run; it was committed together with its result, not before.
 - The checks need `raw/transfer1/work/` (local only). Without it, `processed/check_transfer1.json` and
   `check_transfer1_questions.jsonl` hold their output and are enough for the viewer dataset.
 

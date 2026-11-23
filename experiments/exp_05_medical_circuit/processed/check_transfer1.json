@@ -4613,5 +4613,111 @@
    "predictions_that_differ": 0,
    "mean_distance_to_unedited": 3.7276927734375
   }
+ },
+ "test": {
+  "tensors": 46,
+  "bare": {
+   "n": 1273,
+   "original_correct": 620,
+   "edited_correct": 649,
+   "difference_points": 2.2780832678711707,
+   "standard_error_points": 1.101148580902414,
+   "fixed": 113,
+   "broken": 84,
+   "sign_test_p": 0.04577673264146447,
+   "margin_change": 0.24437843386057503,
+   "margin_change_se": 0.045896990358068844,
+   "letter_mass": [
+    0.04066099624449996,
+    0.1243223828407248
+   ],
+   "predicted": {
+    "original": [
+     486,
+     164,
+     359,
+     264
+    ],
+    "edited": [
+     475,
+     208,
+     306,
+     284
+    ]
+   },
+   "donor": {
+    "correct": 695,
+    "n": 1273,
+    "letter_mass": 0.4077425995051132
+   },
+   "unedited_differs_from_final_eval": 0
+  },
+  "chat": {
+   "n": 1273,
+   "original_correct": 728,
+   "edited_correct": 717,
+   "difference_points": -0.864100549882168,
+   "standard_error_points": 0.7492659661518554,
+   "fixed": 40,
+   "broken": 51,
+   "sign_test_p": 0.294469784568533,
+   "margin_change": -0.16354084810869768,
+   "margin_change_se": 0.10495689344758506,
+   "letter_mass": [
+    0.9987039074407069,
+    0.9999478740759563
+   ],
+   "predicted": {
+    "original": [
+     252,
+     324,
+     364,
+     333
+    ],
+    "edited": [
+     248,
+     347,
+     366,
+     312
+    ]
+   },
+   "donor": {
+    "correct": 719,
+    "n": 1273,
+    "letter_mass": 0.999857097606629
+   },
+   "unedited_differs_from_final_eval": 0
+  },
+  "rule": {
+   "bare_gain_in_standard_errors": 2.0688245958635614,
+   "bare_gain_above_2_standard_errors": true,
+   "chat_difference_not_negative": false
+  },
+  "bare_outcome_by_unedited_chat_result": {
+   "True": {
+    "n": 728,
+    "original_correct": 505,
+    "edited_correct": 539,
+    "difference_points": 4.670329670329671,
+    "standard_error_points": 1.4957710533983597,
+    "fixed": 77,
+    "broken": 43,
+    "sign_test_p": 0.0024468567628141724,
+    "margin_change": 0.2023523258311408,
+    "margin_change_se": 0.06363234791997668
+   },
+   "False": {
+    "n": 545,
+    "original_correct": 115,
+    "edited_correct": 110,
+    "difference_points": -0.9174311926605505,
+    "standard_error_points": 1.611084283167877,
+    "fixed": 36,
+    "broken": 41,
+    "sign_test_p": 0.6487911623106449,
+    "margin_change": 0.30051606073292025,
+    "margin_change_se": 0.06532063291726835
+   }
+  }
  }
 }

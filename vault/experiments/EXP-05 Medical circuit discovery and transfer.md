@@ -22,7 +22,7 @@ lower it. Background: [[EXP-04 MedQA baseline - Phi-3.5 vs MediPhi]].
 |---|---|---|
 | 05a | Weight difference MediPhi - Phi-3.5 per tensor, head and neuron | done (for `microsoft/MediPhi`) |
 | 05b | Cross-model activation patching and per-layer weight swapping, MediPhi-Instruct, bare prompt | done 2026-11-23, awaiting review |
-| 05c | Astra session with the donor in the edit lab (`transfer1`, 30 passes) | done 2026-11-23 14:22, no edit submitted, awaiting review |
+| 05c | Astra session with the donor in the edit lab (`transfer1`, 30 passes) | done 2026-11-23 14:22, no edit submitted; withdrawn candidate scored on the test split 16:58; awaiting review |
 | 05d | Crosscoder on one residual layer of both models | not started |
 
 ## 05a - weight difference (done)
@@ -97,8 +97,15 @@ development (64 for patching, 256 to compare transfers, 512 as a second check).
   above Phi-3.5 on those confirmation questions.
 - Astra's rule, written before the confirmation passes: keep the edit only if the bare-prompt gain exceeds 2
   standard errors and chat accuracy does not fall. Neither held.
+- `[OBSERVATION]` Test split (1,273 questions), scored once after the session at the researcher's request:
+  bare prompt 48.70 % to 50.98 %, +2.28 points (SE 1.10; 113 fixed, 84 broken, sign test p = 0.046); chat prompt
+  57.19 % to 56.32 %, -0.86 points (SE 0.75; 40 fixed, 51 broken). MediPhi-Instruct itself: 54.60 % and 56.48 %.
+  By Astra's rule the bare gain now passes (2.07 standard errors) and the chat condition still fails.
+- Confirmation and test together (2,297 questions; pooled afterwards, not planned): bare +2.05 points (SE 0.85),
+  chat -0.61 points (SE 0.55).
 - `[OBSERVATION]` On the confirmation questions the bare-prompt gain sits where the unedited model is already
   right under the chat prompt: +6.07 points (SE 1.73) on those 626 questions, -5.03 (SE 1.96) on the other 398.
+  On the test split: +4.67 (SE 1.50) on 728 questions, -0.92 (SE 1.61) on the other 545.
 - `[OBSERVATION]` The candidate raises the probability the model puts on the four answer letters under the bare
   prompt from 0.043 to 0.134 (MediPhi-Instruct: 0.413).
 - `[OBSERVATION]` Copying the weights of the components with the largest patching effects did nothing: the whole
@@ -111,8 +118,10 @@ development (64 for patching, 256 to compare transfers, 512 as a second check).
 - Checked by Claude: all 22 score passes recount exactly from the lab's files; the confirmation questions appear
   in no earlier pass; the saved candidate contains only donor values inside the transfer and base values outside;
   scoring the saved candidate again reproduces both confirmation passes with no difference on any question.
-- Not established: that the candidate has no effect (interval -0.8 to +4.3 points); that it beats a control of the
-  same size; anything on the test split for the candidate; medical content against prompt handling.
+- Not established: whether the bare-prompt gain is real (two untouched estimates, +1.76 and +2.28, each about
+  1.3 to 2.1 standard errors); whether the chat prompt loses about a point or nothing; that the candidate beats a
+  control of the same size (no control was scored on untouched questions); medical content against prompt
+  handling.
 
 ## Visualizations
 Viewer datasets `weightdiff_mediphi_phi`, `interventions_mediphi_instruct_bare_phi` and
