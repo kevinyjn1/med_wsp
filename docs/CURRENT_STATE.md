@@ -100,8 +100,13 @@ None of the above has been reviewed by the researcher; nothing is in `research/0
 
 1. Nothing is running. All queued runs and both Astra sessions on Phi-3.5 are finished and written up.
 2. Where to run next: the researcher has a SLURM cluster account (login node reachable only with a password,
-   so not from this session). Its GPUs, limits and storage are not known yet; the Mac's sleep and power problems
-   are the reason to move plain GPU jobs there. Astra itself must stay on the Mac (Codex build in ChatGPT.app).
+   so not from this session). Status pasted by the researcher on 2026-11-23: it has GPU nodes with 8 x H100 80 GB,
+   4 x RTX A6000 48 GB + 6 x RTX 2080 Ti, 4 x Titan Xp and 1 x GTX 1080 (7-day time limit), but none of them is
+   schedulable right now (states down, drain or invalid; one CPU-only node is idle), and the home filesystem is
+   100 % full with 0 bytes available. So it cannot run these jobs until its administrators bring nodes back and
+   there is somewhere to write. Until then: this Mac (lid open, on power), or another cluster or rented GPU if
+   the researcher has one. Astra itself must stay on the Mac (Codex build in ChatGPT.app). `wsp/models.py` picks
+   MPS or CPU only; CUDA support is a small change that has not been made.
 3. Researcher decisions pending: how to read the EXP-05c test-split result (bare up, chat slightly down) and
    whether to score the two controls on the test split; whether to score the EXP-06 candidate there too; control
    and unselected-question scoring for EXP-05b; `around` sweep for EXP-07; whether the bare prompt stays the
