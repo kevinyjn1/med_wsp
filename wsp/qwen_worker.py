@@ -153,6 +153,8 @@ def teacher_forced(job: dict) -> None:
                 )
                 target[i, :, : len(ids), : len(ids)] = array
             del result, logprobs
+            if device == "mps":
+                torch.mps.empty_cache()
     for handle in handles:
         handle.remove()
 

@@ -20,6 +20,16 @@ def device() -> torch.device:
     return torch.device("mps" if torch.backends.mps.is_available() else "cpu")
 
 
+def release_gpu_cache() -> None:
+    """Return freed GPU buffers to the system.
+
+    Call it after every batch of a loop whose batch shapes vary: the MPS allocator keeps a pool per buffer size, and
+    with ever-changing sequence lengths that pool grew from 8.6 GB to 23 GB during one scoring run on this machine.
+    """
+    if torch.backends.mps.is_available():
+        torch.mps.empty_cache()
+
+
 def snapshot_dir(repo_id: str) -> Path:
     """Local snapshot folder of an already-downloaded Hugging Face model."""
     cache = Path(os.environ.get("HF_HOME", Path.home() / ".cache" / "huggingface")) / "hub"

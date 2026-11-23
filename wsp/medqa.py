@@ -14,6 +14,8 @@ import pandas as pd
 import torch
 from huggingface_hub import hf_hub_download
 
+from wsp.models import release_gpu_cache
+
 LETTERS = ("A", "B", "C", "D")
 SPLIT_FILES = {"train": "train", "dev": "validation", "test": "test"}
 INSTRUCTION = (
@@ -126,6 +128,8 @@ def evaluate(model, tokenizer, items: list[dict], batch_size: int = 8, progress:
         )
         enc = {k: v.to(model.device) for k, v in enc.items()}
         scores = letter_scores(model(**enc, use_cache=False).logits[:, -1, :], letter_ids).cpu()
+        del enc
+        release_gpu_cache()
         for row, i in enumerate(batch):
             item, lp = items[i], scores[row]
             gold = LETTERS.index(item["answer"])

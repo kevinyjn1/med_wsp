@@ -553,6 +553,7 @@ class MedQALab(BudgetedLab):
                             )
                             target[i, :, : lengths[i], : lengths[i]] = attention
                     del result, logprobs
+                    models.release_gpu_cache()
         finally:
             for handle in handles:
                 handle.remove()
@@ -635,7 +636,8 @@ class MedQALab(BudgetedLab):
                     margins += [float(x) for x in medqa.gold_margins(logits, letter_ids, item["answer"])]
                 rows.append({"id": item["id"], "answer": item["answer"], "base": round(base_margin, 4), "donor": round(donor_margin, 4),
                              "patched": {p.label(): round(m, 4) for p, m in zip(patches, margins, strict=True)}})  # fmt: skip
-                del cache
+                del cache, enc
+                models.release_gpu_cache()
         del base, donor
         medqa.save_jsonl(rows, self.work / f"patch_{index}.jsonl")
 

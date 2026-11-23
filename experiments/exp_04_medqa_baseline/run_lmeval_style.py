@@ -86,6 +86,8 @@ def score(model, tokenizer, docs: list[dict], variant: str, batch_size: int = 16
             input_ids=input_ids.to(model.device), attention_mask=mask.to(model.device), use_cache=False
         ).logits[:, -1]
         logprobs = torch.log_softmax(logits.float(), dim=-1)[:, choice_ids].cpu()
+        del logits, input_ids, mask
+        models.release_gpu_cache()
         for k, i in enumerate(rows):
             pred = int(logprobs[k].argmax())
             records[i] = {"id": docs[i]["id"], "label": docs[i]["label"], "pred": pred, "correct": pred == docs[i]["label"],

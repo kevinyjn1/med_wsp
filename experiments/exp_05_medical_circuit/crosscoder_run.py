@@ -68,6 +68,8 @@ def collect(
                     store[offsets[i] : offsets[i + 1], column] = (
                         hidden[k, width - len(encoded[i]) :].cpu().numpy()
                     )
+                del hidden
+                models.release_gpu_cache()
             del model
             gc.collect()
             torch.mps.empty_cache()

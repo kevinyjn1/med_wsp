@@ -1,16 +1,19 @@
 {
  "thread_id": "01a20581-41f7-7881-a1bf-840acbd65d6b",
- "turn": 47,
+ "turn": 48,
  "runs": {
   "python": 26,
-  "forward": 20
+  "forward": 21
  },
  "nudges": 0,
  "done": false,
- "next_message": "[note: the harness was restarted, so your kernel restarted too and its variables are gone]\n\nForward pass 20 of 30 done (score); results in score_20.jsonl. Summary:\n```\n{\n \"ok\": true,\n \"type\": \"score\",\n \"model\": \"both\",\n \"questions\": 128,\n \"edited_tensors\": [\n  \"model.layers.26.mlp.down_proj.weight\"\n ],\n \"original\": {\n  \"accuracy\": 0.5781,\n  \"mean_margin\": 5.3911,\n  \"predicted\": {\n   \"A\": 26,\n   \"B\": 34,\n   \"C\": 35,\n   \"D\": 33\n  }\n },\n \"edited\": {\n  \"accuracy\": 0.6094,\n  \"mean_margin\": 5.6965,\n  \"predicted\": {\n   \"A\": 28,\n   \"B\": 35,\n   \"C\": 33,\n   \"D\": 32\n  }\n },\n \"paired\": {\n  \"accuracy_difference\": 0.0312,\n  \"standard_error\": 0.019,\n  \"wrong_to_right\": 5,\n  \"right_to_wrong\": 1,\n  \"sign_test_p\": 0.2188,\n  \"margin_difference\": 0.3054,\n  \"margin_difference_se\": 0.4238\n },\n \"s\": 2254\n}\n```\nForward passes left: 10.",
+ "next_message": "The forward pass failed and was not counted: WorkerError: the model process ended without a result (  warnings.warn('resource_tracker: There appear to be %d ')",
  "failures": 1,
- "wall_s": 1817.8,
+ "wall_s": 1880.3,
  "handoffs": 1,
- "turns_in_thread": 7,
- "unexplained": 0
+ "turns_in_thread": 8,
+ "unexplained": 0,
+ "notices_delivered": [
+  "001_tool_corrections.txt"
+ ]
 }

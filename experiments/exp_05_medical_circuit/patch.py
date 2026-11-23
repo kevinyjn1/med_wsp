@@ -122,7 +122,8 @@ def main() -> None:
                     f.write(json.dumps({"id": item["id"], "set": set_name, "base": base_margin, "donor": donor_margin,
                                         "patched": dict(zip([p.label() for p in patches], margins, strict=True))}) + "\n")  # fmt: skip
                     f.flush()
-                    del donor_cache
+                    del donor_cache, enc
+                    models.release_gpu_cache()
             print(f"activation patching done in {time.time() - start:.0f}s", flush=True)
         del donor
         torch.mps.empty_cache()
