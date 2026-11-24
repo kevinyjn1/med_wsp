@@ -1,0 +1,1278 @@
+id,correct,phi_bare,mediphi_bare,mediphi_instruct_bare,phi_chat,mediphi_chat,mediphi_instruct_chat,only_mediphi_instruct_right_bare,question_start
+test-00000,B,A,B,B,B,B,B,1,A junior orthopaedic surgery resident is completing a carpal tunnel repair with the department chair
+test-00001,D,C,C,A,A,B,B,0,A 67-year-old man with transitional cell carcinoma of the bladder comes to the physician because of 
+test-00002,B,B,A,A,B,B,B,0,Two weeks after undergoing an emergency cardiac catherization with stenting for unstable angina pect
+test-00003,D,A,A,A,A,A,A,0,"A 39-year-old woman is brought to the emergency department because of fevers, chills, and left lower"
+test-00004,B,B,B,B,B,B,B,0,"A 35-year-old man comes to the physician because of itchy, watery eyes for the past week. He has als"
+test-00005,D,A,D,D,B,D,B,1,A 39-year-old man presents to the emergency department because of progressively worsening chest pain
+test-00006,C,B,B,B,B,B,B,0,A 68-year-old male comes to the physician for evaluation of right flank pain. He has a history of di
+test-00007,C,C,C,C,C,C,C,0,A 65-year-old man is brought to the emergency department 30 minutes after the onset of acute chest p
+test-00008,B,A,B,B,B,B,B,1,A 37-year-old-woman presents to her primary care physician requesting a new form of birth control. S
+test-00009,A,A,A,B,B,B,B,0,A 23-year-old woman comes to the physician because she is embarrassed about the appearance of her na
+test-00010,D,A,D,D,D,D,D,1,A 24-year-old G2P1 woman at 39 weeks’ gestation presents to the emergency department complaining of 
+test-00011,D,A,A,A,A,D,A,0,A 72-year-old man comes to the physician because of a 2-month history of fatigue and worsening abdom
+test-00012,B,A,A,B,B,B,B,1,A 20-year-old man comes to the physician because of worsening gait unsteadiness and bilateral hearin
+test-00013,D,A,A,D,D,D,D,1,A 47-year-old executive schedules an appointment his physician for a routine medical check-up. He cu
+test-00014,C,C,D,D,C,D,D,0,A microbiologist is studying the emergence of a virulent strain of the virus. After a detailed study
+test-00015,B,B,B,B,B,B,B,0,A 59-year-old overweight woman presents to the urgent care clinic with the complaint of severe abdom
+test-00016,D,C,C,D,D,C,C,1,A 7-year-old boy is brought to his pediatrician’s office for a follow-up visit. He was diagnosed wit
+test-00017,D,D,D,D,D,D,D,0,A 3-month-old boy is brought the emergency department by his parents after an episode of cyanosis an
+test-00018,B,B,C,A,B,B,A,0,A 29-year-old man presents to the emergency department due to central chest pain over the past 3 day
+test-00019,D,B,B,B,B,B,B,0,A 46-year-old man is brought to the emergency department for evaluation of altered mental status. He
+test-00020,C,D,D,C,C,D,C,1,"A 77-year-old woman presents to the emergency room with the complaints of fever, malaise, and night "
+test-00021,A,A,A,A,A,A,A,0,A 3-month-old infant is brought to her pediatrician because she coughs and seems to have difficulty 
+test-00022,C,C,C,C,C,C,C,0,A 30-year-old African American woman comes to the physician for the evaluation of a dry cough and ch
+test-00023,D,A,A,D,A,D,D,1,A 62-year-old patient has been hospitalized for a week due to a stroke. One week into the hospitaliz
+test-00024,A,A,A,A,A,A,A,0,A 6-year-old boy is brought to the emergency department by his mother for worsening wheezing and sho
+test-00025,D,D,D,D,D,C,C,0,"A 5-year-old female suffers from recurrent infections by Aspergillus species, Pseudomonas species, a"
+test-00026,D,A,A,C,C,C,C,0,A 3-year-old boy presents to the emergency department with a ‘cough-like-a-seal bark’ and a high-pit
+test-00027,A,A,A,A,A,A,A,0,A 26-year-old woman presents to a gynecologist after a missed period. After performing a complete ph
+test-00028,D,D,A,D,D,D,D,0,A 4-year-old previously healthy boy presents with 4 days of intermittent vomiting and 5-6 daily loos
+test-00029,C,C,A,C,C,C,C,0,A 3-week-old male newborn is brought to the physician because of an inward turning of his left foref
+test-00030,D,D,A,D,D,D,D,0,A 42-year-old woman comes to the emergency department because of a 2-day history of right upper abdo
+test-00031,C,A,A,D,D,D,D,0,A 72-year-old woman is admitted to the intensive care unit for shortness of breath and palpitations.
+test-00032,D,B,B,B,C,C,C,0,"A 22-year-old woman is brought to the emergency department because of a 2-day history of fever, inte"
+test-00033,B,D,D,D,D,D,D,0,An otherwise healthy 50-year-old man comes to the physician because of a 6-month history of increasi
+test-00034,A,D,D,D,A,A,A,0,A 27-year-old man presents to the emergency department. He was brought in by staff from the homeless
+test-00035,A,A,A,A,A,A,A,0,A 67-year-old man who was diagnosed with arthritis 16 years ago presents with right knee swelling an
+test-00036,D,C,C,D,D,D,D,1,A 65-year-old woman schedules an appointment with her physician for evaluation of weight loss and we
+test-00037,A,A,A,A,A,A,A,0,"A 3-month-old boy presents to his pediatrician with persistent diarrhea, oral candidiasis, and signs"
+test-00038,D,D,D,D,D,D,B,0,A 53-year-old man with recurrent pancreatic adenocarcinoma is enrolled in a clinical trial for a nov
+test-00039,A,A,A,D,C,D,D,0,A 67-year-old male is seen by neurology after he was noticed to be speaking strangely by his family.
+test-00040,C,C,C,C,C,C,C,0,A 27-year-old woman presents to the office with concerns about her long struggle with her physical a
+test-00041,C,C,C,C,C,C,C,0,А 43-уеаr-old mаn рrеѕеntѕ wіth tіnglіng аnd numbnеѕѕ of the lowеr lіmbѕ for 2 wееkѕ. Не also сomрlа
+test-00042,A,B,B,A,A,A,A,1,A one-day-old male is evaluated in the hospital nursery for bilious vomiting. The patient has urinat
+test-00043,B,B,B,B,B,B,B,0,A healthy 23-year-old male is undergoing an exercise stress test as part of his physiology class. If
+test-00044,A,C,A,A,C,C,C,1,A 45-year-old G5P4105 presents to her gynecologist’s office with six months of increasingly heavy pe
+test-00045,D,D,D,D,D,D,D,0,A man is brought into the emergency department by the police department. The officer state that the 
+test-00046,C,C,A,C,B,B,B,0,A medical research study is evaluating an investigational novel drug (medication 1) compared with st
+test-00047,A,A,A,A,A,A,A,0,A 55-year-old man comes to the physician because of a 6-week history of tingling pain in the sole of
+test-00048,B,A,A,B,B,B,B,1,A 29-year-old primigravid woman at 35 weeks' gestation is admitted to the hospital in labor. She has
+test-00049,C,D,D,D,D,D,D,0,A 67-year-old man is hospitalized after several days of fever and increasing shortness of breath. Re
+test-00050,D,D,D,D,D,D,D,0,A 65-year-old male is treated for anal carcinoma with therapy including external beam radiation. How
+test-00051,A,A,D,A,A,D,A,0,A 56-year-old man with a history of hypertension presents to his physician with progressive fatigue 
+test-00052,D,D,C,D,D,D,D,0,A 65-year-old man comes to the physician because of a 1-week history of yellowish discoloration of h
+test-00053,C,C,A,C,C,C,C,0,A 72-year-old woman is brought to the physician by her daughter because of a 6-month history of wors
+test-00054,A,A,A,A,A,A,A,0,A 61-year-old man with schizophrenia in a locked inpatient psychiatry unit was observed making an un
+test-00055,A,A,A,A,A,A,A,0,"A 17-year-old football player with no significant past medical history, social history, or family hi"
+test-00056,C,C,C,C,C,C,C,0,An otherwise healthy 26-year-old man comes to the physician for medication counseling after recently
+test-00057,B,A,A,A,B,B,B,0,"A 15-year-old woman presents with fever, altered mental status and a petechial rash on her lower ext"
+test-00058,C,C,C,B,C,B,B,0,A 2-year-old boy is brought to the physician for evaluation of pallor and increasing lethargy for 2 
+test-00059,A,C,C,C,C,C,C,0,A 17-year-old girl is referred by her dentist for a suspected eating disorder. She has been visiting
+test-00060,C,C,C,C,B,B,B,0,"A 14-year-old girl is brought to the physician by her father because of fever, chills, abdominal pai"
+test-00061,A,C,A,A,C,C,A,1,A 22-year-old female college student is treated with metronidazole after presenting to student healt
+test-00062,D,A,A,D,B,D,D,1,A 23-year-old primigravida presents for a regular prenatal care visit at 16 weeks gestation. She com
+test-00063,A,C,A,A,C,A,A,1,An 80-year-old man is transferred from a step-down unit to a med-surg floor in the hospital. He had 
+test-00064,A,C,C,C,C,C,C,0,A healthy 19-year-old man presents to his primary care provider complaining of painless “blisters” i
+test-00065,B,A,A,B,B,B,B,1,A 56-year-old man presents to the clinic complaining of subacute back pain for the past month. The p
+test-00066,C,C,C,C,C,A,C,0,A 4-year-old boy is brought to the emergency department because of severe abdominal pain and bilious
+test-00067,B,A,A,B,B,B,B,1,A 3-week-old male newborn is brought to the hospital because of poor weight gain since birth. He was
+test-00068,D,A,A,A,B,B,A,0,A 57-year-old female with a past medical history of alcoholism presents to the emergency room vomiti
+test-00069,A,D,D,C,D,D,C,0,"A 65-year-old man with a history of hypertension, obesity, and alcoholic cirrhosis is seen in clinic"
+test-00070,A,A,A,A,A,A,A,0,A 66-year-old man is brought to the emergency room by his wife due to abdominal distension and persi
+test-00071,A,A,A,A,A,A,A,0,A 27-year-old man presents to the emergency department after a motor vehicle collision. The patient 
+test-00072,C,C,A,D,D,D,D,0,"A 56-year-old man presents to the emergency department for progressively worsening fatigue, malaise,"
+test-00073,B,C,C,C,C,C,C,0,A 29-year-old woman presents to the clinic after several months of weight loss. She noticed a 6.8 kg
+test-00074,C,D,D,A,D,D,A,0,A 21-year-old man comes to the physician because of pruritus and a hypopigmented rash on his upper b
+test-00075,A,A,A,D,D,D,D,0,A 5-year-old female is brought to a speech therapist for continuing work on improving her communicat
+test-00076,B,A,A,B,B,B,B,1,A 62-year old female comes to the physician because of vaginal spotting and urinary urgency for the 
+test-00077,B,A,B,B,B,B,B,1,A 59-year-old man is evaluated for progressive joint pain. There is swelling and tenderness over the
+test-00078,C,A,B,B,B,B,B,0,A newborn is found to be extremely cyanotic immediately after birth. He then develops progressive re
+test-00079,C,A,A,D,C,C,C,0,A 25-year-old male involved in a knife fight presents with a penetrating wound to the chest. The pat
+test-00080,B,B,B,B,B,B,B,0,A post-mortem lung examination of a 68-year-old male overweight male with evidence of chronic lower 
+test-00081,A,A,A,C,C,D,C,0,A 54-year-old male makes an appointment with his primary care physician due to chronic fatigue that 
+test-00082,C,C,C,C,D,C,D,0,A 44-year-old African-American woman comes to the physician for a routine examination. She is concer
+test-00083,A,A,A,A,A,A,A,0,A 60-year-old woman is brought to the clinic by her daughter for evaluation. The daughter reports th
+test-00084,C,C,C,C,C,C,C,0,A 30-year-old woman comes to the physician because she has been unable to conceive for 3 years. Anal
+test-00085,B,B,A,B,B,B,B,0,A 55-year-old truck driver is brought to a physician by his wife. She states that her husband develo
+test-00086,C,D,D,D,C,C,C,0,A previously healthy 30-year-old woman comes to the physician for the evaluation of pain during sexu
+test-00087,C,C,C,C,C,C,C,0,A 50-year-old man visits his physician after 20 years of not seeking any medical care. He is concern
+test-00088,C,D,D,D,D,D,D,0,A 26-year-old woman is brought to the emergency department 20 minutes after being involved in a high
+test-00089,B,B,A,B,B,B,B,0,A 26-year-old G1P0 woman presents to her primary care physician’s office with feelings of anxiety an
+test-00090,D,D,D,D,D,D,D,0,A 32-year-old woman comes to the physician because of a 3-week history of intermittent loose stools 
+test-00091,B,B,B,B,B,B,B,0,A 3-month-old girl is brought to a pediatrician by her parents. She has central cyanosis without sig
+test-00092,C,D,C,C,C,C,C,1,"Six days after undergoing surgical repair of a hip fracture, a previously healthy 79-year-old woman "
+test-00093,D,C,C,B,B,B,B,0,"A 54-year-old woman with a past medical history of mental retardation, hypertension, and diabetes pr"
+test-00094,C,C,A,D,D,D,D,0,A 24-year-old man is brought to the emergency department 15 minutes after he sustained a stab wound 
+test-00095,D,A,A,D,D,D,D,1,A 40-year-old man presents to his primary-care doctor for a follow-up of his hypertension. He is asy
+test-00096,A,A,A,D,D,D,D,0,A 17-year-old female is brought to the emergency room by her father because she has been experiencin
+test-00097,B,B,B,B,B,B,B,0,"A 26-year-old male presents to his primary care physician with complaints of burning with urination,"
+test-00098,B,B,B,B,B,B,B,0,A 37-year-old man with no significant past medical history is rear-ended in a motor vehicle accident
+test-00099,B,B,B,B,D,D,D,0,"A 43-year-old man with a history of schizophrenia, currently controlled with medication, comes in fo"
+test-00100,D,A,A,A,B,B,B,0,A 2-day-old male newborn is brought to the physician because of yellowing of the skin and sclerae fo
+test-00101,A,A,A,A,A,A,A,0,A 65-year old man presents with gradually worsening rigidity of his arms and legs and slowness in pe
+test-00102,A,A,A,B,B,B,B,0,The patient is given prophylactic labetalol and magnesium sulfate. Examination shows absent deep ten
+test-00103,A,A,A,A,A,A,A,0,A 75-year-old woman is brought by a patrolman to the emergency department because of altered mental 
+test-00104,B,A,A,A,B,B,B,0,A 66-year-old male presents to his primary care physician to discuss his increasing shortness of bre
+test-00105,B,B,B,B,B,B,B,0,A 28-year-old woman presents following a suicide attempt 2 days ago. She says that her attempt was a
+test-00106,B,A,A,A,A,A,A,0,A 50-year-old man presents to his primary care doctor following an inguinal hernia repair. The patie
+test-00107,A,A,A,A,A,A,A,0,A 29-year-old man comes in for evaluation of infertility. He has been trying to conceive for over 2 
+test-00108,D,A,A,B,C,C,B,0,"A 13-year-old boy presents to the emergency department with severe knee, hip, and groin pain. The pa"
+test-00109,B,C,A,A,C,C,D,0,A 28-year-old man comes to the physician because of diarrhea and crampy abdominal pain for 5 weeks. 
+test-00110,C,C,A,D,C,C,C,0,"A 51-year-old man is brought to the emergency department because of a 2-day history of fever, abdomi"
+test-00111,B,B,A,B,B,B,B,0,An 18-month-old girl is brought to the emergency department because of a cough that her parents are 
+test-00112,B,B,A,A,A,A,A,0,A 43-year-old woman presents with complaints of retrosternal burning associated with eating. It has 
+test-00113,C,C,C,C,D,C,C,0,A 67-year-old man with chronic kidney disease comes to the physician because of worsening fatigue an
+test-00114,C,C,B,B,B,C,B,0,"A 41-year-old man presents to the emergency department with a 6-hour history of muscle cramping, dec"
+test-00115,D,D,D,D,D,D,D,0,A scientist is studying the properties of myosin-actin interactions in a sample of human muscle tiss
+test-00116,C,C,C,C,C,C,C,0,A 16-year-old boy with a seizure disorder and cognitive delay is brought to the physician because of
+test-00117,C,A,A,C,C,C,C,1,"A 66-year-old man presents to the emergency department with abdominal pain, nausea, and vomiting. He"
+test-00118,D,D,D,D,D,D,D,0,A 56-year-old man comes to the clinic for a check-up. He presents with a 1-year history of worsening
+test-00119,C,C,C,C,C,C,C,0,"A 25-year-old zookeeper presents to the office complaining of a dry cough, fever, and chills for the"
+test-00120,D,D,D,D,D,D,D,0,A 60-year-old female presents to her gynecologist with vaginal bleeding. She underwent menopause ten
+test-00121,A,A,A,A,A,A,A,0,A 40-year-old man presents to the physician with progressive weight loss for the last 3 months. He a
+test-00122,D,D,D,D,D,D,D,0,A 28-year-old gravida 1 at 32 weeks gestation is evaluated for an abnormal ultrasound that showed fe
+test-00123,A,A,A,A,A,A,A,0,"A 41-year-old G3P1 woman presents with a sudden onset throbbing headache, tinnitus, nausea, and left"
+test-00124,B,D,B,B,B,B,B,1,A obstetrician is working in a developing country to help promote maternal health and fetal well bei
+test-00125,A,A,A,B,B,B,B,0,A 33-year-old nurse is referred to an infectious disease specialist after she exhibited a PPD skin t
+test-00126,A,A,A,A,A,A,A,0,An 81-year-old woman is brought to the emergency room by her son after witnessing the patient fall a
+test-00127,C,C,C,C,C,C,C,0,A 67-year-old man with peripheral neuropathy comes to the physician for a follow-up examination afte
+test-00128,A,D,D,D,D,D,D,0,A 47-year-old woman comes to the physician because of progressive muscle weakness for five months. S
+test-00129,A,C,C,B,A,B,B,0,A 41-year-old man presents to the emergency room with sudden onset of blurry vision one hour ago. He
+test-00130,B,B,D,D,D,D,D,0,A 4-week-old female newborn is brought to the physician because of increasing yellowing of her eyes 
+test-00131,B,A,A,B,B,B,B,1,"A 43-year-old man comes to the emergency department with nausea, abdominal discomfort, diarrhea, and"
+test-00132,A,A,A,A,A,A,A,0,A 68-year-old woman presents with left lower quadrant pain that worsens with defecation. She describ
+test-00133,B,A,A,D,B,B,B,0,A 67-year-old man presents to his primary care physician for erectile dysfunction. He states that fo
+test-00134,A,B,A,A,A,A,A,1,A 55-year-old man with a history of chronic glomerulonephritis due to IgA nephropathy presents to yo
+test-00135,C,D,D,D,D,D,D,0,A medical researcher is studying the physiology of the immune system in order to better understand t
+test-00136,C,C,C,C,C,C,C,0,A 61-year-old Caucasian male presents to your office with chest pain. He states that he is worried a
+test-00137,D,A,A,A,D,D,D,0,A 36-year-old woman comes to the clinic because of tearing and a foreign body sensation in her eyes 
+test-00138,B,B,B,B,B,B,B,0,A 7-year-old boy is brought to a pediatrician by his parents for evaluation of frequent bed wetting 
+test-00139,D,A,A,C,C,C,C,0,A 52-year-old man with a history of gastric cancer that was treated with subtotal gastrectomy dies i
+test-00140,C,C,C,A,C,C,C,0,A 24-year-old pregnant woman at 28 weeks gestation presents to the emergency department with complai
+test-00141,A,D,D,A,A,A,A,1,A 25-year-old woman presents to her physician with a four month history of fatigue and weakness. The
+test-00142,A,C,A,A,A,A,A,1,A 67-year-woman with non-Hodgkin lymphoma comes to the physician because of progressively increasing
+test-00143,B,A,A,B,B,B,B,1,A 68-year-old man comes to the physician with a 1-week history of painless hematuria. A CT scan of t
+test-00144,C,C,A,A,B,C,C,0,A 14-year-old girl comes to the physician with her father for evaluation of her short stature. She f
+test-00145,D,C,A,C,C,C,C,0,A 5-year-old boy is brought to the physician because of facial swelling that started 5 days ago. Two
+test-00146,C,D,D,D,D,D,C,0,A 60-year-old man is referred to a dermatologist by his family physician for management of a rare ca
+test-00147,D,D,D,D,D,D,D,0,A 35-year-old woman comes to the physician because she has been feeling very stressed over the past 
+test-00148,B,D,D,D,D,D,D,0,A 65-year-old man presents to his primary care physician for a change in his behavior over the past 
+test-00149,D,D,A,A,D,D,D,0,"An 11-month-old boy is brought to the clinic by his mother for a rash on his trunk, which he has had"
+test-00150,A,B,A,A,A,A,A,1,"A 52-year-old man is brought to the emergency department with dry cough, shortness of breath, and lo"
+test-00151,D,D,D,D,D,D,D,0,A transvaginal ultrasound shows an intrauterine heteroechoic mass with numerous anechoic spaces and 
+test-00152,A,D,D,D,D,D,D,0,A 75-year-old woman is brought to the emergency department by her son because of a 2-day history of 
+test-00153,A,A,A,A,A,A,A,0,A 71-year-old man comes to the physician for a routine visit. His psychiatric history is significant
+test-00154,C,C,C,C,C,C,C,0,A 4-year-old boy is brought to the physician because of a generalized rash for 3 days. During this p
+test-00155,D,D,D,C,D,D,D,0,A 19-year-old man is brought to the emergency department by ambulance because of unusual behavior th
+test-00156,B,D,D,D,B,B,B,0,A 22-year-old male presents to the emergency room complaining of neck stiffness. He reports that his
+test-00157,A,A,A,A,A,A,A,0,A 13-month-old boy is brought to the physician for a well-child examination. Physical examination sh
+test-00158,C,D,A,C,D,D,C,1,"A 41-year-old man comes to the emergency department with nausea, abdominal discomfort, and diarrhea "
+test-00159,B,D,D,D,D,D,D,0,"A 9-year-old boy is brought to a physician by his mother for evaluation of generalized weakness, inc"
+test-00160,C,A,A,D,C,C,C,0,A 5-year-old boy of African descent is presented to the emergency department by his parents. The chi
+test-00161,B,A,A,A,B,C,C,0,A 51-year-old woman presents to her primary care physician complaining of months of dry mouth and dr
+test-00162,C,D,A,D,D,D,D,0,"A 59-year-old man presents to his primary care provider with fatigue, a progressively worsening coug"
+test-00163,A,A,A,A,D,D,D,0,A 32-year-old man with HIV infection is brought to the emergency department by his roommate because 
+test-00164,A,A,A,A,A,A,A,0,"A 70-year-old woman comes to the physician for the evaluation of back pain. For the past six days, s"
+test-00165,B,A,A,A,C,C,C,0,A type of fatal adrenal cancer has an average survival rate of 3 years after the onset of clinically
+test-00166,B,B,B,B,A,A,B,0,A 60-year-old man presents to the office for shortness of breath. The shortness of breath started a 
+test-00167,C,C,C,C,C,C,C,0,A 43-year-old woman is brought to the emergency department by her brother for severe chest pain. The
+test-00168,B,B,A,B,B,B,B,0,A 56-year-old man is brought to the emergency department. He was found unconscious on the street. Th
+test-00169,C,C,C,C,C,C,C,0,"An 8-year-old girl comes to the physician because of a 2-day history of hematuria. Two weeks ago, sh"
+test-00170,C,A,A,C,C,C,C,1,A 25-year-old man presents to the emergency department with altered mental status. He was found down
+test-00171,D,A,C,B,B,B,B,0,A 38-year-old G4P3 presents to her obstetrician’s office for her 20-week anatomy ultrasound. She rep
+test-00172,C,C,C,C,C,C,C,0,"An 83-year-old man is admitted to the hospital with fever, weakness, and decreased responsiveness. H"
+test-00173,A,A,A,A,A,A,A,0,"A 26-year-old woman comes to the physician because of fatigue, weight loss, and muscle aches during "
+test-00174,D,D,D,D,D,D,D,0,An investigator conducts a study to determine whether earlier detection of glioblastoma multiforme (
+test-00175,D,D,D,D,D,D,D,0,A 23-year-old man is brought to the emergency department 25 minutes after being involved in a high-s
+test-00176,D,D,D,D,D,D,D,0,A novel type of PET radiotracer is being developed to evaluate patients with Parkinson’s disease. A 
+test-00177,C,C,C,C,C,C,C,0,A 55-year-old man presents to a rheumatologist with bilateral wrist and knee pain that has been pres
+test-00178,D,A,A,A,B,B,B,0,A 40-year-old businessman who was previously well is brought into the emergency department by his as
+test-00179,C,C,A,A,A,A,A,0,"A previously healthy 19-year-old man comes to the physician with right-sided, dull, throbbing scrota"
+test-00180,B,A,C,C,C,C,C,0,A 4-month-old infant is brought to the office by his parents due to sudden nose bleeding without tra
+test-00181,D,D,D,A,B,B,B,0,A 6-year-old boy is brought to the physician by his mother because of a 2-day history of dysuria and
+test-00182,B,C,C,C,C,C,C,0,A 13-year-old boy is brought to his pediatrician due to a left breast lump under his nipple. He noti
+test-00183,D,D,D,D,D,D,D,0,A 35-year-old Caucasian female presents to the emergency room with unilateral leg swelling. She repo
+test-00184,A,D,D,D,D,D,D,0,A 78-year-old man is brought to the physician by his daughter because of increasing forgetfulness ov
+test-00185,D,D,D,D,D,D,D,0,A previously healthy 18-month-old boy is brought to the physician by his parents for evaluation of a
+test-00186,B,B,B,B,B,B,B,0,A laboratory primarily involved with studying cellular proofreading mechanisms is investigating the 
+test-00187,B,B,B,B,B,B,B,0,"A 65-year-old man with metastatic lung cancer has been experiencing severe, unremitting pain. He has"
+test-00188,D,B,D,B,B,D,D,0,A 27-year-old man presents to the emergency room complaining of left shoulder pain for several weeks
+test-00189,C,B,B,B,B,B,B,0,A 17-year-old woman presents to your office concerned that she has not had her menstrual period in 4
+test-00190,A,C,C,C,C,C,C,0,A 23-year-old college student presents to the clinic with a history of intermittent chest discomfort
+test-00191,C,A,A,A,D,A,A,0,A stillborn infant is delivered at 38 weeks' gestation to a 32-year-old woman. The mother had no pre
+test-00192,D,D,D,D,D,D,D,0,"Please refer to the summary above to answer this question
+The authors of the study have decided to c"
+test-00193,C,C,C,C,C,C,C,0,"During a Mycobacterium tuberculosis infection, Th1 cells secrete a factor capable of stimulating pha"
+test-00194,C,C,A,C,B,B,C,0,A 3-year-old boy is brought to the pediatrician because of abdominal pain and constipation for 3 wee
+test-00195,C,C,C,C,C,C,C,0,A group of researchers conducted a study to determine whether there is an association between folic 
+test-00196,A,B,B,A,B,B,B,1,A student studying pharmacology is a member of a team that is conducting research related to the eli
+test-00197,B,B,B,B,B,B,B,0,A 40-year-old woman presents to her primary care physician for a checkup. She has felt weaker lately
+test-00198,D,C,C,C,C,C,C,0,A 28-year-old woman comes to the obstetrics and gynecology clinic because she has been unsuccessfull
+test-00199,C,A,A,C,C,C,C,1,A 2-year-old girl with recurrent urinary tract infections is brought to the physician for a follow-u
+test-00200,A,A,A,A,B,B,B,0,An unconscious 55-year-old man is brought to the Emergency Department by ambulance. He had recently 
+test-00201,B,B,B,D,C,D,D,0,A 17-year-old girl comes to the physician because of an 8-month history of severe acne vulgaris over
+test-00202,C,B,B,B,B,B,B,0,A 48-year-old female presents for a follow-up appointment to discuss her ultrasound results. She pre
+test-00203,A,D,D,D,D,D,D,0,A 39-year-old man presents to his primary care physician because he has been having severe headaches
+test-00204,B,D,A,A,C,C,C,0,A 10-year-old Caucasian female with Turner's syndrome underwent an abdominal imaging study and was d
+test-00205,B,A,C,C,B,B,B,0,A 34-year-old woman is assaulted and suffers a number of stab wounds to her abdomen. Bystanders call
+test-00206,C,C,C,C,C,C,C,0,Researchers are studying the inheritance pattern of mutations in the cystic fibrosis transmembrane r
+test-00207,A,C,C,A,A,A,A,1,A 28-year-old woman returns to the clinic to follow up on a recent abnormal cervical biopsy that dem
+test-00208,B,C,C,C,C,C,C,0,A clinical researcher is interested in creating a new drug for HIV patients. Darunavir has been part
+test-00209,A,A,A,A,A,A,A,0,A 58-year-old white man with hypertension and type 2 diabetes mellitus comes to the physician becaus
+test-00210,C,D,A,A,A,A,A,0,An investigator is studying the effect of drug X on the retinoblastoma (Rb) gene on chromosome 13 in
+test-00211,B,A,A,D,D,D,D,0,A 65-year-old man presents with painless swelling of the neck over the past week. He also says he ha
+test-00212,D,A,B,B,B,B,B,0,In order to assess the feasibility and evaluate the outcomes of cerclage wiring as a supportive appr
+test-00213,A,A,A,A,A,A,A,0,A 67-year-old woman presents from home hospice with a change in her mental status. She has seemed mo
+test-00214,B,A,B,B,B,B,B,1,A 35-year-old female is brought to the emergency department after being found unconscious. The patie
+test-00215,C,C,A,C,C,C,C,0,A 45-year-old man presents to the physician with complaints of increased urinary frequency and decre
+test-00216,D,A,A,A,A,B,B,0,A 48-year-old woman with chronic tension headaches comes to the physician because of several episode
+test-00217,C,C,A,D,C,C,C,0,A 37-year-old primigravid woman at 12 weeks' gestation comes to the emergency department because of 
+test-00218,D,D,D,D,D,D,D,0,A 17-year-old female accidentally eats a granola bar manufactured on equipment that processes peanut
+test-00219,A,C,A,C,C,C,C,0,"A 4-year-old girl is brought to the emergency department with a persistent cough, fever, and vomitin"
+test-00220,C,B,A,A,B,B,B,0,A 48-year-old man seeks evaluation at a clinic with a complaint of breathlessness for the past coupl
+test-00221,A,A,D,A,A,A,A,0,"A 2,300 g (5 lb) male newborn is delivered to a 29-year-old primigravid woman. The mother has HIV an"
+test-00222,C,C,C,C,C,C,C,0,A 60-year-old woman presents to a physician for worsening shortness of breath and increasing abdomin
+test-00223,A,A,A,A,A,A,A,0,A 15-year-old girl comes to the physician because of episodic pelvic pain radiating to her back and 
+test-00224,B,C,C,A,B,B,B,0,"A 25-year-old male is hospitalized for acute agitation, photophobia, and dysphagia. His parents repo"
+test-00225,C,C,C,C,C,C,C,0,A 19-year-old Caucasian male presents to your office with hypopigmented skin. He undergoes a skin bi
+test-00226,C,B,B,B,B,B,B,0,"A 51-year-old man presents for a routine check-up. He has no complaints. At his last annual visit, h"
+test-00227,C,A,A,A,C,C,C,0,"A 62-year-old woman is evaluated because of a 3-day history of headache, nausea, and decreased urina"
+test-00228,A,D,D,D,B,B,B,0,A 21-year-old male presents to his primary care provider for fatigue. He reports that he graduated f
+test-00229,D,D,D,D,D,D,D,0,Three days after admission to the intensive care unit for septic shock and bacteremia from a urinary
+test-00230,B,B,B,B,B,B,B,0,An 11-year-old child complains of pain in the leg while playing. Blood pressure in the upper limb is
+test-00231,A,C,C,C,C,C,C,0,A 59-year-old man comes to the emergency department because of excruciating left knee pain for 4 day
+test-00232,C,C,C,A,C,C,C,0,"A 47-year-old man presents to the emergency department with fever, fatigue, and loss of appetite for"
+test-00233,A,A,A,A,A,A,A,0,A 36-year-old recent immigrant from India presents with a face similar to that seen in the image A. 
+test-00234,C,D,D,D,D,D,D,0,A 55-year-old man comes to the physician because of a 3-month history of a progressively growing mas
+test-00235,A,A,A,A,A,B,A,0,A 32-year-old man comes to the physician for a pre-employment examination. He recently traveled to G
+test-00236,A,A,A,A,A,A,A,0,A 7-month-old male infant is brought to the pediatrician by his mother. She reports that the child d
+test-00237,B,C,A,A,C,C,C,0,A 65-year-old man presents to his primary care physician with a neck mass. He first noticed a firm m
+test-00238,A,B,B,A,B,B,B,1,A group of researchers decided to explore whether the estimates of incidence and prevalence rates of
+test-00239,A,C,C,C,C,C,C,0,A 48-year-old Caucasian female presents to her primary care physician for evaluation of progressive 
+test-00240,D,D,D,D,D,D,D,0,A 46-year-old man presents to the physician with a complaint of a cough for 6 months. He has been ta
+test-00241,B,C,A,C,C,C,C,0,A 41-year-old man presents to his primary care provider with abdominal pain. He says that the pain “
+test-00242,A,C,C,C,A,C,A,0,A 5-year-old female presents to the pediatrician for a routine office visit. The patient is in kinde
+test-00243,A,C,C,C,C,C,C,0, A 61-year-old man was started on rosuvastatin 40 mg 8 weeks ago and presents today for a follow-up.
+test-00244,D,B,B,B,B,B,B,0,An unidentified surgical specimen is received for histopathologic analysis. A portion of the specime
+test-00245,C,D,A,C,C,C,C,1,"A 70-year-old woman is brought to the emergency department for the evaluation of abdominal pain, nau"
+test-00246,A,A,C,C,C,C,C,0,A 43-year-old man with a history of hepatitis C and current intravenous drug use presents with 5 day
+test-00247,D,D,D,A,D,D,D,0,"A 42-year-old man with AIDS comes to the physician for intermittent fever, nonproductive cough, mala"
+test-00248,B,A,A,C,C,C,C,0,"A 49-year-old woman comes to the physician for a scheduled colposcopy. Two weeks ago, she had a rout"
+test-00249,B,B,B,B,B,B,B,0,A research group has developed a low-cost diagnostic retinal imaging device for cytomegalovirus reti
+test-00250,A,A,A,A,A,A,A,0,A 35-year-old woman is brought into the clinic by a concerned neighbor who says that the patient is 
+test-00251,B,B,B,B,B,B,B,0,A 71-year-old man complains of urinary hesitancy and nocturia of increasing frequency over the past 
+test-00252,A,A,A,A,A,A,A,0,A 30-year-old man presents to his primary care provider complaining of drowsiness at work for the pa
+test-00253,D,A,A,A,D,D,D,0,A 40-year-old man comes to the physician for the evaluation of a painless right-sided scrotal swelli
+test-00254,A,A,A,A,A,A,A,0,A 62-year-old man presents to the physician because of incomplete healing of a chest wound. He recen
+test-00255,C,C,C,C,C,C,C,0,"The Kozak sequence for the Beta-globin gene has a known mutation which decreases, though does not ab"
+test-00256,C,A,C,C,C,B,B,1,A 68-year-old man from California presents for a routine checkup. He does not have any complaints. H
+test-00257,D,A,A,D,A,A,A,1,A routine newborn screening test for phenylketonuria in a male neonate shows a serum phenylalanine c
+test-00258,D,A,A,A,A,A,A,0,"A 36-year-old nursing home worker presents to the clinic with the complaints of breathlessness, coug"
+test-00259,D,D,D,D,D,D,D,0,A 23-year-old woman is referred to a genetic counselor. She is feeling well but is concerned because
+test-00260,C,C,C,C,C,C,C,0,A 16-year-old girl is brought to the emergency department with constant abdominal pain over the past
+test-00261,C,C,C,C,C,C,C,0,A 30-year-old male presents to the emergency department with a complaint of abdominal pain. The pati
+test-00262,D,C,A,C,C,C,C,0,A 70-year-old man is brought to the emergency department by staff of the group home where he resides
+test-00263,C,C,C,C,D,D,C,0,A 35-year-old woman presents with severe fear reactions to seeing dogs after moving into a new subur
+test-00264,A,D,D,D,D,D,C,0,A 45-year-old man arrives by ambulance to the emergency room after being involved in a very severe c
+test-00265,D,A,C,A,C,C,C,0,A 76-year-old man with chronic obstructive pulmonary disease (COPD) presents complaining of 3 weeks 
+test-00266,A,A,A,A,A,A,A,0,A 60-year-old man presents with a 2-day history of increasing difficulty in breathing with a product
+test-00267,D,C,C,C,C,C,C,0,A 34-year-old male suffers from inherited hemophilia A. He and his wife have three unaffected daught
+test-00268,D,D,D,D,D,D,D,0,A 76-year-old man is brought to his physician's office by his wife due to progressively worsening he
+test-00269,C,A,A,D,D,D,A,0,A 13-year-old boy is brought to the emergency department by his mother because of a 6-hour history o
+test-00270,C,C,A,C,C,C,C,0,"A 31-year-old female patient complains of numbness and tingling in her left hand, weakness, difficul"
+test-00271,B,A,A,B,D,D,C,1,A 22-year-old primigravida presents for a regular prenatal visit at 16 weeks gestation. She is conce
+test-00272,C,A,A,C,C,C,C,1,A 9-month-old boy is brought to the physician by his mother because of intermittent watery diarrhea 
+test-00273,A,D,D,D,D,D,D,0,A 57-year-old man comes to the physician because of a 3-week history of abdominal bloating and incre
+test-00274,A,A,A,A,A,A,A,0,A 67-year-old white man presents to his primary care provider for an annual examination. He notes a 
+test-00275,A,A,A,A,A,A,A,0,A 56-year-old man presents to his primary care doctor with intermittent chest pain. He reports a 2-m
+test-00276,C,A,D,D,D,D,D,0,A 69-year-old male with a history of metastatic small cell lung carcinoma on chemotherapy presents t
+test-00277,D,D,D,D,D,D,D,0,A 60-year-old man with a history of osteoarthritis has been awaiting hip replacement surgery for 3 y
+test-00278,A,C,C,C,C,C,C,0,A 62-year-old man presents to the emergency department with shortness of breath. The patient says he
+test-00279,B,D,D,A,D,D,B,0,A 76-year-old man is brought to the physician by his wife because of low back pain and weakness for 
+test-00280,B,C,B,B,B,B,B,1,A 32-year-old man arrives to his primary care physician to discuss his fear of flying. The patient r
+test-00281,C,B,D,D,D,D,D,0,"A 75-year-old man presents to a medical clinic for evaluation of a large, tense, pruritic bulla on h"
+test-00282,A,A,A,A,A,A,A,0,A 16-year-old girl is brought to the physician by her father because of concerns about her behavior 
+test-00283,A,B,A,B,B,A,A,0,"Twelve hours after admission to the hospital because of a high-grade fever for 3 days, a 15-year-old"
+test-00284,A,C,C,C,C,C,C,0,"An elderly man presents to his physician with complaints of difficulty breathing, easy fatigability,"
+test-00285,C,D,D,D,D,D,C,0,A 30-year-old man presents to his primary care physician with complaints of excessive fatigue and we
+test-00286,C,C,C,C,C,C,C,0,A 27-year-old HIV positive female gave birth to a 7lb 2oz (3.2 kg) baby girl. The obstetrician is wo
+test-00287,A,A,C,C,B,D,D,0,A 53-year-old man presents to his physician’s office with a persistent cough which he has had over t
+test-00288,B,C,C,C,C,C,C,0,An 8-year-old boy is brought to the physician because of headaches for the past 2 weeks. His headach
+test-00289,C,C,C,C,C,C,C,0,A previously healthy 2-year-old boy is brought to the physician because of a 10-day history of unste
+test-00290,B,B,B,B,B,B,B,0,"In a study, 2 groups are placed on different statin medications, statin A and statin B. Baseline LDL"
+test-00291,A,A,A,A,A,A,A,0,A 32-year-old woman presents to the emergency department because she has a cord-like rash on her lef
+test-00292,C,A,A,A,D,B,B,0,A 28-year-old female visits her physician for workup of a new onset diastolic murmur found on physic
+test-00293,A,A,A,A,A,A,A,0,"An 8-year-old girl presents to the emergency department with respiratory distress, facial edema, and"
+test-00294,A,A,A,A,A,A,A,0,An investigator is studying the cell morphologies of the respiratory tract. He obtains a biopsy from
+test-00295,A,A,A,A,A,A,A,0,A 32-year-old female complains to her gynecologist that she has had irregular periods for several ye
+test-00296,A,A,A,A,A,A,A,0,A 52-year-old fisherman presents to the clinic for an evaluation of a pigmented lesion on his neck. 
+test-00297,D,B,A,D,B,B,B,1,"Two days after being admitted to the hospital following a fall, a 77-year-old woman complains of fat"
+test-00298,D,D,D,D,D,D,D,0,An 18-month-old girl is brought to the pediatrician by her mother for vaginal bleeding. The mother s
+test-00299,B,B,A,A,A,A,A,0,A 72-year-old woman is admitted to the hospital for treatment of unstable angina. Cardiac catheteriz
+test-00300,D,A,A,A,B,B,B,0,A 5-year-old boy is brought to the physician because of an irregular gait 3 days after receiving age
+test-00301,C,A,A,A,B,B,B,0,A 2-year-old boy is brought to the physician because of decreased appetite and abdominal pain for th
+test-00302,A,A,A,A,A,A,A,0,A 14-year-old boy is brought to the physician because of an increasing difficulty in hearing over th
+test-00303,C,A,A,D,D,D,D,0,A 16-year-old female presents to her primary care physician due to lack of menstruation. She has nev
+test-00304,A,A,A,A,A,A,A,0,A 35-year-old man presents to the emergency room due to shortness of breath that started an hour ago
+test-00305,B,B,A,A,B,B,B,0,"A 48-year-old homeless male is brought to the emergency department, by the police, for altered menta"
+test-00306,C,A,A,A,C,A,A,0,A 61-year-old man presents to his primary care provider complaining of abdominal pain and constipati
+test-00307,C,B,B,A,B,B,B,0,A 67-year-old man is brought to the emergency department with sudden onset of slurred speech. The pa
+test-00308,C,C,C,C,C,C,C,0,A 50-year-old man with congestive heart failure (CHF) was started on an experimental analog of atria
+test-00309,D,D,D,D,D,D,D,0,A 56-year-old man is brought to the emergency room after a motor vehicle accident. The patient’s vit
+test-00310,B,B,B,B,B,B,B,0,A group of researchers wants to evaluate how often the human immunodeficiency virus (HIV) is related
+test-00311,C,A,A,D,D,C,D,0,A 53-year-old man comes to the physician because of a 2-month history of multiple episodes of small 
+test-00312,B,A,A,C,C,C,C,0,A 68-year-old female presents to her primary care physician with a 7-month history of fatigue and lo
+test-00313,B,B,B,B,B,B,B,0,"A 95-year-old woman who is a resident at a long term care facility, got up from her chair, tripped o"
+test-00314,A,B,B,B,B,B,B,0,A 26-year-old woman comes to the clinic for an annual wellness examination. She is healthy with no p
+test-00315,A,A,A,A,A,A,A,0,A 27-year-old woman was referred to a dermatology clinic due to a changing discoloration of her fing
+test-00316,A,B,A,A,A,A,A,1,"A 32-year-old woman presents to the physician because she feels depressed, has difficulty sleeping, "
+test-00317,A,A,A,D,D,D,D,0,A 52-year-old man comes to the physician for an annual physical examination. He reports that his vis
+test-00318,C,C,C,D,C,D,D,0,A 21-year-old woman presents to the emergency room with right arm pain and limited range of motion. 
+test-00319,A,B,B,A,A,A,A,1,A 22-year-old man presents to a psychiatrist complaining of mood fluctuations. He is accompanied by 
+test-00320,C,A,A,D,B,D,C,0,A 32-year-old woman comes to the emergency department because a 5-week history of abdominal pain and
+test-00321,A,D,D,D,D,D,D,0,A 55-year-old man recovering from knee replacement surgery complains of breathlessness in the postop
+test-00322,C,C,C,C,C,D,C,0,A 62-year-old man is brought to his primary care physician by his wife who is concerned about the pa
+test-00323,C,C,C,A,B,B,B,0,A 16-month-old boy is brought to the physician by his mother for a regular check-up. His mother says
+test-00324,A,A,A,A,A,A,A,0,A 55-year-old man is brought to the emergency department with altered mental status. The patient is 
+test-00325,B,B,B,B,B,B,B,0,A 31-year-old woman comes to the physician because of a 5-month history of intermittent flank pain. 
+test-00326,A,A,A,A,A,A,A,0,A 39-year-old African-American woman presents to the emergency room with hip pain. She has a past me
+test-00327,A,A,A,A,C,C,C,0,A 22-year-old man from Nepal presents to the emergency department complaining of swelling and pain i
+test-00328,A,D,D,A,A,A,A,1,"A 27-year-old woman, gravida 2, para 1, at 40 weeks' gestation is admitted to the hospital in active"
+test-00329,B,A,A,A,A,A,A,0,A 57-year-old woman is brought to the emergency department by ambulance for dysarthria and left-side
+test-00330,B,B,B,B,B,B,B,0,A 58-year-old male is hospitalized after sustaining multiple fractures in a severe automobile accide
+test-00331,B,B,B,D,D,B,D,0,"A 6-year-old African American boy is referred to the hospital by his family physician for jaundice, "
+test-00332,D,D,D,D,D,D,D,0,"A 55-year-old man presents to the emergency department with complaints of nausea, vomiting, palpitat"
+test-00333,D,D,D,D,D,D,D,0,A 36-year-old man is brought to the emergency department 25 minutes after being involved in a high s
+test-00334,B,B,B,B,B,B,B,0,A 51-year-old woman was recently diagnosed with type II diabetes. Due to the cumulative effects of d
+test-00335,A,A,A,A,A,A,A,0,A 23-year-old man presents with sudden loss of consciousness while pitching in a baseball game. Ther
+test-00336,A,A,A,D,B,B,B,0,A 39-year-old man is brought to the emergency department unconscious following 2 episodes of general
+test-00337,B,A,A,D,D,D,C,0,A 22-year-old woman from a rural area who recently discovered she was pregnant is referred for a car
+test-00338,A,C,C,C,C,C,C,0,A 25-year-old man with a past medical history of constipation and fibromyalgia presents to the emerg
+test-00339,A,A,A,A,A,A,A,0,A 45-year-old woman presents to the clinic with her husband to discuss her most recent problem. She 
+test-00340,D,B,A,B,A,A,A,0,"A 67-year-old man is brought to the physician because of increasing forgetfulness, unsteadiness, and"
+test-00341,B,B,A,B,B,B,B,0,A 28-year-old primigravid woman at 39 weeks gestation is admitted to the hospital in active labor. O
+test-00342,C,C,C,C,C,C,C,0,A 55-year-old woman with a history of HIV presents to the emergency department with progressive dysp
+test-00343,A,A,A,A,A,A,A,0,A 22-year-old woman with polycystic ovarian syndrome comes to the emergency department because of a 
+test-00344,A,A,A,D,B,B,B,0,A 47-year-old woman comes to the physician for a follow-up examination. She has noticed trembling of
+test-00345,B,B,B,B,B,B,B,0,"A 52-year-old man comes to the physician because of generalized pruritus and raised, erythematous pl"
+test-00346,B,B,B,B,B,B,B,0,A 19-year-old man in a 3-month relationship with a woman experiences frequent sexual fantasies about
+test-00347,A,A,A,A,A,A,A,0,A 66-year-old woman presents to her primary care provider with several days of left flank pain radia
+test-00348,C,D,D,A,D,B,B,0,A 23-year-old woman presents to her psychiatrist concerned about her mood. She has felt tired and un
+test-00349,B,B,B,B,B,B,B,0,A 16-year-old patient presents to the physician’s office with an absence of menstruations. Her last 
+test-00350,B,D,A,D,D,D,D,0,A 7-year-old girl is brought to the emergency department with a 10-day history of fever and sore thr
+test-00351,A,A,A,A,A,A,A,0,A 26-year-old nurse comes to the physician because of a 2-month history of fatigue. She has had a lo
+test-00352,A,D,D,D,D,D,B,0,Five days after undergoing an emergency appendectomy under general inhalational anesthesia while on 
+test-00353,B,C,A,A,C,C,C,0,A 56-year-old woman comes to the physician because of a 2-week history of fatigue and painless bruis
+test-00354,C,C,C,C,C,C,C,0,A 35-year-old man returns to the clinic to follow up for his chronic stomach pain. At the last visit
+test-00355,A,D,D,D,D,D,D,0,A 32-year-old G1P1 patient presents to her obstetrician after having a positive pregnancy test at ho
+test-00356,A,A,A,A,A,A,A,0,A 29-year-old man is referred by his marriage counselor to the outpatient psychiatry clinic. The pat
+test-00357,D,A,B,D,B,B,B,1,A 24-year-old man is brought to the emergency department by the police. He was found unconscious and
+test-00358,B,A,C,A,C,C,B,0,A 3-year-old girl is brought to the emergency department by her parents for an acute arm injury. The
+test-00359,C,D,C,C,C,C,C,1,A 40-year-old male presents to your office complaining that he is too weak to climb stairs or brush 
+test-00360,A,C,A,A,C,C,C,1,A 6-month-old boy presents to his pediatrician for a wellness examination. The mother reports that h
+test-00361,A,C,A,A,A,C,A,1,A 6-day-old male newborn is brought to the physician because he has become increasingly irritable an
+test-00362,D,D,A,D,B,B,B,0,A previously healthy 29-year-old man comes to the emergency department because of burning with urina
+test-00363,C,C,A,C,C,C,C,0,A 36-year-old woman comes to the physician because of a painless lump on her neck for 3 months that 
+test-00364,A,C,C,C,C,C,C,0,A 34-year-old man currently staying at an addiction center presents to the staff psychiatrist with d
+test-00365,C,D,D,D,D,D,D,0,A 26-year-old man presents to his physician with a history of diarrhea and vomiting for the past 24 
+test-00366,A,A,D,D,D,D,D,0,A 28-year-old female comes to the physician’s office with a complaint of episodic chest pain. She de
+test-00367,D,A,A,A,A,A,A,0,A 22-year-old gravida 1 presents to her physician at 15 weeks gestation for a prenatal appointment. 
+test-00368,C,B,B,D,D,B,D,0,"A 20-year-old woman presents with vaginal discharge, pruritus, and painful micturition for the past "
+test-00369,D,D,D,D,D,D,D,0,"A 47-year-old female undergoes a thyroidectomy for treatment of Graves' disease. Post-operatively, s"
+test-00370,D,A,A,D,D,D,D,1,A 15-year-old boy with poorly controlled asthma presents to the emergency room complaining of severe
+test-00371,A,C,A,A,C,C,C,1,A 55-year-old man presents with a 2-month history of an increasing sensation of fullness in the uppe
+test-00372,D,A,A,A,A,A,A,0,A 57-year-old man presents to the emergency department with confusion. His symptoms started a few da
+test-00373,D,A,A,A,A,A,A,0,A 45-year-old man presents to the physician because of a 1-day history of progressive pain and blurr
+test-00374,D,C,D,C,D,D,C,0,"A 50-year-old man presents to his physician with chronic cough, aching joints in his hips and lower "
+test-00375,B,A,A,A,B,B,B,0,A 22-year-old man with sickle cell disease is brought to the emergency room for acute onset facial a
+test-00376,D,D,B,A,B,B,B,0,A 3-month-old girl is brought to the physician because of a productive cough for 5 days. Over the pa
+test-00377,D,A,D,D,D,D,D,1,A 30-year-old primigravid woman at 22 weeks' gestation is brought to the emergency department by her
+test-00378,A,A,A,D,D,D,B,0,A 36-year-old man is brought to the emergency department because of multiple episodes of nonbilious 
+test-00379,C,C,C,C,C,C,C,0,A 52-year-old man is brought to the emergency department because of worsening shortness of breath fo
+test-00380,B,D,D,D,D,D,D,0,A 70-year-old obese male presents to the emergency department with shortness of breath and cough of 
+test-00381,C,D,D,D,D,D,D,0,A 23-year-old woman is seen by her primary care physician for fatigue. She says that she has always 
+test-00382,C,C,C,C,C,C,C,0,"A 32-year-old woman comes to the physician because she feels depressed, has difficulty sleeping, a p"
+test-00383,A,D,A,A,D,D,D,1,A 5-month-old boy is brought to the physician with a 3-day history of fever and cough. His mother re
+test-00384,D,D,A,D,D,D,D,0,"Six days after undergoing an aortic valve replacement surgery, a 68-year-old woman has bluish discol"
+test-00385,D,A,A,D,D,D,D,1,A 55-year-old man with chronic hepatitis B virus infection comes to the physician because of general
+test-00386,C,C,C,A,C,C,C,0,A 28-year-old woman with no significant past medical history presents to her primary care physician 
+test-00387,B,A,C,B,B,B,B,1,A 6-year-old boy is brought in by his parents to a pediatrician’s office for persistent fever. His t
+test-00388,C,C,C,C,C,C,C,0,An 8-week-old male presents with his mother to the pediatrician for a well visit. The patient has be
+test-00389,D,D,A,D,D,D,D,0,A 27-year-old gentleman is brought into the ED after being stabbed in the back by a knife. In additi
+test-00390,A,A,A,A,A,A,A,0,A 58-year-old African American man presents for his yearly wellness visit. He says he has been unsuc
+test-00391,A,A,A,A,C,A,C,0,A 34-year-old patient is brought to the emergency room after a motor vehicle accident. An EKG shows 
+test-00392,C,C,C,C,C,C,C,0,A previously healthy 60-year-old man comes to his physician because of progressively worsening short
+test-00393,A,D,D,D,D,D,D,0,A 29-year-old G1P0 woman is giving birth at 38 weeks gestation to a  boy via vaginal delivery. As so
+test-00394,C,A,A,A,D,D,A,0,"A 54-year-old woman presents with fatigue, malaise, and shortness of breath over the past 5 months. "
+test-00395,B,B,C,C,C,C,B,0,A six-year-old boy with a history of asthma currently uses an albuterol inhaler as needed to manage 
+test-00396,D,D,D,D,D,D,D,0,A 25-year-old woman comes to the office complaining of pelvic pain and feeling “off” for the past fe
+test-00397,A,A,A,B,B,B,B,0,An otherwise healthy 15-year-old boy presents to the emergency department with extreme fatigue and s
+test-00398,D,D,A,D,C,C,C,0,A 65-year-old male presents to the emergency department from his home complaining of dyspnea. He is 
+test-00399,B,B,B,B,B,B,B,0,"A 23-year-old man is admitted to the hospital with fever, chest discomfort, tachypnea, pain, needle-"
+test-00400,B,C,A,A,C,B,B,0,A 23-year-old woman comes to the physician because of progressive fatigue and painful swelling of he
+test-00401,C,D,C,C,C,C,C,1,A 24-year-old woman comes to the physician because she had unprotected intercourse with her boyfrien
+test-00402,A,A,A,A,A,A,C,0,A 27-year-old woman with a history of bipolar disorder presents for a 3-month follow-up after starti
+test-00403,D,A,A,A,A,A,A,0,A 6-year-old boy is brought to the physician by his mother because of a 6-month history of mild epis
+test-00404,A,A,A,B,B,B,B,0,"A healthy, full-term 1-day-old female is being evaluated after birth and is noted to have a cleft pa"
+test-00405,A,A,D,A,D,D,D,0,A 58-year-old male with a history of obesity and hypertension presents to his primary care physician
+test-00406,B,B,A,C,C,C,C,0,A 54-year-old man presents with the acute onset of seizures and hallucinations. The patient’s wife s
+test-00407,B,C,C,C,C,C,C,0,A 60-year-old female patient with a history of hypertension presents to an outpatient office for reg
+test-00408,A,C,A,C,A,A,A,0,A 42-year-old man comes to the physician after elevated liver function tests were found after a rout
+test-00409,C,C,A,C,C,C,C,0,A 44-year-old woman with hypothyroidism comes to the physician because of a 1-month history of tingl
+test-00410,C,C,C,C,C,C,C,0,"A 26-year-old female complains of frequent, large volume urination. This negatively affects her slee"
+test-00411,B,B,B,B,B,B,B,0,"An 8-year-old girl presents to her pediatrician with intensely pruritic lesions over her buttocks, a"
+test-00412,A,A,A,A,A,A,A,0,"A 64-year-old man comes to the emergency department because of a 2-day history of lower back pain, f"
+test-00413,A,C,A,C,C,C,C,0,A 56-year-old man with a history of pancreatic cancer presents to the surgical intensive care unit f
+test-00414,D,A,A,D,A,A,D,1,"A 46-year-old woman comes to the physician because of a 3-day history of diarrhea, moderate abdomina"
+test-00415,D,C,C,C,C,C,C,0,A research group has created a novel screening test for a rare disorder. A robust clinical trial is 
+test-00416,C,D,D,D,D,D,D,0,A 25-year-old woman presents to her new family physician for a follow-up appointment. She previously
+test-00417,A,A,A,A,A,A,A,0,A 55-year-old woman with papillary thyroid carcinoma underwent total thyroidectomy. She has no signi
+test-00418,C,C,C,C,C,C,C,0,A 16-year-old boy is brought to the physician by his parents for the evaluation of fatigue for sever
+test-00419,B,C,C,C,C,C,C,0,A 78-year-old man is brought to the emergency department because of a 1-day history of painful enlar
+test-00420,B,A,A,C,B,B,B,0,A 15-year-old boy is brought to the physician for evaluation of a learning disability. His teachers 
+test-00421,C,D,D,C,D,C,C,1,A 65-year-old woman presented to the emergency room due to progressive dyspnea. She is a known hyper
+test-00422,A,C,C,C,C,C,A,0,A 49-year-old woman is brought to the emergency department with progressive dyspnea and cough which 
+test-00423,D,C,C,A,A,A,A,0,A 27-year-old woman presents to the emergency department with acute onset bloody diarrhea. The patie
+test-00424,C,C,C,C,C,C,C,0,A 45-year-old Caucasian male presents to a gastroenterologist complaining of heartburn and difficult
+test-00425,C,C,C,C,B,B,B,0,A 16-year-old female patient with a history of mental retardation presents to your clinic with her m
+test-00426,B,C,A,A,D,B,B,0,A 51-year-old man presents to his primary care provider complaining of malaise. He returned from a r
+test-00427,B,B,B,B,B,B,B,0,A 45-year-old African-American male presents to the family medicine physician to assess the status o
+test-00428,A,D,D,D,D,D,D,0,"A previously healthy 24-year-old man comes to the physician 1 day after the onset of burning pain, s"
+test-00429,D,D,D,D,D,D,D,0,A 63-year-old man presents to the ambulatory medical clinic with symptoms of dysphagia and ‘heartbur
+test-00430,A,B,B,A,A,A,A,1,A 63-year-old man is admitted to the intensive care unit for hemodynamic instability. Several days p
+test-00431,B,D,D,D,B,B,B,0,A 24-year-old female presents to the emergency department with a chief complaint of an inability to 
+test-00432,A,A,A,A,A,A,A,0,A 54-year-old woman is brought to the physician by her brother for confusion and agitation. She is u
+test-00433,C,C,C,C,C,C,C,0,An 18-year-old woman makes an appointment with a gynecologist for her first gynecologic examination.
+test-00434,B,C,C,B,B,B,B,1,A 70-year-old man is brought to the physician by his daughter because of increasing forgetfulness ov
+test-00435,C,D,D,D,D,D,D,0,A 45-year-old mechanic presents to the emergency department complaining of acute-onset shortness of 
+test-00436,C,A,A,C,C,C,C,1,A 3-year-old male is brought in to his pediatrician by his mother because she is concerned that he i
+test-00437,A,D,A,A,A,A,A,1,A 59-year-old woman comes to the physician 2 weeks after noticing a lump in her left breast. Examina
+test-00438,C,D,C,C,D,C,C,1,A 45-year-old man comes to his primary-care doctor with his wife for a 4-week history of constipatio
+test-00439,A,D,A,A,A,C,A,1,"A 23-year-old man presents to the office for a circular, itchy rash over the abdomen that has been s"
+test-00440,D,A,A,D,D,D,D,1,A 12-year-old boy is brought to the emergency department for the evaluation of persistent bleeding f
+test-00441,C,C,C,C,C,C,C,0,A 40-year-old female presents to your office complaining of a tender neck and general lethargy. Upon
+test-00442,C,C,C,C,C,C,C,0,A 24-year-old man is brought to the emergency room by the police after a fall. The patient smells of
+test-00443,B,D,D,D,B,B,B,0,A 65-year-old woman presents to a physician with painful ankles for 2 days. Her symptoms began 1 wee
+test-00444,C,C,C,C,C,C,C,0,A 61-year-old man complaining of unexplained bleeding by from the mouth is escorted to the emergency
+test-00445,B,A,A,D,B,B,B,0,"Three days after undergoing a laparoscopic Whipple's procedure, a 43-year-old woman has swelling of "
+test-00446,A,A,A,A,A,A,A,0,A 36-year-old man presents to a physician after having a transient loss of consciousness while resti
+test-00447,C,C,A,D,D,D,D,0,A 52-year-old man is brought to the emergency department for recurrent vomiting that began 5 hours a
+test-00448,D,A,A,D,B,B,B,1,A 69-year-old male with a longstanding history of hypertension and high cholesterol presents with ab
+test-00449,B,B,B,B,B,B,B,0,A 38-year-old woman undergoes a partial thyroidectomy for an enlarged thyroid gland compressing the 
+test-00450,B,A,A,A,C,C,B,0,A 17-year-old man presents to his family physician for an evaluation about the size of his penis. He
+test-00451,D,C,C,D,D,D,D,1,"A 63-year-old man is aiming to improve his health by eating a well balanced diet, walking daily, and"
+test-00452,B,D,D,D,D,D,D,0,A 37-year-old man comes to the emergency department with the chief complaint of a high fever for sev
+test-00453,B,B,A,B,B,B,B,0,"A 34-year-old man presents to the emergency department complaining of headache, fever, chills, cough"
+test-00454,D,C,C,C,D,D,D,0,A 42-year-old man presents to a neurologist for evaluation of severe headache. He started experienci
+test-00455,C,A,A,A,C,C,C,0,A 62-year-old woman presents to the emergency department for vision changes. About 90 minutes ago sh
+test-00456,B,B,B,B,D,B,B,0,"A three-day-old, full-term infant born by uncomplicated vaginal delivery is brought to a pediatricia"
+test-00457,B,A,A,A,A,A,A,0,"A 59-year-old man is brought to the emergency department with a history of black, tarry stools but d"
+test-00458,C,C,C,C,C,C,C,0,A 20-year-old healthy man is running on a treadmill for the last 30 minutes. He is in good shape and
+test-00459,D,A,A,D,D,D,D,1,A 14-year-old obese boy presents with severe right hip and knee pain. The patient says that he has b
+test-00460,A,A,A,A,B,B,A,0,A 32-year-old man comes to the physician because of a progressive development of tender breast tissu
+test-00461,C,A,A,A,C,C,C,0,A 58-year-old man comes to the physician because he is unable to achieve erections during sexual int
+test-00462,B,C,A,B,B,B,B,1,A 5-year-old male presents to the pediatrician with a 10-day history of cough that is worse at night
+test-00463,A,A,A,C,A,A,A,0,"A 65-year-old man, known to have chronic obstructive lung disease for the last 3 years, presents to "
+test-00464,B,B,B,B,B,B,B,0,A 22-year-old woman presents to the emergency department for abdominal pain. The patient has been tr
+test-00465,C,C,C,C,C,C,C,0,"A 45-year-old female presents to the emergency department with gross hematuria and acute, colicky fl"
+test-00466,B,B,B,B,B,B,B,0,A 40-year-old man presents to the clinic with complaints of increased bilateral pain in his knees. T
+test-00467,D,D,D,D,C,D,B,0,"A 40-year-old man comes to the physician because of shortness of breath, double vision, and fatigue "
+test-00468,A,C,A,C,A,A,C,0,A 24-year-old man is brought in to the emergency department by his parents who found him in his room
+test-00469,A,D,D,D,D,D,D,0,A 27-year-old woman comes to the physician because of increasing shortness of breath and a non-produ
+test-00470,A,D,D,C,D,D,C,0,A 75-year-old man presents to his physician with a 1-year history of dysphagia for solids. His more 
+test-00471,C,C,D,D,C,C,C,0,A 48-year-old female presents with an enlargement of her anterior neck which made swallowing very di
+test-00472,C,C,C,B,C,C,B,0,"A researcher is testing an unknown compound, X, and seeing the effect it has on renal function. When"
+test-00473,C,C,C,C,C,C,C,0,"A 5-year-old male is brought to the pediatrician with complaints of a painful mouth/gums, and vesicu"
+test-00474,B,B,B,B,B,B,B,0,A patient is unresponsive in the emergency department following a motor vehicle accident. The patien
+test-00475,D,D,D,D,D,B,B,0,A 63-year-old man comes to the emergency department because of retrosternal chest pain. He describes
+test-00476,C,A,A,D,D,D,D,0,A 14-year-old boy presents with right upper quadrant abdominal pain and is found on ultrasound to ha
+test-00477,A,A,A,A,B,B,B,0,A 32-year-old man comes to the physician because of a 2-day history of a tingling sensation in his r
+test-00478,C,A,A,B,B,B,B,0,"A 30-year-old woman presents to your office with decreased appetite, malaise, and fever. Serologic t"
+test-00479,C,C,C,C,C,C,C,0,A 63-year-old patient presents to the emergency department because of severe left leg pain and tingl
+test-00480,B,A,A,A,C,C,C,0,A 17-year-old girl is brought to the pediatrician by her father for evaluation. He is concerned that
+test-00481,A,A,A,A,B,B,B,0,Current recommendations state that a single hemoglobin A1c value of greater than 6.5% is diagnostic 
+test-00482,B,B,B,B,B,B,B,0,Patients with the diagnosis of sickle cell anemia make a specific type of hemoglobin known as HgbS. 
+test-00483,C,A,A,A,A,A,A,0,A 40-year-old man presents to the emergency department with altered mental status. He has a history 
+test-00484,C,C,C,C,C,C,C,0,A previously healthy 4-month-old girl is brought to the emergency department by her parents because 
+test-00485,D,D,D,A,A,A,A,0,A 35-year-old woman presents to the physician because of episodes of difficulty swallowing for the p
+test-00486,B,A,A,C,B,C,B,0,A 2-year-old boy in respiratory distress is brought to the emergency department by his parents. They
+test-00487,C,D,D,D,D,D,A,0,A 70-year-old woman with no significant medical history begins to experience memory loss and persona
+test-00488,A,A,A,A,A,A,A,0,A 38-year-old woman presents with eye dryness and a foreign body sensation in the eyes. On physical 
+test-00489,C,C,C,C,C,C,C,0,A 62-year-old man with a history of chronic bronchitis comes to the physician because of a 1-month h
+test-00490,C,C,C,C,C,C,C,0,"A 14-year-old boy is brought to the physician for evaluation of his sense of smell. Two days ago, hi"
+test-00491,A,A,A,A,A,A,A,0,A 26-year-old woman comes to the physician for a follow-up vaccination 1 week after being bitten by 
+test-00492,C,D,C,D,C,C,D,0,"A 38-year-old nursing home worker presents to the clinic with complaints of fever, loss of appetite,"
+test-00493,C,A,A,C,C,C,C,1,A 16-year-old boy presents to the emergency department with shortness of breath after prolonged expo
+test-00494,A,D,D,A,B,B,B,1,A 2050-g (4.5-lb) female newborn and a 2850-g (6.3-lb) female newborn are delivered at 37 weeks' ges
+test-00495,A,D,D,D,D,D,A,0,A 55-year-old woman is found to have an abnormal mass on routine mammography. The mass is biopsied a
+test-00496,C,C,C,C,C,C,C,0,"A 24-year-old woman is brought to the physician because of agitation, confusion, and lethargy. She h"
+test-00497,D,A,A,B,B,B,B,0,A 29-year-old woman presents to the physician with a blurred vision of her right eye for 2 days. She
+test-00498,A,B,B,B,B,B,B,0,A 25-year-old woman presents to her physician with complaints of cyclic vomiting for 3 days. The vom
+test-00499,C,C,A,A,D,D,D,0,A 30-year-old male presents to his primary care physician complaining of infertility. He and his wif
+test-00500,B,A,A,A,D,D,A,0,A 71-year-old woman with type 2 diabetes mellitus and hypertension comes to the emergency department
+test-00501,D,D,B,B,B,B,B,0,A 36-year-old man undergoes open reduction and internal fixation of a left femur fracture sustained 
+test-00502,B,B,B,B,B,B,B,0,"A 45-year-old woman comes into your office with complaints of ""lump"" she found on her neck while sho"
+test-00503,B,A,A,C,C,C,C,0,"While in the ICU, a 62-year-old male undergoes placement of a Swan-Ganz catheter to evaluate his rig"
+test-00504,B,A,A,A,B,B,B,0,"A 3-year-old boy is brought to the physician for a well-child examination. Over the past 8 months, h"
+test-00505,B,A,A,A,A,A,B,0,A 42-year-old man is admitted to the intensive care unit with decreased consciousness and convulsion
+test-00506,A,A,A,B,A,A,A,0,"A 72-year-old woman presents to the emergency department with altered mental status. 90 minutes ago,"
+test-00507,D,D,A,D,D,D,D,0,"A 68-year-old man comes to the emergency department because of a cough, dyspnea, and fever for 1 day"
+test-00508,B,C,C,C,C,C,C,0,A 21-year-old old college student is brought to the emergency department by his roommates because he
+test-00509,D,D,D,D,D,D,D,0,An 81-year-old man is brought to the clinic by his son to be evaluated for memory issues. The patien
+test-00510,A,A,A,A,A,A,A,0,A 46-year-old woman with a history of previously well-controlled HIV infection comes to the physicia
+test-00511,A,B,A,A,B,A,B,1,A 67-year-old man comes to the physician for a routine medical check-up prior to a scheduled electiv
+test-00512,B,B,A,A,B,A,A,0,A 35-year-old woman presents to her primary care provider concerned that she may be pregnant. She ha
+test-00513,D,D,A,D,D,A,D,0,A 65-year-old man presents to the emergency department with back pain. The patient states that he ha
+test-00514,A,C,A,A,D,D,D,1,"A 3-year-old girl is brought to the physician because of a 3-day history of fever, cough, purulent n"
+test-00515,D,A,A,A,B,C,B,0,An 8-year-old boy who recently immigrated to the United States presents with a rash. Past medical hi
+test-00516,D,A,A,A,D,D,D,0,A 59-year-old man presents to general medical clinic for his yearly checkup. He has no complaints ex
+test-00517,A,A,A,A,B,B,B,0,"A male newborn is evaluated 24 hours after delivery for high-pitched crying, poor feeding, rhinorrhe"
+test-00518,B,A,B,B,B,B,B,1,A previously healthy 35-year-old primigravid woman at 12 weeks' gestation comes to the physician bec
+test-00519,C,A,A,A,A,A,A,0,A 36-year-old man is brought to the emergency department 40 minutes after being involved in a shooti
+test-00520,B,A,A,A,B,B,B,0,"Mutations in the ATP2A1 gene results in loss of function of the calcium ATPase pump, which is in the"
+test-00521,A,A,A,B,A,B,A,0,"A 62-year-old man presents to the emergency department with crushing chest pain (10/10 in severity),"
+test-00522,C,C,A,B,C,C,C,0,A 54-year-old man comes to the emergency department because of a 2-day history of increasingly sever
+test-00523,D,D,D,D,D,D,D,0,A 28-year-old Caucasian woman presents to your office with recurrent abdominal cramping on her left 
+test-00524,B,D,A,A,D,D,D,0,A 6-month-old boy is brought to the physician by his parents for difficulty breathing and bluish dis
+test-00525,D,A,A,D,D,D,D,1,A 67-year-old man comes to the clinic complaining of fatigue and dizziness for the past 2 months. He
+test-00526,C,A,A,A,B,B,B,0,A 81-year-old man is brought to the emergency department after he fell asleep at the dinner table an
+test-00527,A,A,A,A,A,A,A,0,"A 10-year-old girl is brought to the physician because of high-grade fever, myalgia, and generalized"
+test-00528,C,A,A,B,A,A,A,0,A 56-year-old woman presents to a physician with severe pain and swelling of the left inguinal area 
+test-00529,B,D,D,D,D,D,D,0,"A 60-year-old woman is brought to the emergency department because of sudden, painless loss of visio"
+test-00530,A,C,A,A,C,A,A,1,A previously healthy 35-year-old woman comes to the emergency department because of sudden weakness 
+test-00531,D,C,C,C,C,C,C,0,A 24-year-old woman is brought to the emergency room (ER) by her co-workers after they found her unc
+test-00532,B,A,B,B,B,B,B,1,A 38-year-old man is brought to the emergency room by his father because of altered mental status. A
+test-00533,A,D,A,D,A,A,B,0,A 36-year-old woman presents with increased tiredness and lethargy for the past 4 weeks. Investigati
+test-00534,B,A,A,A,B,B,B,0,A 48-year-old man is brought to the emergency department for sudden onset of difficulty breathing 6 
+test-00535,C,C,C,C,C,C,C,0,"Please refer to the summary above to answer this question
+A medical student is examining the table i"
+test-00536,D,A,A,D,D,D,D,1,A 63-year-old man with diverticular disease comes to the emergency department because of painless re
+test-00537,A,A,A,A,A,A,A,0,A 32-year-old man is brought by ambulance to the emergency room after being involved in a head-on mo
+test-00538,A,A,A,A,A,B,A,0,A 25-year-old female presents to urgent care with complaints of one day of burning and pain with uri
+test-00539,D,D,D,D,D,D,D,0,A 70-year-old man with a history of hypertension and atrial fibrillation comes to the physician for 
+test-00540,D,A,A,D,A,A,A,1,A 21-year-old man is brought to the emergency department by his mother after being found lying uncon
+test-00541,A,D,D,D,D,D,D,0,In a study to determine the risk factors for myocardial infarction (MI) at a young age (age < 30 yea
+test-00542,B,A,A,A,A,A,A,0,A 32-year-old primigravid woman at 16 weeks' gestation comes to the physician for a routine prenatal
+test-00543,C,A,A,C,C,C,C,1,A 39-year-old man presents to the emergency department complaining of a sharp pain that radiates alo
+test-00544,B,D,A,C,B,B,C,0,A 47-year-old woman presents to her primary care physician for evaluation of her right hand. Specifi
+test-00545,C,C,C,C,C,C,C,0,A 24-year-old woman presents to the emergency department with a severe headache. She states it is 10
+test-00546,D,C,C,A,C,C,C,0,"Twelve hours after undergoing an exploratory laparotomy for a perforated duodenal ulcer, a 36-year-o"
+test-00547,D,C,A,A,D,D,D,0,A 62-year-old man is brought to the emergency department 40 minutes after his wife noticed during br
+test-00548,D,C,D,D,C,C,C,1,"A 24-year-old man, who recently migrated from a developing country, presents to a physician because "
+test-00549,B,A,A,A,A,A,A,0,"A 6-year-old boy presents with fever, malaise, and intense pain in the anterior neck. His vital sign"
+test-00550,A,C,C,C,C,C,C,0,A 65-year-old previously healthy man presents to the primary care physician with the chief complaint
+test-00551,A,A,A,A,A,C,A,0,"A 13-year-old boy is brought to the emergency room by his mother with confusion, abdominal pain, and"
+test-00552,A,A,A,A,A,A,A,0,A 58-year-old woman presents to the emergency department because of worsening abdominal pain for the
+test-00553,B,B,B,B,B,B,B,0,A 62-year-old man presents to his primary care doctor with continued hypertension despite adherence 
+test-00554,A,B,B,B,B,B,B,0,A 30-year-old woman presents to the emergency department with a recent episode of chest pain. She sa
+test-00555,B,B,B,B,B,B,B,0,A previously healthy 14-year-old boy is brought to the physician for evaluation because of loss of a
+test-00556,A,A,A,B,D,D,B,0,A previously healthy 6-year-old boy is brought to the physician because of generalized malaise and a
+test-00557,C,C,C,C,C,C,C,0,A 56-year-old man is brought to the emergency department with severe dyspnea and a productive cough 
+test-00558,B,B,B,B,B,B,B,0,A 44-year-old man presents to the family medicine clinic for some small bumps on his left thigh. The
+test-00559,B,B,B,B,B,B,B,0,"A prominent male politician has secret homosexual desires. However, rather than engaging in homosexu"
+test-00560,A,A,D,A,D,D,D,0,A 55-year-old man presents to his primary care physician for a general checkup. The patient has a pa
+test-00561,C,C,C,C,C,C,C,0,A 20-year-old woman in the army recruit collapses during an especially hot day at basic training. Sh
+test-00562,B,B,B,B,B,B,B,0,A 60-year-old man with a long-standing history of chronic hepatitis C infection comes to the emergen
+test-00563,A,A,A,A,A,A,A,0,A 47-year-old woman seeks evaluation at your office because she has had postcoital vaginal bleeding 
+test-00564,A,C,C,C,B,B,B,0,A 35-year-old man visits your office for his annual health checkup. He was diagnosed with generalize
+test-00565,B,A,A,B,B,B,B,1,A 63-year-old man comes to the physician for the evaluation of an unintentional 10-kg (22-lb) weight
+test-00566,B,A,A,A,B,B,B,0,"A 61-year-old man is brought to the emergency room with chest pain. He developed severe, crushing, s"
+test-00567,D,C,A,C,C,C,C,0,"A 61-year-old man comes to the physician with several months of sharp, shooting pain in both legs. T"
+test-00568,A,A,A,A,A,A,A,0,A 55-year-old woman presents with severe pruritus and fatigue. She denies any similar symptoms in th
+test-00569,B,B,B,B,B,B,B,0,A 25-year-old man is brought to the emergency department after being found unconscious. He was at a 
+test-00570,A,A,A,B,B,B,B,0,A 13-year-old boy is brought to the emergency department because of pain in his right knee for the p
+test-00571,C,C,B,C,C,C,C,0,"Three days after undergoing an open cholecystectomy, an obese 57-year-old woman has fever, chills, a"
+test-00572,C,A,A,A,A,D,A,0,A 55-year-old man presents with a red rash over his face for the last 3 months. The patient says he 
+test-00573,C,A,A,D,D,D,D,0,A previously healthy 46-year-old woman comes to the physician because of progressive shortness of br
+test-00574,B,A,A,B,B,B,B,1,An 11-year-old boy presents to your office with pitting edema and proteinuria exceeding 3.5g in 24 h
+test-00575,B,C,C,C,C,C,C,0,"A 48-year-old woman comes to the physician because of intermittent pain in her neck, right shoulder,"
+test-00576,D,C,C,C,C,C,C,0,A 32-year-old female is brought to the emergency room by her friend for acute onset abdominal pain. 
+test-00577,B,A,A,A,B,B,B,0,A 63-year-old man from the countryside presents with leg swelling and right upper abdominal tenderne
+test-00578,A,C,A,A,A,A,C,1,A 36-year-old woman comes to the physician because of difficulty discarding items in her home. She s
+test-00579,D,A,A,D,B,B,B,1,A 59-year-old woman presents to her primary care provider complaining of diffuse bodily aches. She r
+test-00580,A,D,D,B,B,B,C,0,A 20-year-old woman is brought in for a psychiatric consultation by her mother who is concerned beca
+test-00581,C,A,A,A,B,D,D,0,A 58-year-old woman presents to the emergency department with difficulty breathing and a sensation t
+test-00582,D,C,C,C,D,D,A,0,A 27-year-old male suddenly develops severe abdominal cramping and bloody diarrhea. The patient repo
+test-00583,D,A,A,D,B,D,C,1,A 46-year-old woman presents to her primary care physician with one week of intermittent nausea and 
+test-00584,D,A,A,D,D,D,C,1,A 33-year-old man presents to the emergency department after a motor vehicle collision. He was the f
+test-00585,D,D,D,D,D,D,D,0,A 55-year-old man is brought to the emergency department 12 hours after the sudden onset of shortnes
+test-00586,B,B,B,B,B,B,B,0,A 34-year-old man comes to the physician because of frequent headaches and blurry vision during the 
+test-00587,D,A,B,B,B,B,B,0,A 33-year-old G2P1 woman presents to the office because of poor diabetic control. She is currently a
+test-00588,A,A,A,A,A,A,A,0,A 45-year-old G3P3 presents complaining of the feeling of a foreign body in her vagina that worsens 
+test-00589,D,A,D,D,D,D,D,1,"A 36-year-old woman, gravida 2, para 2, comes to the emergency department because of sudden-onset, s"
+test-00590,C,A,A,C,D,D,C,1,A 69-year-old woman comes to the physician for a routine health maintenance examination. She feels w
+test-00591,C,C,A,C,C,C,B,0,A 24-year-old married woman presents to the emergency department with severe abdominal pain since la
+test-00592,A,A,A,B,B,B,B,0,A 44-year-old man comes to the clinic because of a 6-month history of progressive fatigue. He has a 
+test-00593,C,A,A,C,D,D,D,1,A 42-year-old male presents to his primary care physician complaining of fatigue. He has not been to
+test-00594,C,C,C,C,C,C,C,0,A 38-year-old woman presents to an urgent care clinic with the complaint of epigastric discomfort an
+test-00595,B,B,B,B,B,B,B,0,A 19-year-old female college soccer player presents to a sports medicine clinic with right knee pain
+test-00596,C,D,B,D,B,B,B,0,"Six hours after birth, a newborn boy is evaluated for tachypnea. He was delivered at 41 weeks' gesta"
+test-00597,B,D,D,B,B,B,B,1,A study is conducted to determine the most effective ways to prevent transmission of various infecti
+test-00598,B,C,C,B,B,C,B,1,"A 34-year-old woman comes to the physician requesting prenatal care. For the past 2 months, she has "
+test-00599,C,C,C,C,C,C,C,0,A 60-year-old man comes to the physician for a routine physical examination. He lives in a group hom
+test-00600,D,C,A,A,A,A,A,0,"A medical student decides to join an immunology research center, which specifically works on capsula"
+test-00601,D,D,D,D,D,D,D,0,An investigator is studying the pattern of glutamate release from presynaptic nerve terminals in hum
+test-00602,A,C,C,C,C,C,C,0,A 24-year-old woman presents to a physician with a history of exposure to a close friend who was dia
+test-00603,A,D,D,D,A,A,A,0,"A 38-year-old woman comes to the physician because of a 1-month history of a painless, nonpruritic s"
+test-00604,A,C,A,A,A,C,A,1,A previously healthy 3-year-old boy is brought to the physician by his parents because of fever and 
+test-00605,B,C,C,B,D,B,B,1,A 25-year-old man is brought to the emergency department by police. He was found at a local celebrat
+test-00606,D,D,D,D,D,D,D,0,A 75-year-old with hypertension and atrial fibrillation comes to the emergency department because of
+test-00607,C,C,C,C,C,C,C,0,A group of researchers from Italy conducted a case register study that included all patients from a 
+test-00608,C,C,C,C,C,C,C,0,A 10-year-old boy is brought to the emergency room by his grandparents. He is in a wheelchair with s
+test-00609,D,D,A,D,D,D,D,0,A 34-year-old woman with poorly controlled Crohn disease comes to the physician because of a 2-week 
+test-00610,A,A,A,A,A,A,A,0,"A 23-year-old woman, gravida 2, para 1, at 20 weeks of gestation comes to the physician for a routin"
+test-00611,C,C,C,C,C,C,C,0,"A 52-year-old man presents to the physician because of ongoing shortness of breath, which is more pr"
+test-00612,A,C,A,D,D,D,A,0,A 33-year-old woman presents to her primary care physician with bilateral joint pain. She says that 
+test-00613,C,A,A,A,B,A,A,0,A 40-year-old man comes to the emergency department with a 4-day history of left leg pain. Over the 
+test-00614,C,A,A,C,C,C,C,1,A 75-year-old man presents to the emergency department with a racing heart and lightheadedness for 3
+test-00615,A,C,C,C,C,C,C,0,"A 31-year-old man, who was hospitalized for substance-induced psychosis two days prior, has had epis"
+test-00616,D,B,B,A,B,B,A,0,"A 31-year-old man presents to his primary care physician with fevers, chills, and night sweats. Afte"
+test-00617,B,B,B,B,B,B,B,0,A microbiologist has isolated several colonies of Escherichia coli on an agar plate. The microbiolog
+test-00618,C,C,D,D,C,D,D,0,A 48-year-old man is brought to the emergency department by his son with a fever over the past day. 
+test-00619,D,D,D,D,D,D,D,0,"Eight weeks after starting a new weight-loss medication, a 43-year-old woman with obesity comes to t"
+test-00620,C,A,A,A,A,A,A,0,A 70-year-old man with chronic heart failure presents to the emergency department due to difficulty 
+test-00621,D,A,A,D,D,D,D,1,A 59-year-old man with a history of sickle cell disease presents to the emergency department for eva
+test-00622,C,A,A,A,A,A,A,0,A 30-year-old woman comes to the physician because of increasing weakness in both legs for 7 days. S
+test-00623,A,A,A,A,A,A,A,0,A group of investigators is studying the association between a fire retardant chemical used on furni
+test-00624,D,B,B,B,B,B,B,0,A 41-year-old man is brought to the emergency department after a suicide attempt. His wife found him
+test-00625,B,B,D,B,B,B,B,0,"A 23-year-old woman presents to the hospital for elective surgery. However, due to an unexpected ble"
+test-00626,D,A,A,D,D,D,D,1,A 21-year-old man is brought to the emergency department 30 minutes after being found unconscious in
+test-00627,C,A,A,D,B,B,B,0,A 30-year-old G4P3 woman at 38 weeks gestation is admitted to the labor and delivery unit complainin
+test-00628,C,C,A,D,A,D,C,0,A 42-year-old man comes to the physician to establish care. He recently moved to the area and has no
+test-00629,D,D,D,D,D,D,D,0,A 16-year-old boy is brought to the emergency department by ambulance from a soccer game. During the
+test-00630,D,C,D,D,D,C,C,1,A 64-year-old male with a past medical history of two myocardial infarctions presents to the emergen
+test-00631,B,A,A,B,A,A,A,1,A 50-year-old man presents to the office with complaints of fever and chills for 4 weeks. He adds th
+test-00632,D,D,D,D,D,D,D,0,A 41-year-old woman presents with shortness of breath that is worse when she lies on her left side. 
+test-00633,B,C,C,C,C,C,C,0,A 25-year-old man presents with painless swelling of the neck for the past week. He reports no recen
+test-00634,A,B,A,A,B,B,B,1,A 67-year-old woman presents to her primary care physician for urinary incontinence. She has been wa
+test-00635,B,B,B,B,B,B,B,0,A 55-year-old man presents into the emergency department with a severe cough and difficulty breathin
+test-00636,A,A,A,A,A,A,A,0,A 2-day-old boy delivered at 34 weeks gestation is found to have a murmur on routine exam. He is lyi
+test-00637,A,D,D,D,B,B,B,0,"A 12-year-old girl is brought to your psychiatry office by her parents, who are concerned that she h"
+test-00638,A,B,A,D,A,A,A,0,"Four days after admission to the hospital for pneumonia, a 68-year-old woman develops abdominal pain"
+test-00639,A,C,A,D,D,D,D,0,A 1-month-old girl is brought to the pediatrician by her parents. They are concerned that she become
+test-00640,D,D,D,D,B,D,D,0,A 4-year-old boy presents for a routine checkup. The patient’s parents say he was doing well until a
+test-00641,A,A,A,A,A,A,A,0,A 39-year-old woman with poorly controlled systemic lupus erythematosus (SLE) presents to her rheuma
+test-00642,A,A,A,A,A,A,B,0,A 40-year-old woman presents with severe shortness of breath. The patient is unable to provide a his
+test-00643,D,D,D,D,D,D,D,0,A 74-year-old woman is brought to her primary care doctor by her adult son. The son says she has bee
+test-00644,B,D,D,D,D,D,C,0,An investigator is studying the effects of different gastrointestinal regulatory substances. A healt
+test-00645,B,A,A,B,B,B,B,1,A 45-year-old woman comes to the physician with a lump on her throat that has steadily increased in 
+test-00646,B,D,B,B,B,B,B,1,A 53-year-old female patient comes to the physician’s office for her annual check-up visit. She has 
+test-00647,B,A,A,A,B,B,B,0,A 2-month-old girl is brought to the pediatrician by her concerned father. He states that ever since
+test-00648,A,A,A,A,A,A,A,0,"A 1-year-old boy is brought to the clinic by his parents for a regular check-up. His weight, height,"
+test-00649,A,A,A,A,A,A,A,0,A 15-year-old girl is brought to the physician because she has not had a menstrual period. There is 
+test-00650,C,C,C,C,C,C,C,0,A 51-year-old man presents the emergency room with chest pain. He mentions that the pain started sev
+test-00651,C,A,A,B,B,B,B,0,A 45-year-old woman presents to the physician for a follow-up visit. She has no specific complaints 
+test-00652,C,C,D,D,B,B,B,0,An 89-year-old woman is brought to the emergency department by her husband because of diarrhea and w
+test-00653,A,A,A,A,A,A,A,0,A 45-year-old woman is brought to the emergency department by her husband due to upper abdominal pai
+test-00654,A,A,A,A,A,D,A,0,A mother brings her 18-year-old daughter to your office because she has not menstruated yet. They re
+test-00655,B,A,D,D,D,D,B,0,A 62-year-old woman with a pancreatic insulinoma is being prepared for a laparoscopic enucleation of
+test-00656,D,D,D,D,D,D,D,0,A 55-year-old man is brought to the emergency room by his wife for severe abdominal pain for the pas
+test-00657,D,C,C,C,D,D,B,0,A 62-year-old man presents with episodes of palpitations for the past 3 weeks. He says that he has e
+test-00658,C,C,C,C,C,C,C,0,"In 2005, a group of researchers believed that prophylactically removing the ovaries and fallopian tu"
+test-00659,C,A,D,D,D,D,D,0,A 64-year-old man with a history of type 2 diabetes mellitus is referred to a urologist. The patient
+test-00660,A,A,A,A,A,A,A,0,A 35-year-old man presents with a 7 month history of insomnia. The patient admitted to having troubl
+test-00661,A,A,A,A,B,B,B,0,A 3-year-old girl is brought to the cardiologist because of sweating and respiratory distress while 
+test-00662,D,D,D,D,D,D,D,0,A 58-year-old man comes to the emergency department because of increasing shortness of breath and a 
+test-00663,D,A,A,A,A,A,A,0,A 58-year-old man is brought to the emergency department because of sudden-onset right-sided body nu
+test-00664,C,A,D,D,D,D,D,0,A 9-year-old boy is brought in by his mother because of bruising on his torso and limbs. The patient
+test-00665,B,A,A,D,D,D,D,0,A 31-year-old man comes to the physician because of a 4-week history of a painless lump near the lef
+test-00666,A,A,A,A,B,B,B,0,A 52-year-old man comes to the physician for the evaluation of a painless right-sided scrotal swelli
+test-00667,A,A,A,A,A,A,A,0,A 40-year-old patient is brought into the emergency department after suffering a motor vehicle crash
+test-00668,B,B,B,B,B,B,B,0,An 18-month-old boy is brought to the physician by his mother because of a 2-day history of fever an
+test-00669,B,A,A,A,A,A,A,0,A 43-year-old male is brought to the emergency department after his son found him vomiting bright re
+test-00670,D,C,A,A,A,A,A,0,A medical student is preparing a patient for an appendectomy. He is asked by the surgeon to disinfec
+test-00671,B,B,B,B,B,B,B,0,A 19-year-old man with a past medical history significant only for facial acne presents with increas
+test-00672,B,A,A,A,A,A,A,0,A 6-week-old girl is brought to the pediatrician for a post-natal visit. She was born at 38 weeks ge
+test-00673,D,C,A,A,D,D,D,0,A 7-year-old boy is brought to the physician because of a 3-week history of burning sensation in his
+test-00674,A,A,A,A,A,A,A,0,An experimental new drug in the treatment of diabetes mellitus type 2 was found to increase the leve
+test-00675,C,C,C,C,C,C,C,0,A 60-year-old man with severe persistent asthma since the age of 14 presents with an acute exacerbat
+test-00676,A,A,A,D,D,D,D,0,A 75-year-old man is admitted to the hospital because of a 3-day history of a productive cough and s
+test-00677,A,A,B,B,D,D,B,0,"A 2-month-old infant is brought to the emergency department by her mother due to a fall. Tearfully, "
+test-00678,B,A,A,A,A,A,A,0,A researcher is interested in identifying the most effective treatment for uncomplicated urinary tra
+test-00679,B,D,B,B,B,B,B,1,A 31-year-old man comes to the emergency department because of acute onset neck pain and enlargement
+test-00680,D,D,D,D,D,D,D,0,A 25-year-old man presents to the office because of extreme fatigue for the past 2 days. He is also 
+test-00681,B,A,A,A,C,C,C,0,A 29-year-old female presents to her primary care provider with an aching pain in her left leg that 
+test-00682,D,D,A,A,D,D,D,0,A 22-year-old woman with a history of asthma visits her physician for worsening shortness of breath.
+test-00683,C,C,D,D,C,B,B,0,A 30-year-old man is brought to the emergency department with complaints of fever (41.5℃ (106.7℉)) a
+test-00684,B,D,D,D,D,D,D,0,A 12-year-old girl is brought to the emergency department 3 hours after the sudden onset of colicky 
+test-00685,C,C,C,C,D,C,C,0,A healthy 21-year-old man undergoes physical fitness testing prior to long-term submarine deployment
+test-00686,A,A,A,B,B,B,B,0,"A 3-day-old boy is brought to the emergency department because of a 4-hour history of somnolence, po"
+test-00687,A,A,A,A,A,A,A,0,A 31-year-old woman comes to the physician because of dragging pelvic pain and a 3 kg (6 lb 9 oz) we
+test-00688,A,B,A,D,C,C,C,0,A 55-year-old man comes to the emergency department with the complaint of pain in his right toe for 
+test-00689,C,C,C,D,C,C,C,0,A 33-year-old man presents to the infectious diseases clinic for follow-up. He was recently admitted
+test-00690,A,A,C,C,C,C,C,0,A 67-year old man presents to his primary care physician for his yearly checkup. He has not noticed 
+test-00691,B,A,A,B,B,B,B,1,A 29-year-old woman presents to her OB/GYN for a preconception visit. She wishes to become pregnant 
+test-00692,C,C,A,C,C,C,C,0,A 47-year-old man presents to his family physician with a sudden onset of severe pain and redness in
+test-00693,B,D,D,D,D,D,D,0,A 38-year-old woman presents to her physician’s clinic for recurrent episodes of chest pain that wak
+test-00694,A,C,C,C,C,C,C,0,"A 16-year-old male presents to his pediatrician with complaints of malaise, fatigue, sore throat, an"
+test-00695,B,D,D,D,D,D,D,0,A 75-year-old man comes to the physician because of a 7-day history of nausea and vomiting. Over the
+test-00696,D,D,D,D,D,D,D,0,A 38-year-old woman presents to her primary care physician for her yearly exam. Her only complaint i
+test-00697,D,D,D,D,D,D,D,0,A 35-year-old male presents to the emergency department for evaluation of hemoptysis. A chest X-ray 
+test-00698,A,D,D,D,D,D,D,0,A 34-year-old man comes to the physician with a 2-month history of difficulty concentrating at work.
+test-00699,A,C,A,A,A,C,A,1,A 25-year-old female presents to her primary care physician complaining of double vision. She first 
+test-00700,B,B,B,B,B,B,B,0,A 76-year-old woman visits a physician for a general medical examination. She is asymptomatic. Six m
+test-00701,C,C,C,D,D,D,D,0,A 4-year-old boy is brought to his primary care physician for a physical prior to beginning a presch
+test-00702,C,C,C,C,C,C,C,0,Accurate and rapid identification of individuals with tuberculosis (TB) is crucial to accomplishing 
+test-00703,D,D,D,D,D,D,D,0,A 55-year-old caucasian male is transferred to a tertiary care hospital from a small county hospital
+test-00704,D,D,D,D,D,D,D,0,"A one-week-old, full-term infant born by uncomplicated vaginal delivery is brought to a pediatrician"
+test-00705,C,C,C,C,C,C,C,0,A 35-year-old woman arrives to the clinic complaining of progressive urinary leakage that has occurr
+test-00706,B,A,D,D,D,D,D,0,A 24-year-old woman presents to the emergency department after an episode of altered mental status. 
+test-00707,C,C,C,C,C,C,C,0,A 47-year-old woman presents to a physician for evaluation of vomiting and diarrhea for 2 days. Her 
+test-00708,A,A,C,C,A,C,A,0,"A one-week-old boy presents with yellow sclerae, severe lethargy, and decreased muscle tone. His mot"
+test-00709,A,C,C,C,D,D,C,0,A researcher is conducting an experiment on the mouse kidney to study the relative concentrations be
+test-00710,C,A,A,D,C,C,D,0,"A 62-year-old man comes to the emergency department because of right-sided back pain, nausea, and da"
+test-00711,C,C,C,C,C,C,C,0,An 8-year-old boy is brought to the physician because he has excessively dry skin. His mother says t
+test-00712,C,C,A,A,C,B,B,0,"A 29-year-old woman, gravida 3, para 2, at 24 weeks' gestation comes to the emergency department bec"
+test-00713,A,A,A,A,A,A,A,0,A 16-year-old boy is rushed to the emergency room with acute vomiting and abdominal pain that began 
+test-00714,B,A,A,B,B,B,B,1,A 28-year-old male presents to the emergency department with chest pain. He reports that one hour ag
+test-00715,B,D,D,D,D,D,D,0,A mother brings her 6-year-old daughter to the pediatrician to discuss her child's sleeping troubles
+test-00716,C,D,D,D,D,D,D,0,An 18-year-old woman comes to the physician because of a pruritic rash on her back for the past 2 ho
+test-00717,B,A,A,B,B,B,B,1,"Two hours after admission to the hospital for dialysis, a 63-year-old woman has severe pain in her l"
+test-00718,D,B,B,B,C,B,B,0,A 50-year-old man comes to the physician because of swelling of his legs for 2 months. Three months 
+test-00719,A,B,B,A,D,D,A,1,An investigator is studying the function of different enzymes in various human cell types. A subset 
+test-00720,B,A,A,D,C,C,D,0,"A 28-year-old woman is brought to the emergency room after a motor vehicle accident. On arrival, she"
+test-00721,B,D,D,D,B,B,D,0,A 23-year-old woman comes to the physician because of a 2-month history of episodic headaches associ
+test-00722,D,A,A,D,D,D,D,1,A 20-day-old child is brought to the emergency department by her parents. They are concerned about l
+test-00723,C,C,A,A,C,C,C,0,"A 10-year-old boy is brought to the physician because of a generalized, non-itchy rash for 2 days. H"
+test-00724,D,D,A,C,C,C,C,0,"A 32-year-old man presents to the emergency department with fever, nausea, and vomiting. The patient"
+test-00725,C,C,A,C,C,C,C,0,A 64-year-old man comes to the physician with a 1-week history of sore mouth. He says that swallowin
+test-00726,D,C,A,A,C,D,D,0,"A 56-year-old woman is brought to the emergency department because of a 2-day history of fever, chil"
+test-00727,A,C,A,C,A,A,A,0,"A 26-year-old man comes to the physician for episodic fever, recurrent night sweats, and a 6-kg (14."
+test-00728,C,C,C,C,C,C,C,0,A 25-year-old woman comes to the physician for the evaluation of nausea for the last two weeks. Duri
+test-00729,C,C,A,A,C,C,C,0,A 6-week-old male infant is brought to the physician by his mother because of a 2-day history of rec
+test-00730,D,D,A,D,D,D,D,0,A 5-year-old Syrian immigrant and her family present for an immigration physical. Her mother describ
+test-00731,B,C,B,B,B,B,B,1,"Three days after induction chemotherapy, a 9-year-old boy is admitted to the hospital for fever and "
+test-00732,B,A,A,A,B,B,B,0,A 45-year-old homeless man comes to the emergency department because of progressive neck pain for 3 
+test-00733,B,A,A,A,B,B,B,0,"A 1-month-old girl is brought to the emergency department with persistent vomiting, dehydration, and"
+test-00734,C,C,C,C,C,C,C,0,"A 10-year-old girl is brought to a clinic by her parents after 1 week of difficulty breathing, dry c"
+test-00735,A,C,A,C,C,C,C,0,A 68-year-old man presents to the emergency department with confusion. The patient lives in a nursin
+test-00736,A,D,D,D,D,D,D,0,A 68-year-old woman is referred to the outpatient psychiatry clinic from the medical clinic. The pat
+test-00737,C,D,D,D,C,C,C,0,A 55-year-old male presents to the emergency department with dyspnea and palpitations. He does not s
+test-00738,A,C,C,B,B,B,B,0,Public health researchers are reviewing data from an outbreak of hepatitis A that was traced to cont
+test-00739,A,A,A,A,A,A,A,0,A 30-year-old man is brought to the emergency room by ambulance after being involved in a motor vehi
+test-00740,D,C,C,C,C,C,C,0,A 42-year-old man presents to his primary care physician for a follow-up visit. He has type 1 diabet
+test-00741,A,A,A,A,A,A,A,0,A researcher conducts multiple experiments to establish an infection and disease model for Clostridi
+test-00742,B,A,B,B,B,B,B,1,A 23-year-old woman visits her obstetrician for an antenatal appointment. She is at the 24th week of
+test-00743,B,B,A,B,B,B,B,0,A 63-year-old man presents to the physician with a complaint of back pain for the past 2 months. The
+test-00744,C,C,C,C,C,C,C,0,An 18-year-old college student presents to the student health clinic complaining of excessive sleepi
+test-00745,A,A,A,C,C,C,C,0,A 63-year-old woman with end-stage renal disease complains of feeling lightheaded after her hemodial
+test-00746,B,C,C,C,B,B,C,0,A 34-year-old woman presents to the emergency room with a fever. She developed worsening malaise and
+test-00747,C,C,A,C,C,C,C,0,"A 47-year-old man presents with hemoptysis, diffuse muscle pain, and shortness of breath. He has had"
+test-00748,A,B,B,B,B,B,B,0,"A 39-year-old woman presents with headaches, constipation, increased thirst, and increased urinary f"
+test-00749,C,A,A,A,A,A,A,0,A 55-year-old man presents to the emergency department with a headache. He states that this is the w
+test-00750,B,D,B,B,B,B,B,1,A 34-year-old man with acute lymphocytic leukemia presents for follow-up in the oncology clinic afte
+test-00751,B,A,A,A,C,C,B,0,A 1-day-old infant is in the neonatal intensive care unit due to respiratory failure from pulmonary 
+test-00752,C,C,C,C,C,C,C,0,A 47-year-old woman with metastatic breast cancer who is undergoing chemotherapy comes to the physic
+test-00753,C,A,A,C,C,C,C,1,A male newborn born at 27 weeks' gestation is evaluated for rapid breathing and hypoxia shortly afte
+test-00754,B,A,A,B,B,B,B,1,A 38-year-old woman is brought to the emergency department because of three 1-hour episodes of sever
+test-00755,C,D,A,D,B,B,B,0,A 31-year-old G1-P0 woman at 28-weeks gestation presents with shortness of breath and nonspecific ri
+test-00756,B,C,C,B,C,C,B,1,An otherwise healthy 29-year-old man presents to his family physician with a slowly growing left nec
+test-00757,D,A,A,A,C,C,C,0,An 18-year-old woman is brought to the emergency department because of lightheadedness and a feeling
+test-00758,D,B,A,B,B,B,B,0,"A 62-year-old man presents to the emergency department for evaluation of a low-grade fever, worsenin"
+test-00759,C,C,C,C,C,C,C,0,A 33-year-old woman presents to the clinic for follow-up of her AIDS treatment with highly active an
+test-00760,B,C,C,B,B,B,B,1,A 77-year-old woman is brought to the emergency department by her husband because of increasing conf
+test-00761,D,A,A,A,D,D,D,0,"A 39-year-old woman comes to the physician because of fever, generalized fatigue, and chills for 1 w"
+test-00762,C,A,A,A,A,A,A,0,A 57-year-old man presents to his primary care physician for follow-up of his diabetes. He was diagn
+test-00763,A,C,C,C,C,C,C,0,A 42-year-old chronic alcoholic man was admitted to the hospital for inappropriate behavior and dist
+test-00764,C,D,D,D,D,D,D,0,"A 28-year-old woman, gravida 2, para 1, at 40 weeks gestation is brought to the emergency department"
+test-00765,C,A,A,A,C,B,C,0,A 7-year-old boy is brought to your office with complaints of wheezing and dyspnea. Laboratory work 
+test-00766,D,D,D,D,B,B,B,0,A 16-year-old healthy female presents to her pediatrician concerned that she has not had a menstrual
+test-00767,A,A,A,A,B,A,B,0,A 61-year-old nulliparous woman comes to the physician for a follow-up examination. Her last Pap sme
+test-00768,B,B,B,B,B,B,B,0,An unresponsive 92-year-old man is brought to the emergency department by ambulance and is quickly f
+test-00769,C,C,B,B,C,C,C,0,A 51-year-old man presents to his primary care provider for intermittent shaking of his hands. He re
+test-00770,B,D,D,D,D,D,D,0,A pediatrician notices that 9 of her patients this year have developed paralysis after a flu-like il
+test-00771,C,A,A,D,B,B,B,0,A 3-year-old boy is brought to the emergency department by ambulance after a motor vehicle accident.
+test-00772,D,C,A,B,B,B,B,0,A 25-year-old man presents to his primary care provider complaining of several weeks of intense itch
+test-00773,A,A,A,A,B,B,B,0,A 21-year-old female presents to the office after a health screening in which she was found to have 
+test-00774,D,C,C,C,C,C,C,0,A 25-year-old African American man presents to his primary care provider for routine blood work. He 
+test-00775,A,A,A,A,A,A,C,0,A gunshot victim is brought to the Emergency Department and appears to be in shock. You note a penet
+test-00776,B,C,C,C,C,C,B,0,"A clinical trial is conducted to test the efficacy of a new drug, A, to treat tinea versicolor. A to"
+test-00777,C,C,C,C,C,C,C,0,"A 38-year-old woman is being evaluated by her primary care physician for chronic, widespread pain th"
+test-00778,C,B,B,A,B,B,B,0,A 3rd year resident in good standing with his residency training program would like to work more hou
+test-00779,D,A,A,D,D,D,D,1,A 29-year-old man presents to the emergency department after a motor vehicle accident. On presentati
+test-00780,C,D,D,D,D,D,D,0,A 14-year-old teenager presents to his pediatrician complaining of frequent headaches and excessive 
+test-00781,D,A,D,D,D,D,D,1,Hypoxia-inducible factor 1-alpha (HIF-1a) is a transcription factor with increased activity under co
+test-00782,D,C,C,C,C,C,C,0,A 25-year-old primigravida is admitted to the hospital at 36 weeks gestation after a generalized ton
+test-00783,B,A,A,B,B,B,B,1,A 3-year-old male is brought by his mother to the pediatrician's office. The mother and child are re
+test-00784,B,D,D,D,D,D,D,0,A 42-year-old woman presents to her obstetrician for a prenatal care appointment at 10 weeks gestati
+test-00785,D,C,A,A,C,C,C,0,"A 6-year-old boy is brought to the physician because of abdominal distention, fatigue, and night swe"
+test-00786,D,A,A,D,D,D,C,1,A 14-year-old boy is brought to the emergency department by his mother after falling from the jungle
+test-00787,C,C,A,C,C,C,C,0,A 52-year-old man with Crohn disease comes to the physician because of a 1-week history of dysuria a
+test-00788,C,B,B,B,B,B,B,0,A 26-year-old gravida 2 para 1 at 24 weeks gestation is admitted to the labor and delivery suite wit
+test-00789,C,A,A,A,A,A,A,0,A 55-year-old man is brought to the emergency department after collapsing at the grocery store and l
+test-00790,B,C,C,C,B,B,B,0,A 56-year-old patient is being treated with oral amoxicillin for community-acquired pneumonia. The p
+test-00791,A,A,D,D,D,D,D,0,A 5-year-old boy is brought to his pediatrician’s office by his parents after they noticed blood in 
+test-00792,B,D,D,D,D,D,D,0,"A 46-year-old woman presents with difficulty initiating sleep, as well as frequent nighttime awakeni"
+test-00793,B,A,A,A,B,B,B,0,A 5-year-old girl is brought to her pediatrician for evaluation of difficulties noted at school. Her
+test-00794,D,D,D,D,D,D,D,0,A 75-year-old man comes to the physician for the evaluation of progressive shortness of breath and f
+test-00795,C,A,A,C,C,C,C,1,A 56-year-old man comes to the physician for a follow-up examination 1 week after a temporal artery 
+test-00796,C,C,C,D,C,C,A,0,While traveling abroad a physician is asked to attend a meeting regarding healthcare in the region. 
+test-00797,D,D,A,D,D,D,D,0,A 48-year-old woman comes to the physician because of a 7-day history of progressively worsening sho
+test-00798,C,A,A,A,D,A,A,0,A 29-year-old G1P0 female presents at 22 weeks gestation for her first prenatal care appointment. Ph
+test-00799,B,B,A,B,B,B,B,0,A 68-year-old woman presents to the emergency room with chest pain. She reports sudden severe and cr
+test-00800,B,B,B,B,B,B,B,0,A 4-year-old child is rushed to the emergency department after developing sudden abdominal pain foll
+test-00801,B,A,A,C,C,C,C,0,"A 32-year-old woman comes to the physician because of fatigue, breast tenderness, increased urinary "
+test-00802,D,A,A,A,B,A,A,0,Three patients present to the pediatrician for routine well-child visits. The first child’s mother r
+test-00803,A,D,A,A,A,A,A,1,A 75-year-old woman presents to the emergency department with 30 minutes of slurred speech and arm w
+test-00804,A,C,C,A,C,C,C,1,A 45-year-old man presents to the emergency department with weakness. He states that it started yest
+test-00805,B,A,A,A,B,B,B,0,A 79-year-old woman comes to the physician because of a 1-month history of difficulty starting urina
+test-00806,A,A,A,A,A,A,A,0,A 30-year-old woman presents to the physician because of ongoing diarrhea for the past 1 month. She 
+test-00807,A,A,A,C,B,B,B,0,A 45-year-old man presents to the emergency department after being stabbed 12 times in various parts
+test-00808,C,C,C,C,C,C,C,0,"A 71-year-old woman presents to her physician accompanied by her son. She has no complaints, but her"
+test-00809,B,A,A,B,B,B,B,1,A 16-year-old teenager presents to the emergency department with a sudden onset of severe pain in hi
+test-00810,A,A,A,A,A,A,A,0,An otherwise healthy 49-year-old woman has a routine full blood count complete prior her elective ch
+test-00811,D,D,D,D,D,C,D,0,A 39-year-old man is brought to the physician by his wife because of personality changes over the pa
+test-00812,D,C,C,C,C,C,C,0,A 45-year-old African-American woman comes to the physician after an episode of hemoptysis. Over the
+test-00813,C,A,A,D,D,D,D,0,A 70-year-old man with hyperlipidemia and hypertension returns to his cardiologist for ongoing blood
+test-00814,D,A,A,D,D,D,D,1,An 11-month-old boy is brought to the physician for a well-child examination. He is growing along wi
+test-00815,A,A,A,A,A,A,A,0,A 24-year-old woman comes to the physician because of 1-day history of nausea and weakness. She has 
+test-00816,A,C,A,A,C,C,C,1,A 65-year-old woman comes to the physician for a routine bone mineral density screening. She does no
+test-00817,C,C,C,B,C,C,B,0,A multi-specialty physician practice is meeting to determine which compensation scheme would best se
+test-00818,A,A,A,A,A,A,A,0,A 29-year-old woman presents to her primary care doctor for a prenatal visit. She has just learned t
+test-00819,D,D,A,A,D,D,D,0,A 17-year-old girl is brought to the physician because she has not attained menarche. There is no pe
+test-00820,C,C,C,C,C,C,B,0,A 68-year-old man presents with a 6-month history of worsening fatigue and weight loss. He is especi
+test-00821,C,C,C,C,C,C,C,0,A 73-year-old woman is brought to the physician by her daughter for evaluation of impaired memory an
+test-00822,C,B,A,B,B,B,B,0,A 27-year-old man presents to the emergency department due to a change in his skin color. The patien
+test-00823,C,D,D,C,C,C,C,1,A 40-year-old woman presents to the emergency department with severe left upper quadrant pain (durat
+test-00824,A,C,A,A,A,A,B,1,A 47-year-old man with a history of HIV1 infection presents to his HIV clinic to discuss his antiret
+test-00825,C,C,C,C,C,C,C,0,A 16-year-old female presents to her physician’s office after noticing a round lump in her left brea
+test-00826,B,C,C,C,C,C,C,0,A 22-year-old woman presents to the emergency department with a headache. She has had episodic heada
+test-00827,A,A,A,A,A,A,A,0,A 28-year-old woman presents to her primary care physician for evaluation of amenorrhea. Her last pe
+test-00828,B,D,A,D,D,D,D,0,A 57-year-old homeless man is brought to the emergency department because of several episodes of hem
+test-00829,D,A,A,C,C,C,C,0,A 66-year-old man presents to the emergency department for a cough and fatigue. The patient was brou
+test-00830,B,D,A,D,D,D,D,0,A 72-year-old man in a nursing home was brought to the emergency department with right hand and leg 
+test-00831,A,A,A,A,A,A,A,0,An 11-year-old boy was brought in by his mother with red tender bumps on his legs. The patient’s mot
+test-00832,B,B,B,B,B,B,B,0,"Two hours after admission to the hospital for rupture of membranes, a 35-year-old woman, gravida 3, "
+test-00833,D,A,A,D,D,A,D,1,A 54-year-old male presents to his primary care physician complaining of fatigue. He reports that he
+test-00834,C,C,C,C,C,C,C,0,"While on a teaching sabbatical in Uruguay, a pathologist examined the excised liver of an 18-year-ol"
+test-00835,C,C,A,A,C,C,B,0,"A 45-year-old woman with hypothyroidism comes to the physician because of progressive fatigue, letha"
+test-00836,A,A,A,A,A,A,A,0,A 72-year-old anthropologist with long-standing hypertension visits your office for a routine exam. 
+test-00837,D,D,A,D,D,D,D,0,A 56-year-old woman is brought to the emergency department by her husband because of increasing conf
+test-00838,A,D,D,D,D,D,D,0,A 50-year-old woman is brought to the office by her daughter with a chief complaint of finger pain i
+test-00839,B,C,A,A,B,B,B,0,"A 48-year-old woman comes to the physician because of a 4-month history of lightheadedness, intermit"
+test-00840,D,D,D,D,D,D,D,0,"Candida is injected into the skin of a 38-year-old female patient. Forty-eight hours later, there is"
+test-00841,B,A,A,A,B,B,B,0,"On routine screening, a 62-year-old man is found to have positive fecal occult blood tests. He is as"
+test-00842,C,D,C,C,D,C,D,1,A 20-year-old male college student presents to the emergency room at 4 AM in the morning with compla
+test-00843,C,C,C,C,C,C,C,0,A 79-year-old woman presents to her physician complaining of a persistent non-productive cough and d
+test-00844,A,C,A,C,C,C,C,0,A 14-year-old girl comes to the physician because she has not yet had her period. She is at the 10th
+test-00845,A,A,A,A,A,A,A,0,An investigator is studying traumatic knee joint injuries in college athletes. Images and tissue sam
+test-00846,C,C,C,A,C,C,C,0,A 35-year-old woman comes to the physician for the evaluation of increasing weakness and numbness of
+test-00847,C,C,C,B,B,B,B,0,"A 37-year-old woman presents to your office with heartburn. Following an extensive workup, you diagn"
+test-00848,B,B,B,A,B,B,C,0,"A 47-year-old woman comes to the emergency department because of worsening pain, discoloration, and "
+test-00849,D,C,D,D,D,D,D,1,"Two weeks after starting chemotherapy with etoposide, a 66-year-old man with small cell lung cancer "
+test-00850,B,C,C,C,C,C,C,0,A 55-year-old construction worker is struck by a high-voltage power line while on duty. According to
+test-00851,C,B,B,C,C,C,B,1,A 69-year-old male presents to the emergency department with shortness of breath. The patient has pr
+test-00852,C,A,A,A,C,C,C,0,"A 48-year-old man presents to the clinic with nausea, vomiting, fever, and pain in the right upper q"
+test-00853,C,B,B,C,B,B,B,1,A 22-year-old man is brought to the emergency department by police after he was found undressing him
+test-00854,B,A,A,A,B,B,B,0,A 32-year-old woman presents to the emergency department with abdominal pain and vaginal discharge. 
+test-00855,B,C,B,D,B,B,B,0,An 18-month-old boy is brought to his pediatrician because his mother is concerned about his walking
+test-00856,C,A,A,A,A,A,A,0,A 45-year-old man presents to his primary care provider for two weeks of low-grade fever and sore th
+test-00857,C,C,C,C,C,C,C,0,A 71-year-old woman comes to the physician for evaluation of a pigmented lesion on her left foot. Sh
+test-00858,A,A,A,A,D,D,D,0,A 27-year-old female presents to her physician with a palpable thyroid nodule. Iodine uptake testing
+test-00859,D,A,A,D,D,D,D,1,A 58-year-old male presents with an acutely elevated blood pressure of 220/140 mmHg. The patient com
+test-00860,C,A,A,A,D,C,D,0,"A 24-year-old woman delivers a baby at term. The Apgar counts are 9 and 10 at 1 and 5 minutes, respe"
+test-00861,B,A,A,D,D,D,D,0,A 3-year-old boy is brought to the physician because of a 3-day history of fatigue and yellow discol
+test-00862,B,C,C,C,C,C,C,0,A 27-year-old woman presents to her primary care physician for a general checkup. She has been doing
+test-00863,A,A,A,A,C,C,C,0,A 25-year-old woman presents generalized abdominal pain and vomiting for the past hour. She has also
+test-00864,D,D,D,D,D,D,D,0,A 26-year-old man with no significant past medical history presents to the ED following a motor vehi
+test-00865,C,C,C,C,C,C,C,0,A 74-year-old man undergoes an open cholecystectomy. Surgery is performed under general anesthesia f
+test-00866,A,C,A,A,B,B,B,1,An 11-month-old male infant is brought to his pediatrician by his mother. She is concerned about his
+test-00867,A,D,D,D,D,D,D,0,A 21-year-old man comes to the emergency room with swelling and severe pain in his left lower leg th
+test-00868,C,C,C,C,C,C,C,0,An 80-year-old man is brought to the emergency department because of fatigue and lightheadedness. He
+test-00869,A,C,C,C,C,C,C,0,"In a small town with a population of 10,000 people, the prevalence of alcohol use is estimated to be"
+test-00870,A,D,D,D,D,A,A,0,A 41-year-old man presents to the clinic with the complaints of abdominal discomfort and cramping fo
+test-00871,B,B,B,C,B,B,C,0,"A 45-year-old man presents to your office with a 2-year history of moderate-to-severe pelvic pain, i"
+test-00872,C,D,D,A,D,D,A,0,An 18-year-old male presents to the emergency department trauma bay with a gunshot wound to the abdo
+test-00873,C,A,C,C,C,C,C,1,"A 2-hour-old, 3.2 kg (7.0 lb) newborn boy born by cesarean delivery is being evaluated by the reside"
+test-00874,D,A,D,D,A,A,A,1,"A 33-year-old man presents to the emergency department with a cough. He states that 2 weeks ago, he "
+test-00875,D,D,A,D,D,D,D,0,A 64-year-old man with multiple sclerosis comes to the physician because of a 4-month history of uri
+test-00876,D,D,D,D,D,D,D,0,A 42-year-old woman with a history of depression and headaches presents to the emergency room with s
+test-00877,B,B,B,B,B,B,B,0,A pulmonologist is analyzing the vital signs of patients with chronic obstructive pulmonary disease 
+test-00878,C,C,C,C,C,C,C,0,A 17-year-old high school student was in shop class when he accidentally sawed off his pointer finge
+test-00879,D,D,D,D,D,D,D,0,A 15-year-old girl comes to the physician because she has not had menstrual bleeding for the past 3 
+test-00880,C,A,A,A,A,A,A,0,A 21-year-old woman presents with sudden onset of high blood pressure. She is concerned about her he
+test-00881,A,A,A,A,A,A,A,0,A 52-year-old man presents to the physician with a 6-month history of shortness of breath and nonpro
+test-00882,D,A,A,A,B,B,B,0,A 72-year-old man develops reduced urine output and a serum creatinine concentration of 2.9 mg/dL th
+test-00883,B,C,B,B,B,B,B,1,"An immunology expert is delivering a talk on innate immunity. While talking about inflammasomes, he "
+test-00884,A,A,A,A,A,A,A,0,The ribosome is an essential organelle that plays an important role in the synthesis of new proteins
+test-00885,C,C,C,C,B,B,B,0,A patient presents to the emergency department with severe pain in her head. She states that the pai
+test-00886,A,D,D,D,D,D,A,0,A 24-year-old woman comes to the physician for a routine gynecological examination and to refill her
+test-00887,A,C,C,D,C,C,C,0,A 27-year-old man presents to the emergency department after a motor vehicle accident. The patient h
+test-00888,A,C,C,C,C,C,C,0,An academic obstetrician is conducting a retrospective cohort study that evaluates the risk of place
+test-00889,A,A,A,A,A,A,A,0,A 23-year-old man presents to his primary care physician after bleeding from his gums while brushing
+test-00890,A,A,A,A,A,A,A,0,A 51-year-old Caucasian woman presents to the physician for a routine health maintenance examination
+test-00891,A,C,A,C,C,C,C,0,"A 33-year-old woman, gravida 2, para 1, at 26 weeks' gestation presents to the emergency department "
+test-00892,D,A,A,A,A,A,A,0,A 55-year-old man presents with complaints of exertional dyspnea and dry cough. He reports using ext
+test-00893,B,B,B,B,B,B,B,0,A 22-year-old man presents to the medical clinic after getting bit in the hand by a stray dog 2 days
+test-00894,A,A,A,A,A,A,A,0,A 3-year-old refugee with increasing pitting edema and abdominal swelling over the past 2 months is 
+test-00895,D,C,A,A,A,A,A,0,A 2-year-old boy is brought to his pediatrician by his parents for a routine visit. Since his 18-mon
+test-00896,D,D,D,D,D,D,D,0,A 23-year-old man is brought to the emergency department by his mother because of a change in his pe
+test-00897,B,B,B,B,B,B,B,0,A 37-year-old woman presents to the clinic with pain and swelling of her legs. She states that she f
+test-00898,B,A,A,A,B,B,B,0,A 38-year-old woman presents to the office for a routine examination. She has no complaints and offe
+test-00899,C,A,A,C,B,A,B,1,A 3-year-old boy is brought to the emergency room by his mother after she found him somnolent at hom
+test-00900,B,A,A,A,C,C,C,0,A 38-year-old man presents with progressive tiredness and shortness of breath on exertion. Past medi
+test-00901,D,A,A,D,D,D,D,1,"A 27-year-old G3P1010 makes an appointment with her gynecologist for evaluation of profuse bleeding,"
+test-00902,C,C,A,D,C,C,C,0,An otherwise healthy 25-year-old woman comes to the physician because of a 2-day history of pain and
+test-00903,B,C,C,C,C,C,C,0,A 54-year-old man comes to the clinic for management of his gastroesophageal reflux disease (GERD). 
+test-00904,B,A,A,A,A,B,A,0,A 7-year-old boy is brought to the physician by his mother for evaluation of progressively worsening
+test-00905,A,C,C,C,C,C,C,0,Background: There is a lack of consensus about whether the initial imaging method for patients with 
+test-00906,D,A,A,A,B,D,D,0,A 45-year-old woman comes to the emergency department because of intermittent chest pain and palpita
+test-00907,A,D,D,D,D,D,D,0,A 58-year-old woman comes to the physician because of intermittent painful retrosternal dullness for
+test-00908,C,B,B,D,D,D,D,0,A 24-year-old primigravida presents to her physician at 20 weeks gestation. She was diagnosed with a
+test-00909,B,A,A,A,D,D,D,0,"A 36-year-old G3P2 woman with no significant past medical history delivers a 3.7 kg (8 lb, 3 oz) bab"
+test-00910,B,A,A,A,B,B,B,0,A 52-year-old woman presents with a complaint of headache for the past 10 days. Her headache is diff
+test-00911,C,D,D,D,D,D,D,0,A previously healthy 27-year-old woman comes to the physician because of a 2-month history of depres
+test-00912,B,D,D,D,B,B,B,0,A 37-year-old woman presents to her primary care physician after returning from her honeymoon in Can
+test-00913,D,C,C,C,C,C,C,0,"A 30-year-old female presents to her primary care provider complaining of 4 days of fever, malaise, "
+test-00914,C,C,C,A,C,B,C,0,A 27-year-old graduate student is bitten by a coral snake while he was hiking alone through the wood
+test-00915,A,A,A,A,A,A,A,0,"A 28-year-old G1P0 woman at 12 weeks estimated gestational age presents with malaise, joint pain, fe"
+test-00916,A,A,A,A,A,A,A,0,A 52-year-old man with hypertension and hyperlipidemia comes to the emergency department 30 minutes 
+test-00917,D,A,D,D,D,D,D,1,A 5-year-old boy is brought to the emergency department by his mother because of a sudden loss of co
+test-00918,B,B,A,B,B,B,B,0,"A 66-year-old woman presents with urinary incontinence, difficulty urinating, incomplete voiding, an"
+test-00919,B,B,B,B,B,B,B,0,A 69-year-old man presents to his primary care physician with hip and back pain. The patient states 
+test-00920,A,A,A,A,A,A,A,0,A 61-year-old woman presents to an outpatient clinic with fatigue and mild neck pain for a month. Sh
+test-00921,A,A,A,A,A,A,A,0,A 65-year-old female patient comes to the physician’s office for her annual check-up. The patient’s 
+test-00922,A,C,D,A,C,C,A,1,A 3-year-old boy is brought to the physician for the evaluation of recurrent skin lesions. The episo
+test-00923,C,C,C,C,C,C,C,0,A 53-year-old man presents to clinic with a six month history of shoulder pain that is especially bo
+test-00924,A,A,A,A,A,A,A,0,A 58-year-old woman comes to the physician because of a 3-month history of left knee pain as well as
+test-00925,C,C,C,C,C,C,C,0,A 6-month-old boy presents to a pediatrician for the evaluation of recurrent bacterial infections. H
+test-00926,B,B,B,B,B,B,B,0,A 48-year-old man with type II diabetes mellitus complicated by peripheral neuropathy presents to th
+test-00927,C,C,C,C,C,C,C,0,A 56-year-old man comes to the physician because of a 1-day history of sudden severe pain in his rig
+test-00928,B,D,A,D,D,D,D,0,"A 45-year-old man presents to the emergency department with severe dyspnea, wheezing, and palpitatio"
+test-00929,C,D,D,C,C,C,C,1,A 74-year-old man has been treated for prostate cancer for the past 6 months. He is on an experiment
+test-00930,A,A,A,A,A,A,A,0,A 74-year-old man was admitted to the hospital after falling down several stairs. He is a known alco
+test-00931,A,C,C,C,C,C,C,0,A previously healthy 67-year-old man comes to the physician for routine health maintenance evaluatio
+test-00932,D,C,C,C,C,C,C,0,A 64-year-old male presents to his primary care physician with a complaint of bilateral knee pain th
+test-00933,A,D,D,D,D,D,D,0,A 4-year-old girl is brought to the physician because of pallor and rash for 2 days. She had a 4-day
+test-00934,B,D,D,D,D,D,D,0,A 76-year-old man presents to the physician because of dyspepsia and weight loss over the past 6 mon
+test-00935,A,B,A,A,C,C,C,1,A 29-year-old female presents to the clinic for a regular check-up. She has no specific complaints. 
+test-00936,B,C,A,C,C,C,C,0,A 23-year-old woman presents to the emergency department with abdominal pain. The patient states she
+test-00937,C,A,D,D,D,D,D,0,"A 24-year-old Asian woman is admitted to the hospital at 30 weeks gestation with nausea, vomiting, a"
+test-00938,C,C,C,C,C,C,C,0,A 44-year-old obese African-American male presents to clinic with complaints of 3 days of fatigue an
+test-00939,A,A,A,A,A,D,A,0,A 32-year-old woman comes to the physician because of fatigue and joint pain for the past 4 months. 
+test-00940,A,D,A,A,A,A,A,1,A 66-year-old male with a history of myocardial infarction presents to your primary care office with
+test-00941,A,C,A,D,D,D,D,0,A 49-year-old man comes to the physician for a routine health maintenance examination. He feels well
+test-00942,A,C,C,C,C,C,C,0,A 40-year-old woman comes to the physician because of a 6-month history of difficulty sleeping and f
+test-00943,D,D,D,D,D,D,D,0,A scientist observes a myocyte beating in cell culture. Which step is the most direct necessary comp
+test-00944,D,D,A,D,D,D,D,0,"Two days after admission to the hospital for treatment of acute myelogenous leukemia, a 35-year-old "
+test-00945,B,B,B,B,B,B,B,0,"The menses are 4 weeks overdue in a 23-year-old sexually active woman, thus she is scheduled for an "
+test-00946,C,C,C,D,C,C,D,0,A 49-year-old man comes to the physician because he has had multiple falls and multiple episodes of 
+test-00947,B,A,A,A,A,D,A,0,A 7-year-old girl is brought to the physician by her mother for a well-child examination. The mother
+test-00948,C,B,A,B,B,B,B,0,A 67-year-old man presents to his primary care physician for a follow up appointment. He was release
+test-00949,A,A,A,A,A,A,A,0,A 61-year-old man comes to the emergency department because of a 2-day history of a productive cough
+test-00950,A,C,C,C,C,C,C,0,An investigator is studying cellular regeneration of epithelial cells. She has obtained a tissue sam
+test-00951,C,C,C,C,D,D,C,0,A 22-year-old woman comes to the physician for a routine health examination. She feels well but asks
+test-00952,A,D,A,C,B,B,B,0,A hospitalized 34-year-old man with severe diarrhea and bloating for 1 month is diagnosed with celia
+test-00953,C,B,C,C,C,C,C,1,"A 70-year-old man presents to the Emergency Department after 3 days of shortness of breath, orthopne"
+test-00954,B,A,A,D,B,B,B,0,"A 26-year-old Caucasian woman is admitted to the emergency department after 4 days of fever, malaise"
+test-00955,C,D,C,B,C,B,B,0,A 59-year-old woman presents to the outpatient clinic for worsening symptoms of congestive heart fai
+test-00956,A,D,C,A,D,D,D,1,A 36-year-old woman comes to the physician for intermittent stabbing face pain. The pain typically o
+test-00957,B,A,A,B,B,B,B,1,"A 23-year-old woman, gravida 2, para 1, at 28 weeks' gestation comes to the physician for a routine "
+test-00958,B,C,A,A,B,B,B,0,"A 61-year-old man presents to the clinic with complaints of excessive thirst, frequent urination, an"
+test-00959,B,B,B,B,B,B,B,0,A 65-year-old male presents to his primary care physician for stiffness in his arm. He states that h
+test-00960,D,A,A,B,B,B,B,0,A 52-year-old man presents to the clinic with a headache and dizziness for the past month. The patie
+test-00961,A,B,B,D,B,B,B,0,A 20-year-old woman comes to the clinic for her first follow-up visit after being diagnosed with bip
+test-00962,B,B,A,B,B,B,B,0,A 19-year-old female presents to the emergency room with 6 days of lower abdominal pain. She states 
+test-00963,D,B,A,C,C,C,C,0,A 72-year-old man with hypertension and type 2 diabetes mellitus is admitted to the hospital for the
+test-00964,C,A,A,A,B,C,C,0,A 24-year-old woman presents to the office for evaluation of intermittent vertigo for the past 2 day
+test-00965,D,B,A,A,B,B,B,0,A 52-year-old woman presents to the emergency department due to severe pain of her first metatarsoph
+test-00966,B,D,D,D,D,D,D,0,A 59-year-old man complains of chest pain that has been present for 4 hours on the 5th day of hospit
+test-00967,B,A,A,C,C,C,C,0,A 16-year-old girl comes to the emergency department because of left wrist pain and swelling for 5 h
+test-00968,A,A,A,A,A,A,C,0,A 46-year-old man comes to the physician with a 1-week history of yellowish discoloration of his eye
+test-00969,C,C,A,C,C,B,C,0,A 29-year-old woman presents to her primary care doctor with a lesion on her left labia. She first n
+test-00970,C,C,C,C,D,D,D,0,"A 67-year-old man presents with feelings of nervousness and anxiety. He mentions that lately, he has"
+test-00971,D,D,A,A,D,D,D,0,"Two hours after undergoing open cholecystectomy for complicated cholecystitis, a 48-year-old woman d"
+test-00972,C,A,D,C,B,B,B,1,"A 28-year-old woman, gravida 2, para 1, at 40 weeks of gestation is admitted to the hospital in acti"
+test-00973,B,A,B,B,B,B,B,1,"A 63-year-old female complains of weakness, light-headedness, palpitations, and soreness of the tong"
+test-00974,D,D,D,D,D,D,D,0,"A 45-year-old man presents to the doctor’s office with shortness of breath, cough, and fatigue for 3"
+test-00975,C,C,C,C,C,C,C,0,A 28-year-old man reports to his physician that he is having second thoughts about his long-term com
+test-00976,D,D,D,D,D,D,D,0,"A 25-year-old, G2P2L2 woman presents with a complaint of missed menstrual cycle for 4 weeks. Her pre"
+test-00977,B,B,B,B,B,B,B,0,"A 77-year-old man comes to your office for a routine visit. He is doing well, and his only complaint"
+test-00978,C,C,A,C,C,C,C,0,A 72-year-old man presents to his primary care physician with a 6-month history of shortness of brea
+test-00979,C,A,A,A,C,A,A,0,A 67-year-old male comes into the ED complaining of dyspnea and a heavy feeling in his chest. He rep
+test-00980,B,A,A,A,A,B,A,0,A 29-year-old G4P0 woman presents following a spontaneous pregnancy loss in the 18th week of her pre
+test-00981,C,D,D,C,C,C,C,1,A 22-year-old woman presents to her primary care physician in April for seasonal allergies. She has 
+test-00982,B,B,B,B,B,B,B,0,A 55-year-old male visited his primary care physician complaining of chest pain and progressive shor
+test-00983,C,A,A,A,A,A,A,0,A 56-year-old man recently diagnosed with cirrhosis secondary to alcohol use presents to the clinic 
+test-00984,C,D,D,D,D,D,B,0,A 70-year-old man is brought to the emergency department by his wife for incomprehensible speech. Up
+test-00985,A,A,A,A,A,A,A,0,A 75-year-old man presents to the physician for his annual blood pressure visit and blood work. He h
+test-00986,C,A,A,B,B,B,B,0,A 60-year-old man comes to the physician because of a 2-month history of cough productive of yellow 
+test-00987,B,B,B,B,B,B,B,0,An 11-month-old boy is brought to the emergency department by his mother after she observed jerking 
+test-00988,B,A,D,D,D,D,D,0,A researcher hypothesizes that low birth weight is related to obesity later in life. He conducts a s
+test-00989,B,A,A,A,D,D,A,0,A 52-year-old woman presents to her primary care physician for abdominal pain and diarrhea. The pati
+test-00990,D,D,D,D,D,D,D,0,"A 3-week-old newborn is brought to the physician by his parents because of poor feeding, irritabilit"
+test-00991,C,C,C,C,C,C,C,0,"A 13-year-old boy is brought to the physician because of progressive left leg pain for 2 months, whi"
+test-00992,D,D,B,B,B,B,B,0,A 55-year-old male with a history of stage I colon cancer status-post left hemicolectomy presents to
+test-00993,A,C,C,C,C,C,C,0,"A 67-year-old man is brought to the emergency department with severe, crushing, retrosternal chest p"
+test-00994,B,B,D,D,D,D,D,0,A 65-year-old male presents to his pulmonologist for a follow-up visit. He has a history of chronic 
+test-00995,C,A,A,C,C,C,C,1,"A 36-year-old woman, gravida 3, para 2, at 42 weeks' gestation comes to the physician for induction "
+test-00996,C,D,C,A,D,D,B,0,The only immunoglobulin found as a dimer has what primary function?
+test-00997,D,D,D,D,D,D,D,0,A 47-year-old woman is brought to the emergency department by paramedics. She was found unconscious 
+test-00998,B,D,D,B,D,D,B,1,A 72-year-old woman with a 40 pack-year history of smoking presents to your office with jaundice. Af
+test-00999,D,D,D,D,D,D,D,0,A 40-year-old man is referred to an optometrist. He complains of mild vision impairment over the las
+test-01000,C,C,A,C,C,C,C,0,"A 65-year-old man presents with a 6-month history of repeated falls, postural dizziness, progressive"
+test-01001,C,C,C,C,C,C,C,0,A 42-year-old man presents to establish care with a family physician after having progressively wors
+test-01002,A,A,A,A,A,A,A,0,A previously healthy 28-year-old man comes to the emergency department because of dizziness and palp
+test-01003,D,C,A,A,C,C,A,0,"A 45-year-old woman comes to the physician because of fatigue, abdominal cramps, watery diarrhea, an"
+test-01004,C,C,C,C,C,C,C,0,A 66-year-old man presents to the emergency department due to a productive cough. His cough has been
+test-01005,D,D,A,D,D,D,D,0,A 55-year-old man presents with bloody nasal secretions and shortness of breath. He reports he has l
+test-01006,C,B,B,B,C,B,C,0,A 25-year-old Hispanic male presents with heat intolerance and recent weight loss. Serum analysis sh
+test-01007,A,A,A,A,B,B,B,0,A 3-day-old male is evaluated in the hospital nursery for delayed passage of meconium. His mother is
+test-01008,D,D,D,D,B,D,A,0,A 78-year-old woman presents to the office for an annual health check-up with her family physician a
+test-01009,C,A,A,A,A,A,A,0,A 45-year-old woman comes to the physician because of a 2-week history of painful ulcers in her mout
+test-01010,B,C,C,A,B,C,C,0,"A 25-year-old woman presents to her primary care provider for evaluation of a ""painful mass in my le"
+test-01011,D,A,A,A,A,A,A,0,A 70-year-old hypertensive and hyperlipidemic woman comes to the emergency department with chief com
+test-01012,A,A,A,A,B,B,B,0,"During the normal catabolism of protein, urea and ammonia are produced as waste products. If these w"
+test-01013,C,C,C,C,C,C,C,0,A 46-year-old man presents with worsening pain in multiple joints for the past 2 weeks. He says the 
+test-01014,B,B,B,A,B,B,B,0,"A previously healthy 29-year-old woman, gravida 1, para 0, at 35 weeks' gestation comes to the physi"
+test-01015,A,A,A,A,A,A,A,0,A 2-year-old girl is brought in to the office by her parents. They state that their daughter has rec
+test-01016,C,D,D,C,C,D,C,1,An 18-year-old male is brought in by fire rescue. The patient was an unrestrained passenger in a mot
+test-01017,D,D,D,A,D,D,A,0,"A 60-year-old man presents to his local walk-in clinic with 1 week of fever, chills, night sweats, a"
+test-01018,B,C,C,C,B,B,B,0,A 31-year-old man with a history of schizophrenia is brought to the emergency department by police a
+test-01019,A,B,B,A,A,B,B,1,A 40-year-old obese man presents to his primary care provider with a history of excessive daytime so
+test-01020,C,D,D,D,D,D,D,0,A 70-year-old man presents with cough and progressively worsening shortness of breath for the last 6
+test-01021,D,A,A,C,D,D,C,0,"Two hours following an elective cholecystectomy, a 43-year-old woman has fever and chills. The patie"
+test-01022,A,D,A,A,D,D,D,1,"The first 24 hours after delivery, a 2888 g (6.37 lb) male newborn is not feeding well, has a high-p"
+test-01023,C,D,D,D,D,D,D,0,"A 38-year-old woman with a history of systemic lupus erythematosus, obesity, and hyperlipidemia pres"
+test-01024,C,C,C,C,C,C,C,0,"A 64-year-old man presents with severe respiratory distress. This has onset over the past 3 weeks, p"
+test-01025,D,A,B,B,B,B,B,0,A previously healthy 52-year-old woman is brought to the emergency department after sustaining burns
+test-01026,A,D,B,D,B,B,B,0,A 45-year-old man presents to his primary care provider after feeling sad and depressed for the past
+test-01027,B,A,A,C,C,A,C,0,A 35-year-old man comes to the emergency department with acute shortness of breath that developed af
+test-01028,D,A,D,D,D,D,D,1,A 45-year-old man presents to a surgeon with painless swelling over his right leg. He noticed the sw
+test-01029,A,A,A,A,A,A,A,0,A 24-year-old woman presents to her primary care physician for a wellness visit. She says that she h
+test-01030,A,C,A,A,B,B,B,1,"A 3466-g (7-lb, 10-oz) female newborn is delivered at 38 weeks' gestation to a 32-year-old woman, gr"
+test-01031,D,D,D,D,D,D,D,0,A 10-year-old boy is brought to his pediatrician after discovering a painless mass in the left testi
+test-01032,B,B,B,B,B,B,B,0,An 80-year-old man presents with severe pain of the right lower extremity. He says that symptoms had
+test-01033,B,B,B,B,B,B,B,0,A 35-year-old woman presents to the emergency department after losing consciousness at work. On pres
+test-01034,B,A,C,C,C,C,C,0,A 34-year-old woman presents to the plastic surgery office 3 months following a rhinoplasty procedur
+test-01035,B,D,A,D,B,A,B,0,A 43-year-old woman comes to the physician because of a 1-day history of rash on the trunk and lower
+test-01036,B,A,A,B,B,B,B,1,A 19-year-old man is brought to the emergency department because of severe right shoulder pain and i
+test-01037,A,A,A,C,C,C,C,0,A 25-year-old girl is brought to the emergency room after a suicide attempt. Her mother states that 
+test-01038,A,C,C,C,C,C,B,0,A 32-year-old male presents to the ED with acute-onset chest pain. His blood pressure is 157/90 mmHg
+test-01039,B,B,B,B,B,B,B,0,A 38-year-old woman comes to the physician because of difficulty falling asleep for the past 2 month
+test-01040,B,A,A,A,C,C,C,0,A 55-year-old woman is brought to the emergency department because of worsening upper abdominal pain
+test-01041,C,A,A,B,B,B,B,0,A 3-year-old boy is brought to his pediatrician for evaluation because his parents have been concern
+test-01042,D,A,B,B,B,B,B,0,A 21-year-old man with a past medical history significant for Down syndrome presents to the outpatie
+test-01043,D,A,D,D,D,D,D,1,A 35-year-old woman presents to the office because she has felt a small painless mass in her neck wh
+test-01044,B,A,A,B,B,B,B,1,A 4-year-old boy presents to the pediatrician’s office. His mother complains that he has been sleepi
+test-01045,A,D,D,A,A,A,A,1,A 69-year-old right-handed man comes to the physician for a routine health maintenance examination. 
+test-01046,B,A,A,B,B,B,B,1,"An investigator is studying the frequency of polycythemia in a population of a remote, mountainous r"
+test-01047,B,A,A,A,B,B,B,0,A 57-year-old woman comes to the physician because of a 3-month history of fatigue. She also reports
+test-01048,B,A,C,C,C,D,D,0,A 32-year-old pregnant woman presents to her physician with flu-like symptoms for the past 3 days. S
+test-01049,C,C,C,C,C,C,C,0,An investigator is studying bacterial adaptations to the environment in an infectious isolate and a 
+test-01050,C,B,B,B,B,B,B,0,"A 40-year-old female with a past medical history of high cholesterol, high blood pressure, hyperthyr"
+test-01051,C,C,C,C,B,B,B,0,A 62-year-old patient with a history of deep venous thrombosis is enrolled in a clinical trial for a
+test-01052,B,C,C,A,C,C,C,0,A 7-day-old infant boy presents to an emergency department due to poor feeding. His parents are rece
+test-01053,B,B,B,B,B,B,B,0,"A 28-year-old woman presents with facial flushing, weakness, and chronic diarrhea for the past month"
+test-01054,A,A,A,A,A,A,A,0,A 69-year-old gentleman presents to his primary care physician for pain in his right shoulder. The p
+test-01055,C,A,C,C,C,C,C,1,A 9-year-old male visited his primary care physician for a check-up three months after a throat infe
+test-01056,D,D,D,D,D,D,D,0,A 29-year-old man diagnosed with schizophrenia 4 years ago presents for follow-up to discuss his med
+test-01057,A,A,A,A,C,A,C,0,"A 32-year-old man with HIV comes to the physician because of a 2-month history of weight loss, night"
+test-01058,C,A,A,A,C,C,C,0,A 7-year-old boy is rushed to the emergency room after losing consciousness 30 mins ago at home. The
+test-01059,A,A,A,A,A,A,A,0,"A chronic opioid abuser undergoes emergency surgery. Following the operation, the man is started on "
+test-01060,C,B,A,A,B,B,B,0,"A 3550-g (7.8-lb) male newborn is delivered at term to a 27-year-old, gravida 1, para 1 woman (Rh+)."
+test-01061,D,D,D,D,D,D,D,0,"A 37-year-old woman presents to the emergency department with confusion, anxiety, sweating, and epis"
+test-01062,A,A,A,A,B,A,B,0,A 13-year-old boy is brought to the emergency department because he was vomiting and seemed abnormal
+test-01063,D,D,D,D,D,D,D,0,"A 54-year-old woman presents with sudden onset, mild vaginal bleeding for the past day. She says she"
+test-01064,D,D,D,D,D,D,D,0,"A 22-year-old woman presents with recurrent episodes of swelling in her face, hands, and neck with o"
+test-01065,A,C,C,C,C,C,C,0,"A 24-year-old woman gravida 2, para 1 at 24 weeks' gestation comes to the physician for a prenatal v"
+test-01066,A,C,C,D,C,C,D,0,"A 42-year-old man is brought to the emergency department because of a 2-day history of dyspnea, ches"
+test-01067,C,A,A,D,D,D,D,0,"A 27-year-old woman, gravida 1, para 0, at 38 weeks' gestation is admitted to the hospital for activ"
+test-01068,B,C,B,C,C,C,C,0,A 63-year-old man presents to his primary care physician for follow-up. He reports a slow and steady
+test-01069,A,D,A,A,A,A,A,1,A 45-year-old woman comes to the physician for the evaluation of a right breast mass that she notice
+test-01070,D,D,D,D,D,D,D,0,A 72-year-old Caucasian male presents to your office with dysphagia and halitosis. If this patient i
+test-01071,A,A,A,A,A,B,B,0,A 10-year-old boy is brought to the emergency department because he has not been able to walk since 
+test-01072,D,D,D,D,D,D,D,0,A 27-year-old male presents to the psychiatrist requesting help with his compulsions as they are int
+test-01073,D,D,D,A,A,B,A,0,"A 35-year-old Caucasian female presents to the hospital alarmed by her recent truncal weight gain, f"
+test-01074,C,D,A,D,D,D,D,0,A 24-year-old man with chronic back pain comes to the physician to establish care after moving to Fl
+test-01075,D,D,D,D,D,D,D,0,A 53-year-old man comes to the physician because of a 3-month history of cough and progressively wor
+test-01076,B,D,D,D,D,D,D,0,"A 78-year-old woman presents to the emergency department with weight loss, abdominal pain, and jaund"
+test-01077,A,C,A,D,C,C,C,0,A 59-year-old man presents to his primary care provider with fatigue. He has been seen in the emerge
+test-01078,A,C,C,D,C,A,A,0,A 75-year-old man becomes pulseless in the cardiac intensive care unit 48 hours after admission for 
+test-01079,D,D,D,A,A,A,A,0,"A 65-year-old man presents with left-sided numbness, diplopia, and blurring of vision. The diplopia "
+test-01080,C,A,A,C,C,C,D,1,"A 5-day-old boy is brought to the emergency department because of a 1-day history of poor feeding, i"
+test-01081,D,D,C,D,D,D,D,0,A 62-year-old woman comes to the physician because of a 6-month history of progressive pain and stif
+test-01082,B,B,B,D,D,D,B,0,An 81-year-old man patient recently moved into an assisted living facility and presents today with i
+test-01083,A,A,A,A,A,A,A,0,A previously healthy 18-year-old army recruit is brought to a military treatment facility because of
+test-01084,D,A,A,D,C,C,C,1,"Thirty minutes after delivery, a 3600-g (7-lb 15-oz) newborn has noisy breathing, bluish discolorati"
+test-01085,A,A,C,C,A,C,C,0,A 3-year-old girl is brought to the emergency department by her mother 30 minutes after the sudden o
+test-01086,B,A,A,B,B,B,C,1,A 3-day-old boy is admitted to the neonatal intensive care unit for seizures. He was born to a 33-ye
+test-01087,C,C,C,C,C,C,C,0,A 39-year-old man seeks an evaluation in the emergency room due to an episode of syncope at work. He
+test-01088,B,B,A,A,B,B,B,0,A 26-year-old nullipara presents to her physician for a routine check-up at 18 weeks gestation. She 
+test-01089,B,A,A,A,A,B,B,0,A 42-year-old man presents to your office complaining of right-sided facial swelling that has progre
+test-01090,C,C,C,C,C,C,C,0,A 15-year-old boy is brought to the physician by his mother. His mother reports multiple instances o
+test-01091,C,C,C,C,C,C,C,0,A 64-year-old man presents to the clinic with easy fatigability and breathlessness when climbing sta
+test-01092,B,B,B,B,B,B,B,0,A 69-year-old man presents to his primary care physician for trouble sleeping. The patient states th
+test-01093,B,D,A,A,D,D,A,0,A 62-year-old woman comes to the physician for a routine health maintenance examination. She feels w
+test-01094,C,D,D,D,D,D,D,0,A 25-year-old female with Hodgkin's lymphoma presents with a several day history of edema. Lab studi
+test-01095,C,A,C,C,C,C,C,1,A 45-year-old man comes to the physician because of mild left-sided abdominal pain when lifting heav
+test-01096,C,C,C,C,C,C,C,0,A 7-year-old woman presents shortly after her birthday with red scaly plaques over both ears. Her mo
+test-01097,C,C,C,C,C,C,C,0,A 34-year-old man comes to the physician because of a 3-week history of colicky abdominal pain and d
+test-01098,D,D,D,D,D,D,D,0,A 32-year-old woman presents to the emergency department with complaints of a headache. The last men
+test-01099,A,A,A,A,A,A,A,0,A 42-year-old woman comes to the clinic for a routine annual exam. She recently moved from New Jerse
+test-01100,A,A,A,D,D,D,D,0,A 2-day-old infant male is brought to the emergency department with a 5-hour history of vomiting and
+test-01101,A,A,A,A,A,A,A,0,A 58-year-old man with hypertension and dyslipidemia comes to the physician for a routine health mai
+test-01102,C,A,A,A,A,B,A,0,A 27-year-old college student presents to his physician for constant fatigue. The patient states tha
+test-01103,C,C,C,C,C,C,C,0,A 63-year-old woman comes to the physician because of a 6-month history of fatigue and shortness of 
+test-01104,B,C,A,A,B,B,B,0,A 62-year-old man presents with bright red blood in his stool which occurred 2 times this week. He d
+test-01105,A,A,A,A,A,C,B,0,"A 55-year-old woman presents to the office because she has been feeling weak. For the past 2 years, "
+test-01106,B,B,B,B,B,B,A,0,A 35-year-old woman presents to a psychiatrist for an initial consultation. She reports that for the
+test-01107,A,A,A,A,C,C,C,0,A 76-year-old woman comes to the physician for a routine examination. She has a history of hypertens
+test-01108,C,A,C,C,B,C,C,1,"A 32-year-old man jumps off a 3 story building during a suicide attempt. Paramedics arrive quickly, "
+test-01109,B,B,C,C,B,C,B,0,A 46-year-old man comes to the emergency department because of a 4-week history of fatigue and heada
+test-01110,C,A,A,A,B,B,B,0,A previously healthy 16-year-old boy comes to the physician because of a 5-day history of pain at th
+test-01111,C,C,A,C,C,C,C,0,"A 3-year-old boy presents with episodic diarrhea with malodorous stools, stunted growth, occasional "
+test-01112,C,A,A,C,C,C,C,1,An 18-year-old patient is visiting the pediatrician with her mother for her annual exam before colle
+test-01113,D,D,A,A,A,D,A,0,A 15-year-old girl comes to the physician because of a 2-week history of genital lesions. She has no
+test-01114,C,B,B,B,B,B,B,0,"A 48-year-old woman comes to the emergency department because of a 1-day history of fever, vomiting,"
+test-01115,D,D,D,D,D,D,D,0,A 10-year-old African American girl with known sickle cell disease becomes acutely anemic in the set
+test-01116,C,D,A,D,D,D,D,0,A 46-year-old woman comes to the physician because of severe muscle and joint pain for 5 months. The
+test-01117,C,C,C,C,C,C,C,0,A 68-year-old man presents with difficulty breathing for the last 3 hours. Upon asking about other s
+test-01118,C,C,C,C,C,C,C,0,A 40-year-old obese man with a history of diabetes and chronic kidney disease presents with one day 
+test-01119,D,D,D,D,D,D,D,0,An obese 42-year-old female presents to her primary care physician with a complaint of left knee pai
+test-01120,C,C,C,C,C,C,C,0,A 24-year-old woman comes to the physician’s office with concerns about a recent pregnancy. She and 
+test-01121,A,D,A,A,A,A,A,1,A 25-year-old woman comes to the physician because of periodic painful double vision for 3 days. Her
+test-01122,A,C,C,C,A,A,A,0,A 63-year-old man presents to the clinic for left calf pain when walking a distance of more than 200
+test-01123,D,A,A,A,D,D,A,0,"A 72-year-old woman comes to the physician because of a 1-month history of frequent headaches, doubl"
+test-01124,D,C,C,A,B,B,B,0,"A 22-year-old woman comes to the physician because of yellow vaginal discharge, pruritus, and pain w"
+test-01125,C,D,C,C,C,C,C,1,A 15-year-old female presents to her pediatrician’s office for severe menstrual cramping. The patien
+test-01126,D,D,D,D,A,A,A,0,A 34-year-old woman is brought to the emergency department following a high-speed motor vehicle coll
+test-01127,C,B,B,B,B,B,B,0,A previously healthy 17-year-old female college student comes to the emergency department because of
+test-01128,A,A,A,A,A,A,B,0,"A 74-year-old man was admitted to the intensive care ward due to progressive dyspnea, cough with pin"
+test-01129,C,C,C,C,C,C,C,0,"Please refer to the summary above to answer this question
+A cardiologist at another institution is t"
+test-01130,A,A,A,A,A,A,A,0,A 35-year-old woman comes to the physician because of intermittent episodes of heart palpitations fo
+test-01131,A,A,A,C,C,C,C,0,A 78-year-old right-handed man is brought to the emergency department by his daughter for sudden ons
+test-01132,D,D,C,D,D,D,D,0,A 68-year-old woman presents with an intermittent throbbing headache with an onset approximately 3 w
+test-01133,B,D,D,D,D,D,D,0,A 31-year-old male comes to your office for his annual exam. He states that he received all of his r
+test-01134,A,A,A,D,D,D,D,0,A 24-year-old woman presents to the emergency department with a 2-week history of a foot ulcer. She 
+test-01135,D,A,A,A,A,A,A,0,"A 23-year-old man comes to the physician because of a 1-week history of anorexia, nausea, upper abdo"
+test-01136,D,C,A,A,B,B,B,0,A 42-year-old man comes to the physician because of progressive fatigue and shortness of breath for 
+test-01137,C,C,C,D,C,C,B,0,A 32-year-old Caucasian woman is referred to a gastroenterologist by her family physician for 8 mont
+test-01138,D,D,A,A,A,A,A,0,"A 62-year-old woman with small-cell lung cancer comes to the physician because of a painful, burning"
+test-01139,A,D,D,D,D,D,D,0,A 54-year-old man is brought to the emergency department after he was found outside in the middle of
+test-01140,B,A,A,A,C,C,C,0,A 5-year-old boy is brought to his pediatrician due to sore throat and fever. He was in his usual st
+test-01141,B,D,B,A,B,B,B,0,A 35-year-old woman comes to the physician for sleeping problems and the inability to concentrate fo
+test-01142,A,A,A,A,A,A,A,0,A 25-year-old female is brought to the emergency department by her family. They found her somnolent 
+test-01143,C,C,D,C,C,C,C,0,A 27-year-old man and his wife come to the physician for preconception genetic counseling. The patie
+test-01144,C,C,C,C,C,C,C,0,A 58-year-old Caucasian female presents to her primary care physician with concerns about several re
+test-01145,A,A,A,A,A,A,A,0,A 33-year-old woman at 17-weeks gestation comes to the physician for evaluation of a painless mass i
+test-01146,C,C,C,C,C,C,C,0,"A 27-year-old male presents for emergency surgery to reattach his left arm, severed during a high-sp"
+test-01147,A,A,A,A,A,A,A,0,The parents of a 14-year-old patient are concerned and have questions about the use of insulin for t
+test-01148,A,A,A,A,A,A,A,0,"A researcher evaluates healthy breast tissue from 100 women, 50 women that were pregnant at the time"
+test-01149,B,B,B,B,B,B,B,0,A 21-month-old boy is brought to the physician for a well-child examination. His mother noticed defo
+test-01150,A,A,A,A,B,B,B,0,A 30-year-old woman presents to an outpatient clinic for a scheduled gynecologic check-up. The patie
+test-01151,A,D,A,A,D,D,D,1,A 1900-g (4-lb 3-oz) newborn is delivered at term to a 36-year-old primigravid woman. Pregnancy was 
+test-01152,B,A,A,A,A,A,A,0,"A 51-year-old man presents to his primary care provider complaining of fatigue, weight loss, and int"
+test-01153,A,D,D,D,D,D,D,0,A 68-year-old man presents to his primary care physician with complaints of increased fatigue and ba
+test-01154,D,A,A,D,D,D,D,1,A 68-year-old postmenopausal woman presents to the clinic for a dual-energy X-ray absorptiometry (DE
+test-01155,D,C,D,D,D,D,D,1,An investigator is studying the growth pattern of a particular bacterial strain that caused a respir
+test-01156,C,D,A,A,D,D,D,0,"A 7-month-old boy is brought to the physician because of a 2-month history of fatigue, weakness, and"
+test-01157,D,A,D,D,D,D,D,1,A 4-year-old boy with acute lymphoblastic leukemia is admitted to the hospital to undergo allogeneic
+test-01158,D,C,A,B,C,C,C,0,A 27-year-old female is brought to the emergency department by police when she attacked her date out
+test-01159,A,A,A,A,A,A,A,0,"A 68-year-old man presents to the emergency department because of fever, abdominal pain, and rapidly"
+test-01160,C,C,C,C,C,C,C,0,A 31-year-old female patient presents with significant swelling and redness of her fingers that is c
+test-01161,B,A,D,D,D,D,D,0,"A 44-year-old woman presents to her primary care physician because she has been having fever, chest "
+test-01162,D,C,C,C,D,C,C,0,"A 51-year-old Asian woman presents to her primary care provider with abdominal pain. On examination,"
+test-01163,B,D,D,D,D,D,D,0,A 49-year-old man comes to the physician because of a 1-week history of diarrhea and abdominal bloat
+test-01164,A,C,A,A,C,C,B,1,An 80-year-old African American man is brought to the emergency department in a confused state with 
+test-01165,B,B,A,B,B,B,B,0,A 4-month-old boy is brought to the pediatrician by his parents. He presents to the pediatric ward w
+test-01166,C,C,C,C,C,C,C,0,A 15-year-old girl is brought to the physician by her mother because of worsening grades over the pa
+test-01167,A,A,A,A,B,B,B,0,A 3-year-old boy is brought to the clinic by his parents because he ‘hasn’t been himself lately’ and
+test-01168,A,A,A,A,A,A,A,0,"A 26-year-old woman developed rapidly progressive septic shock associated with nuchal rigidity, pete"
+test-01169,C,D,D,A,C,C,A,0,A 35-year-old man comes to the physician because of episodes of difficulty swallowing for the past 3
+test-01170,A,B,C,C,C,C,C,0,A 33-year-old man presents to the emergency department with altered mental status. He was at work as
+test-01171,C,C,C,C,C,C,C,0,"A 67-year-old man is brought to the hospital by his relatives. He complains of early satiety, abdomi"
+test-01172,D,A,A,D,D,D,D,1,A four-day-old neonate is brought to the pediatrician with vaginal discharge for the last two days. 
+test-01173,A,C,A,C,A,A,A,0,A 53-year-old male presents to his primary care physician complaining of fatigue and joint and muscl
+test-01174,C,C,C,C,C,C,C,0,A 40-year-old woman presents to her family physician with a 3-week history of swollen neck. The smal
+test-01175,B,A,A,A,A,A,A,0,A 27-year-old woman with no past medical history presents to the emergency department with recurrent
+test-01176,D,C,C,C,C,C,C,0,A 66-year-old man comes to the physician because of fatigue and swelling of his legs and feet for 6 
+test-01177,B,A,A,B,B,B,B,1,"A 35-year-old woman presents with an unsteady and broad-based gait, dysmetria, and intention tremor "
+test-01178,B,C,C,D,D,D,D,0,A 6-year-old Russian boy who recently immigrated to the United States presents to your office with f
+test-01179,C,C,C,C,C,D,C,0,A 17-year-old male presents to the emergency department after a motor vehicle accident. The patient 
+test-01180,A,A,A,A,D,D,C,0,A 62-year-old woman with a history of hypertension and type 2 diabetes mellitus comes to the physici
+test-01181,D,A,A,A,D,D,D,0,A 21-year-old woman comes to the physician for evaluation of excess hair growth on her face. Menses 
+test-01182,A,A,A,A,C,C,C,0,A 64-year-old man with coronary artery disease and hypertension comes to the physician for a follow-
+test-01183,B,C,C,C,C,C,C,0,A 65-year-old woman is brought to the emergency department by her husband after he found her with na
+test-01184,D,A,C,C,C,C,C,0,"A 62-year-old Caucasian male presents to the emergency room with severe substernal chest pain, diaph"
+test-01185,C,A,A,A,A,A,A,0,"A previously healthy, 24-year-old man comes to the physician because of a 6-week history of loose, n"
+test-01186,B,D,D,D,D,D,D,0,A 65-year-old man presents with pain in his left thigh for a week. He describes the pain as dull and
+test-01187,A,A,A,A,A,A,A,0,A 15-year-old boy is brought to the emergency department because of severe abdominal pain and vomiti
+test-01188,B,B,B,B,B,B,B,0,"After a T cell progenitor leaves the bone marrow, most of its development takes place in the thymus."
+test-01189,C,A,A,A,A,A,A,0,"A 28-year-old male presents with a recent onset of upsetting dreams, anxiety, and disturbing flashba"
+test-01190,D,A,D,D,D,D,D,1,A patient with a1-antitrypsin deficiency is warned by his physician that his increasing dyspnea may 
+test-01191,C,C,C,C,C,C,C,0,A 54-year-old man comes to the physician for a routine health maintenance examination. He was diagno
+test-01192,A,A,A,A,A,A,A,0,A 19-year-old woman is brought into the emergency department after collapsing during a cheerleading 
+test-01193,C,A,A,C,C,C,C,1,A 45-year-old man comes to the physician for a routine health maintenance examination. He was diagno
+test-01194,D,C,A,A,A,A,A,0,A 32-year-old male presents to the emergency department because of fever and diarrhea. He was in his
+test-01195,A,A,A,A,A,A,B,0,A 14-year-old boy presents to the emergency department with hand pain after falling from his skatebo
+test-01196,C,C,C,C,C,C,C,0,A 22-year-old woman comes to the physician for the evaluation of irregular menstrual bleeding. Mense
+test-01197,C,C,C,C,C,C,C,0,A 56-year-old man comes to the emergency department because of nausea and shortness of breath that s
+test-01198,B,D,D,D,C,C,C,0,A 27-year-old man with a history of cocaine abuse comes to the physician 2 weeks after undergoing su
+test-01199,A,A,A,A,A,A,A,0,"An 89-year-old woman sees her neurologist for a follow-up evaluation. Three months ago, she presente"
+test-01200,B,A,A,B,A,B,B,1,"A 28-year-old man is brought to the emergency department because of a 3-day history of fever, chills"
+test-01201,C,A,A,D,D,C,C,0,A 24-year-old woman comes to the physician because of persistent fatigue for the past 4 months. She 
+test-01202,A,A,A,A,A,A,A,0,A 40-year old man presents to the clinic with vague upper abdominal pain that has been worsening for
+test-01203,C,C,C,C,C,C,C,0,"A 36-year-old man presents to his physician for a regular checkup, and he expresses an intent to qui"
+test-01204,A,A,A,A,A,A,A,0,"A 32-year-old woman, gravida 2, para 0, at 22 weeks' gestation comes to the emergency department for"
+test-01205,D,D,D,D,D,D,D,0,A 78-year-old man comes to the physician because of progressively worsening fatigue and headache for
+test-01206,A,C,D,D,D,D,D,0,A 35-year-old woman comes to the physician for genetic counseling prior to conception. Her younger b
+test-01207,B,D,A,D,C,C,C,0,A 23-year-old man presents with swelling of the left knee. He noticed the swelling a day ago while p
+test-01208,D,D,A,D,D,D,D,0,Which of the following patient presentations seen in a pediatric immunology clinic is most consisten
+test-01209,A,B,B,D,C,C,C,0,A 29-year-old man is brought to the emergency department by a concerned neighbor. The patient appear
+test-01210,C,C,C,C,D,C,C,0,A 23-year-old man comes to the clinic for yellowing of his eyes. The patient has been relatively hea
+test-01211,C,A,A,A,D,D,D,0,A 40-year-old woman comes to the physician because of a 2-month history of increasingly frequent epi
+test-01212,B,A,A,B,B,B,B,1,A 47-year-old female presents to her primary physician for follow up after an ED visit for nephrolit
+test-01213,D,C,C,C,C,C,C,0,A 62-year-old man comes to the physician because of worsening involuntary movements of both arms for
+test-01214,A,A,A,A,A,A,A,0,"Ten days after undergoing a cadaveric renal transplant, a 21-year-old man has pain in the right lowe"
+test-01215,A,C,C,C,C,C,C,0,A 58-year-old woman presents to the office for routine follow-up. She recently underwent routine scr
+test-01216,A,C,A,A,C,C,C,1,A 46-year-old man is brought to the emergency department 15 minutes after being involved in a motor 
+test-01217,D,A,A,A,B,A,B,0,A 65-year-old man with a longstanding history of poorly-controlled hypertension and no recent illnes
+test-01218,B,A,A,D,D,D,A,0,A 56-year-old man of Korean descent visits his primary care provider for an annual health check-up. 
+test-01219,C,C,C,C,C,C,C,0,"A 46-year-old woman presents with a 5-month history of worsening dry cough, occasional shortness of "
+test-01220,A,C,A,D,B,B,B,0,A 67-year-old woman with depression comes to the physician because of easy bruising and bleeding of 
+test-01221,A,A,A,A,B,B,B,0,A 49-year-old female with a history of alcoholism was found lying unconscious on a bench at a local 
+test-01222,C,B,B,B,B,B,B,0,A 53-year-old man comes to the physician for a follow-up appointment three days after being prescrib
+test-01223,A,A,A,D,D,D,D,0,"A 31-year-old woman is brought to the emergency department with fever, right upper quadrant pain, an"
+test-01224,D,C,D,D,B,B,B,1,A 25-year-old man presents to his primary care physician for pain in his back. The patient describes
+test-01225,B,B,B,B,B,B,B,0,A 9-month-old boy is brought to his pediatrician by his mother for a routine health checkup. The boy
+test-01226,D,A,D,D,D,D,D,1,"A 39-year-old woman, with a history of thyroidectomy and primary hyperparathyroidism presents for su"
+test-01227,C,D,D,D,D,D,D,0,A 58-year-old male is diagnosed with hypertension and started on daily propranolol after failing ant
+test-01228,B,D,B,B,B,B,D,1,An 8-year-old boy is brought to the physician by his parents for short stature. Neither his clothing
+test-01229,C,A,A,A,D,D,D,0,"A 31-year-old woman, gravida 2, para 1, at 32 weeks' gestation presents to the emergency department "
+test-01230,D,D,A,A,D,D,D,0,A 63-year-old man comes to the emergency department because of a 4-day history of lower abdominal pa
+test-01231,A,C,C,C,A,C,C,0,A researcher is studying risk factors for open-angle glaucoma in a group of elderly patients at a pr
+test-01232,A,A,B,B,A,B,B,0,"Background:
+Some patients with severe asthma have frequent exacerbations associated with persistent "
+test-01233,A,A,A,B,D,D,D,0,A 30-year-old Japanese woman is brought to the emergency department after fainting at work. She says
+test-01234,B,C,A,C,C,B,B,0,"A 25-year-old woman comes to the physician because of an acute, painful swelling of the left labia t"
+test-01235,A,C,C,A,B,B,B,1,A 21-year-old female presents to the clinic requesting prenatal counseling. She was born with a dise
+test-01236,B,C,C,C,B,C,B,0,"A 45-year-old woman presents to the physician with a history of headache, palpitations, and episodic"
+test-01237,A,A,A,A,A,A,A,0,A 57-year-old man comes to the physician because of a 1-year history of increasing shortness of brea
+test-01238,C,A,A,A,A,A,A,0,A 45-year-old woman presents with sudden-onset dyspnea. Her past medical history is significant for 
+test-01239,C,C,A,A,A,A,A,0,A 7-year-old boy is brought to the clinic by his mother with increasing swelling of his right jaw fo
+test-01240,A,A,A,A,A,A,A,0,"A 3-year-old male was brought to the pediatrician with severe lip lacerations, with a portion of his"
+test-01241,D,A,A,A,C,B,B,0,An asymptomatic 65-year-old woman is found to have T-score of -2.6 SD on routine bone mineral densit
+test-01242,B,B,B,B,B,B,B,0,"A 28-year-old woman, gravida 1, para 0, at 20 weeks' gestation comes to the physician with her husba"
+test-01243,D,D,D,D,D,D,D,0,A 26-year-old man presents to the office complaining of persistent epigastric pain for the past 2 mo
+test-01244,A,D,D,C,D,D,C,0,The parents of a 16-year-old boy with type 1 diabetes mellitus present requesting information about 
+test-01245,B,A,A,A,B,A,A,0,A 79-year-old woman comes to the physician for the evaluation of a 2-month history of a non-producti
+test-01246,C,A,A,A,C,C,C,0,A 25-year-old woman comes to the physician because of irregular menstrual bleeding. Menses have occu
+test-01247,A,C,D,D,D,D,D,0,A 51-year-old woman goes to respiratory function testing in order to evaluate her shortness of breat
+test-01248,D,D,D,D,D,D,D,0,"A 44-year-old woman comes to the physician because of a 6-month history of fatigue, intermittent fev"
+test-01249,D,C,C,C,D,C,C,0,A 55-year-old nulligravid woman comes to the physician because of a 3-day history of heavy vaginal b
+test-01250,A,C,C,C,C,C,C,0,A 37-year-old woman with an HIV infection comes to the physician for a follow-up examination. Six mo
+test-01251,A,A,A,A,A,A,A,0,A 14-year-old girl presents with sudden drooping of the right side of her face with drooling and exc
+test-01252,B,B,B,B,B,B,B,0,"A 66-year-old man with high blood pressure, high cholesterol, and diabetes presents to the clinic wi"
+test-01253,B,B,B,B,B,B,B,0,"A 7 -day-old newborn boy presents to the emergency department with a history of fever, irritability,"
+test-01254,B,B,B,B,B,B,B,0,A 60-year-old woman presents to the outpatient clinic complaining of severe vulvar itching that has 
+test-01255,A,A,B,D,B,B,B,0,A 50-year-old woman with Systemic Lupus Erythematosus (SLE) presents to your clinic with complaints 
+test-01256,A,A,A,A,A,A,A,0,A 25-year-old woman presents to the emergency department with abdominal pain. She states that she wa
+test-01257,D,C,A,A,C,C,C,0,A 65-year-old man comes to the physician because of progressively worsening fatigue for 6 months. Du
+test-01258,A,A,A,A,A,A,A,0,A 24-year-old woman comes to the emergency department with her boyfriend 2 hours after an episode of
+test-01259,B,B,A,B,B,B,B,0,A 15-year-old boy is brought to the emergency department 1 hour after falling from his bicycle. The 
+test-01260,B,A,A,C,C,C,C,0,A 51-year-old man is brought to the physician by his wife because of a 3-week history of abnormal be
+test-01261,C,C,A,C,C,C,C,0,A 55-year-old woman with no significant past medical history presents to her primary care doctor wit
+test-01262,B,C,C,C,D,D,B,0,A 30-year-old man presents to the emergency room complaining of malaise. Two hours prior to presenta
+test-01263,A,D,D,D,D,D,D,0,A 62-year-old man is brought to the physician by his wife because of difficulties walking for the pa
+test-01264,B,C,A,A,C,C,D,0,"A 40-year-old woman with Down syndrome comes to the physician for the evaluation of fatigue, progres"
+test-01265,B,D,B,D,B,B,B,0,"A 74-year-old woman with a history of hypertension, hyperlipidemia, and type 2 diabetes mellitus is "
+test-01266,C,D,D,D,D,D,D,0,A 45-year-old male with a history of diabetes and poorly controlled hypertension presents to his pri
+test-01267,B,B,B,B,B,B,B,0,"A 29-year-old woman comes to the physician with high-grade fever, headache, and muscle pain. A week "
+test-01268,D,D,D,D,D,D,D,0,A 39-year-old woman presents to the clinic for her annual physical. Although she feels generally hea
+test-01269,D,C,A,C,C,C,C,0,A 38-year-old woman comes to the physician because of persistent diarrhea and fatigue for 1 month. S
+test-01270,B,D,D,D,D,D,B,0,A 21-year-old college student comes to the physician because of daytime fatigue for 2 months. He has
+test-01271,C,C,C,C,C,C,C,0,A 19-year-old man is brought to the physician by his mother because she is worried about his strange
+test-01272,C,C,C,C,C,C,C,0,A 79-year-old man presents to the office due to shortness of breath with moderate exertion and a sli
