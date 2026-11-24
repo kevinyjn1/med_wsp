@@ -35,9 +35,28 @@ loses 0.9 in the chat format. The no-donor editing session and the layer-looping
 ### Which questions the medical models get and Phi-3.5 misses (bare prompt)
 ![Which models answer each MedQA test question correctly, bare prompt](../attachments/exp04_venn_plain_text.png)
 
-Of the 1,273 test questions, Phi-3.5 misses 219 that at least one medical model gets right: 113 only
-MediPhi-Instruct, 78 both, 28 only MediPhi. Of the 191 that MediPhi-Instruct gets and Phi-3.5 misses, Phi-3.5
-answers 134 correctly under the chat prompt, and its wrong pick under the bare prompt is "A" in 100 of them.
+| Model | Right, of 1,273 | Right where Phi-3.5 is wrong | Wrong where Phi-3.5 is right | Net against Phi-3.5 |
+|---|---|---|---|---|
+| Phi-3.5 | 618 (48.6 %) | - | - | - |
+| MediPhi | 612 (48.1 %) | 106 | 112 | -6 |
+| MediPhi-Instruct | 695 (54.6 %) | 191 | 114 | +77 |
+
+Breakdown of the 1,273 questions by which models are right:
+
+| Phi-3.5 | MediPhi | MediPhi-Instruct | Questions |
+|---|---|---|---|
+| right | right | right | 448 |
+| right | right | wrong | 58 |
+| right | wrong | right | 56 |
+| right | wrong | wrong | 56 |
+| **wrong** | **right** | **right** | **78** |
+| **wrong** | **right** | **wrong** | **28** |
+| **wrong** | **wrong** | **right** | **113** |
+| wrong | wrong | wrong | 436 |
+
+The three bold rows are the 219 questions Phi-3.5 misses and a medical model gets. Of the 191 that
+MediPhi-Instruct gets and Phi-3.5 misses, Phi-3.5 answers 134 correctly under the chat prompt, and its wrong pick
+under the bare prompt is "A" in 100 of them.
 The full list is in [picks_test.csv](../../experiments/exp_04_medqa_baseline/processed/picks_test.csv).
 
 ### The prompts
