@@ -32,6 +32,14 @@ loses 0.9 in the chat format. The no-donor editing session and the layer-looping
 - The editing experiments below score the bare prompt with our own code, which gives Phi-3.5 48.70 % on the test
   split (620 questions right against 618 in the harness-format run).
 
+### Which questions the medical models get and Phi-3.5 misses (bare prompt)
+![Which models answer each MedQA test question correctly, bare prompt](../attachments/exp04_venn_plain_text.png)
+
+Of the 1,273 test questions, Phi-3.5 misses 219 that at least one medical model gets right: 113 only
+MediPhi-Instruct, 78 both, 28 only MediPhi. Of the 191 that MediPhi-Instruct gets and Phi-3.5 misses, Phi-3.5
+answers 134 correctly under the chat prompt, and its wrong pick under the bare prompt is "A" in 100 of them.
+The full list is in [picks_test.csv](../../experiments/exp_04_medqa_baseline/processed/picks_test.csv).
+
 ### The prompts
 The answer is the letter with the highest next-token probability at the end of the prompt.
 

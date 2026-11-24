@@ -31,6 +31,11 @@ running for the two medical models.
   margin (log-prob of the gold letter minus the best other letter), letter log-probs
 - `processed/cot_{phi,mediphi,mediphi_instruct}_test_400.jsonl` - per question: generated text, parsed answer
 - `run.py`, `run_cot.py`
+- `contrast.py` (no model runs) -> `processed/picks_test.csv`: for each of the 1,273 test questions the correct
+  letter, the letter each model picks under the harness format and under the chat prompt, and which models are
+  right. Figures `vault/attachments/exp04_venn_plain_text.png` and `exp04_venn_chat.png`: the same counts as a
+  three-circle diagram. Harness format: all three right 448; Phi-3.5 wrong and MediPhi-Instruct right 191 (of
+  which MediPhi is also right on 78); Phi-3.5 wrong and only MediPhi right 28; none right 436.
 
 ## Numerical results
 
